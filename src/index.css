@@ -1,0 +1,50 @@
+:root {
+  --lbv-ink: #0a0806;
+  --lbv-ink-soft: #17120d;
+  --lbv-ivory: #f8f2e8;
+  --lbv-ivory-light: #fdfaf5;
+  --lbv-sand: #e8d2ac;
+  --lbv-gold: #c8a458;
+  --lbv-gold-deep: #b78a4e;
+  --lbv-white: #fff;
+  --lbv-line-light: rgba(255, 255, 255, 0.2);
+  --lbv-line-dark: rgba(26, 18, 8, 0.16);
+  --lbv-page-gutter: clamp(24px, 5.5vw, 88px);
+  --lbv-section-space: clamp(88px, 13vw, 190px);
+  --lbv-display: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --lbv-serif: 'Cormorant Garamond', Georgia, serif;
+  --lbv-sans: 'Montserrat', system-ui, sans-serif;
+  --lbv-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --lbv-shadow: 0 28px 80px rgba(46, 29, 10, 0.14);
+}
+
+html {
+  overscroll-behavior: none;
+  overflow-x: hidden;
+}
+
+body,
+#root {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--lbv-ink);
+  color: var(--lbv-ink);
+  font-family: var(--lbv-sans);
+}
+
+::selection {
+  background: var(--lbv-gold);
+  color: var(--lbv-ink);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}

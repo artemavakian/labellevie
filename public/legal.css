@@ -1,0 +1,247 @@
+:root {
+  color: #211d19;
+  background: #f6f4ef;
+  font-family: Arial, Helvetica, sans-serif;
+  font-synthesis: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #f6f4ef;
+}
+
+.document-header {
+  border-bottom: 1px solid #d9d4ca;
+  background: #fff;
+}
+
+.document-brand {
+  display: flex;
+  width: min(920px, calc(100% - 48px));
+  min-height: 112px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  color: #4e4a44;
+  text-decoration: none;
+}
+
+.document-brand img {
+  display: block;
+  width: 138px;
+  height: auto;
+  filter: brightness(0);
+  user-select: none;
+}
+
+.document-brand span,
+.document-type,
+.document-updated {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.document {
+  width: min(920px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 72px 0 96px;
+}
+
+.document-title {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  margin-bottom: 64px;
+  padding-bottom: 34px;
+  border-bottom: 2px solid #211d19;
+}
+
+.document-type {
+  grid-column: 1 / -1;
+  margin: 0 0 18px;
+  color: #8a673d;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.35rem, 6vw, 4.35rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.document-updated {
+  margin: 0 0 4px 32px;
+  color: #747069;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.document-body section {
+  display: grid;
+  grid-template-columns: minmax(185px, 0.31fr) minmax(0, 0.69fr);
+  column-gap: clamp(36px, 7vw, 92px);
+  padding: 34px 0;
+  border-top: 1px solid #d9d4ca;
+}
+
+.document-body section:first-child {
+  border-top: 0;
+}
+
+.document-body h2,
+.document-body h3 {
+  grid-column: 1;
+  margin: 3px 0 12px;
+  color: #2e2a25;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.document-body h3 {
+  margin-top: 18px;
+  color: #68635c;
+  font-size: 10px;
+}
+
+.document-body p,
+.document-body ul,
+.document-body address {
+  grid-column: 2;
+  margin: 0 0 16px;
+  color: #4f4a44;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.75;
+}
+
+.document-body p:last-child,
+.document-body ul:last-child,
+.document-body address:last-child {
+  margin-bottom: 0;
+}
+
+.document-body ul {
+  padding-left: 20px;
+}
+
+.document-body li {
+  margin-bottom: 9px;
+  padding-left: 5px;
+}
+
+.document-body strong {
+  color: #2e2a25;
+  font-weight: 650;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: #a08058;
+  text-underline-offset: 3px;
+}
+
+.document-major {
+  margin-top: 52px;
+  padding-top: 56px !important;
+  border-top: 2px solid #211d19 !important;
+}
+
+.document-major .document-type {
+  grid-column: 1;
+  margin-bottom: 12px;
+}
+
+.document-major h2 {
+  grid-column: 1 / -1;
+  max-width: 720px;
+  margin: 0 0 30px;
+  font-size: clamp(1.75rem, 4vw, 2.8rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  text-transform: none;
+}
+
+.document-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 72px;
+  padding-top: 24px;
+  border-top: 2px solid #211d19;
+  color: #5c5750;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 680px) {
+  .document-brand {
+    min-height: 92px;
+  }
+
+  .document-brand span {
+    display: none;
+  }
+
+  .document {
+    padding-top: 52px;
+  }
+
+  .document-title {
+    display: block;
+    margin-bottom: 42px;
+  }
+
+  .document-updated {
+    margin: 20px 0 0;
+    white-space: normal;
+  }
+
+  .document-body section {
+    display: block;
+    padding: 28px 0;
+  }
+
+  .document-body h2 {
+    margin-bottom: 18px;
+  }
+
+  .document-body h3 {
+    margin-top: 24px;
+  }
+
+  .document-footer {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+
+  .document-header {
+    border-bottom: 0;
+  }
+
+  .document {
+    width: 100%;
+    padding-top: 30px;
+  }
+}

@@ -1,0 +1,367 @@
+.treatments-directory {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 80% 3%, rgba(200, 164, 88, 0.17), transparent 28rem),
+    var(--lbv-ivory-light);
+  color: var(--lbv-ink);
+  padding: clamp(112px, 15vw, 210px) var(--lbv-page-gutter) var(--lbv-section-space);
+}
+
+.treatments-directory__inner {
+  width: min(1520px, 100%);
+  margin: 0 auto;
+}
+
+.treatments-directory__intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(250px, 0.55fr);
+  align-items: end;
+  column-gap: clamp(32px, 8vw, 140px);
+  margin-bottom: clamp(100px, 15vw, 220px);
+}
+
+.treatments-directory__eyebrow {
+  grid-column: 1 / -1;
+  margin: 0 0 clamp(24px, 3vw, 42px);
+  color: var(--lbv-gold-deep);
+  font: 600 0.68rem / 1 var(--lbv-sans);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.treatments-directory__title {
+  --beautifully-font-size: 1.2em; /* Adjust only this value to resize “beautifully.” */
+  max-width: 10ch;
+  margin: 0;
+  font: 300 clamp(3.4rem, 7.7vw, 8.5rem) / 0.87 var(--lbv-display);
+  letter-spacing: -0.065em;
+}
+
+.treatments-directory__title em {
+  color: var(--lbv-gold-deep);
+  font-family: var(--lbv-serif);
+  font-size: var(--beautifully-font-size);
+  font-weight: 400;
+}
+
+.treatments-directory__lede {
+  max-width: 37ch;
+  margin: 0 0 0.7em;
+  color: color-mix(in srgb, var(--lbv-ink) 68%, transparent);
+  font: 300 clamp(1rem, 1.4vw, 1.22rem) / 1.75 var(--lbv-sans);
+}
+
+.treatments-directory__grid {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(22px, 4vw, 72px);
+}
+
+.treatments-directory__col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(80px, 11vw, 170px);
+  min-width: 0;
+  will-change: transform;
+}
+
+.treatments-directory__col--offset {
+  padding-top: clamp(100px, 17vw, 260px);
+}
+
+.treatments-directory__category {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.42fr) minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(14px, 2.2vw, 34px);
+  min-width: 0;
+}
+
+.treatments-directory__category--right {
+  grid-template-columns: minmax(0, 1fr) minmax(120px, 0.42fr);
+}
+
+.treatments-directory__category--right .treatments-directory__category-heading {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.treatments-directory__category--right .treatments-directory__tile {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.treatments-directory__category-heading {
+  padding-bottom: clamp(14px, 2vw, 28px);
+  text-align: right;
+}
+
+.treatments-directory__category--right .treatments-directory__category-heading {
+  text-align: left;
+}
+
+.treatments-directory__category-number {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--lbv-gold-deep);
+  font: 600 0.62rem / 1 var(--lbv-sans);
+  letter-spacing: 0.22em;
+}
+
+.treatments-directory__category-title {
+  margin: 0;
+  color: var(--lbv-ink);
+  font: 500 clamp(0.78rem, 1.05vw, 0.95rem) / 1.6 var(--lbv-sans);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.treatments-directory__tile {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5.15;
+  overflow: hidden;
+  background: var(--lbv-sand);
+  box-shadow: var(--lbv-shadow);
+  isolation: isolate;
+}
+
+.treatments-directory__tile-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: filter 700ms var(--lbv-ease), transform 1.2s var(--lbv-ease);
+  user-select: none;
+}
+
+.treatments-directory__tile-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(10, 8, 6, 0.1), rgba(10, 8, 6, 0.94));
+  opacity: 0.24;
+  transition: opacity 550ms var(--lbv-ease);
+  pointer-events: none;
+}
+
+.treatments-directory__tile-prompt {
+  position: absolute;
+  right: clamp(18px, 2.5vw, 34px);
+  bottom: clamp(18px, 2.5vw, 34px);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--lbv-white);
+  font: 500 0.65rem / 1 var(--lbv-sans);
+  letter-spacing: 0.23em;
+  text-transform: uppercase;
+  transition: opacity 300ms ease, transform 400ms var(--lbv-ease);
+}
+
+.treatments-directory__tile-prompt svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 1.4;
+}
+
+.treatments-directory__tile-items {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  padding: clamp(20px, 3.4vw, 50px);
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 400ms ease, transform 600ms var(--lbv-ease);
+}
+
+.treatments-directory__tile:hover .treatments-directory__tile-img {
+  filter: saturate(0.78);
+  transform: scale(1.035);
+}
+
+.treatments-directory__tile:hover .treatments-directory__tile-overlay {
+  opacity: 1;
+}
+
+.treatments-directory__tile:hover .treatments-directory__tile-items,
+.treatments-directory__tile:focus-within .treatments-directory__tile-items {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.treatments-directory__tile:hover .treatments-directory__tile-prompt,
+.treatments-directory__tile:focus-within .treatments-directory__tile-prompt {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.treatments-directory__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.24);
+  background: none;
+  color: var(--lbv-white);
+  cursor: pointer;
+  font: 300 clamp(0.9rem, 1.15vw, 1.08rem) / 1.3 var(--lbv-sans);
+  padding: clamp(8px, 1.1vw, 14px) 0;
+  text-align: left;
+  transition: color 180ms ease, padding 300ms var(--lbv-ease);
+}
+
+.treatments-directory__item:first-child {
+  border-top: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.treatments-directory__item svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  opacity: 0;
+  transform: translate(-7px, 7px);
+  transition: opacity 180ms ease, transform 300ms var(--lbv-ease);
+}
+
+.treatments-directory__item:hover {
+  padding-left: 8px;
+  color: var(--lbv-sand);
+}
+
+.treatments-directory__item:hover svg,
+.treatments-directory__item:focus-visible svg {
+  opacity: 1;
+  transform: translate(0);
+}
+
+.treatments-directory__item:focus-visible {
+  outline: 2px solid var(--lbv-white);
+  outline-offset: 3px;
+}
+
+@media (hover: none), (max-width: 900px) {
+  .treatments-directory__tile-overlay {
+    opacity: 0.85;
+  }
+
+  .treatments-directory__tile-prompt {
+    display: none;
+  }
+
+  .treatments-directory__tile-items {
+    justify-content: flex-end;
+    opacity: 1;
+    transform: none;
+    padding: clamp(18px, 4vw, 32px);
+  }
+}
+
+@media (max-width: 820px) {
+  .treatments-directory {
+    padding-top: clamp(100px, 22vw, 150px);
+  }
+
+  .treatments-directory__intro {
+    grid-template-columns: 1fr;
+    margin-bottom: 90px;
+  }
+
+  .treatments-directory__title {
+    max-width: 9ch;
+    font-size: clamp(3.6rem, 16vw, 6.5rem);
+  }
+
+  .treatments-directory__lede {
+    margin-top: 34px;
+  }
+
+  .treatments-directory__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .treatments-directory__col,
+  .treatments-directory__col--offset {
+    gap: 60px;
+    padding-top: 0;
+    transform: none !important;
+  }
+
+  .treatments-directory__col--offset {
+    padding-top: 110px;
+  }
+
+  .treatments-directory__category,
+  .treatments-directory__category--right {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .treatments-directory__category-heading,
+  .treatments-directory__category--right .treatments-directory__category-heading {
+    order: -1;
+    padding: 0;
+    text-align: left;
+  }
+
+  .treatments-directory__category-title {
+    font-size: 0.68rem;
+  }
+}
+
+@media (max-width: 580px) {
+  .treatments-directory__grid {
+    grid-template-columns: 1fr;
+    gap: 70px;
+  }
+
+  .treatments-directory__col,
+  .treatments-directory__col--offset {
+    display: contents;
+  }
+
+  .treatments-directory__category:nth-child(1) { order: 1; }
+  .treatments-directory__category:nth-child(2) { order: 3; }
+  .treatments-directory__category:nth-child(3) { order: 5; }
+  .treatments-directory__col--offset .treatments-directory__category:nth-child(1) { order: 2; }
+  .treatments-directory__col--offset .treatments-directory__category:nth-child(2) { order: 4; }
+  .treatments-directory__col--offset .treatments-directory__category:nth-child(3) { order: 6; }
+
+  .treatments-directory__tile {
+    aspect-ratio: 4 / 5;
+  }
+
+  .treatments-directory__item {
+    font-size: clamp(0.9rem, 4.3vw, 1.06rem);
+    padding-block: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .treatments-directory__col {
+    transform: none !important;
+  }
+
+  .treatments-directory__tile-img,
+  .treatments-directory__tile-items,
+  .treatments-directory__tile-prompt {
+    transition: none;
+  }
+}
