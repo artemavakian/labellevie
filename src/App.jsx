@@ -245,9 +245,15 @@ export default function App() {
     }
     setHeroPhase('intro')
     setHeroVideoStarted(false)
+    // On phones the video can take a beat to actually start rendering frames
+    // once .play() is called, so it's started immediately (silently, fully
+    // hidden behind the opaque intro panels) instead of waiting for the
+    // reveal — by the time the intro splits open at 2500ms it's already
+    // playing smoothly. Desktop/tablet keep the original synced timing.
+    const isPhoneHero = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches
     const logoExitTimer = setTimeout(() => setHeroPhase('logo-exit'), 2250)
     const revealTimer = setTimeout(() => setHeroPhase('reveal'), 2500)
-    const videoTimer = setTimeout(() => setHeroVideoStarted(true), 2500)
+    const videoTimer = setTimeout(() => setHeroVideoStarted(true), isPhoneHero ? 0 : 2500)
     const doneTimer = setTimeout(() => {
       setHeroPhase('done')
       heroIntroPlayedRef.current = true

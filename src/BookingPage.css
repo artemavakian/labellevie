@@ -348,22 +348,55 @@ a.booking-detail__value:hover { text-decoration: none; }
   }
 
   .booking-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 44px;
     padding-top: 0;
+    text-align: center;
   }
 
   .booking-info {
+    align-items: center;
     gap: 28px;
+    text-align: center;
+  }
+
+  .booking-detail {
+    align-items: center;
   }
 
   /* The icon-reveal is a hover interaction that never fires on a
-     touchscreen, so the reserved space for it just becomes clutter. */
+     touchscreen, so the reserved space for it just becomes clutter —
+     except for phone and email, where the icon is kept permanently
+     visible instead of hidden behind a hover that can't happen. */
   .contact-link {
     padding-left: 0;
   }
 
   .contact-link__slot {
     display: none;
+  }
+
+  .booking-info > .booking-detail:nth-child(1) .contact-link,
+  .booking-info > .booking-detail:nth-child(2) .contact-link {
+    padding-left: 42px;
+  }
+
+  .booking-info > .booking-detail:nth-child(1) .contact-link__slot,
+  .booking-info > .booking-detail:nth-child(2) .contact-link__slot {
+    display: block;
+  }
+
+  .booking-info > .booking-detail:nth-child(1) .contact-link__circle,
+  .booking-info > .booking-detail:nth-child(2) .contact-link__circle {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .booking-info > .booking-detail:nth-child(1) .contact-link__text,
+  .booking-info > .booking-detail:nth-child(2) .contact-link__text {
+    transform: translateX(0);
   }
 
   .booking-detail--hours .booking-detail__value {

@@ -761,8 +761,24 @@
     text-align: center;
   }
 
+  /* The glow accent never had an explicit position (it relied on the
+     desktop flex layout's default static position), which put it off to
+     one side on phones. Anchor it dead-center, bleeding up from the
+     bottom of the tile. */
+  .tx-book-group::before {
+    top: auto;
+    right: auto;
+    bottom: -14%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
   .tx-git-wrap {
     align-items: center;
+    margin-inline: auto;
+  }
+
+  .tx-book-btn {
     margin-inline: auto;
   }
 

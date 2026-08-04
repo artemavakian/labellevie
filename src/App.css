@@ -1244,10 +1244,11 @@
     background: #f7eddd;
   }
 
-  /* Crop from the left instead of centering — the right edge of the
-     frame stays flush with the right edge of the screen. */
+  /* Crop from the left instead of centering. The rightmost ~7.5% of the
+     frame is trimmed off, and that new edge (not the video's true right
+     edge) sits flush with the right edge of the screen. */
   .hero__video {
-    object-position: right center;
+    object-position: 89.5% center;
   }
 
   .hero-intro-logo {

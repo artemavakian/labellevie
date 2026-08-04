@@ -387,8 +387,8 @@
   .site-menu-button {
     top: 16px;
     right: 16px;
-    min-height: 40px;
-    width: 40px;
+    min-height: 54px;
+    width: 54px;
     padding: 0;
     justify-content: center;
     gap: 0;
@@ -397,6 +397,9 @@
 
   .site-menu-button--hero {
     display: inline-flex;
+    border-color: rgba(10, 8, 6, 0.12);
+    background: #fff;
+    color: #000;
   }
 
   .site-menu-button--pending {
@@ -409,12 +412,12 @@
   }
 
   .site-menu-button__cross {
-    width: 16px;
-    height: 16px;
+    width: 21.6px;
+    height: 21.6px;
   }
 
   .site-menu-button__cross span {
-    width: 14px;
+    width: 18.9px;
   }
 
   .site-menu__panel {
@@ -455,7 +458,7 @@
   }
 
   .site-menu__nav-link {
-    font-size: clamp(30px, 9.5vw, 40px);
+    font-size: clamp(37.5px, 11.875vw, 50px);
     text-align: center;
   }
 
@@ -465,7 +468,7 @@
   }
 
   .site-menu__nav-link--secondary {
-    font-size: 11px;
+    font-size: 13.75px;
   }
 
   .site-menu__footer {
