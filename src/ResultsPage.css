@@ -1054,8 +1054,8 @@
   }
 
   .results-cta__actions {
-    align-self: flex-end !important;
-    align-items: flex-start !important;
+    align-self: center !important;
+    align-items: center !important;
     flex-direction: column-reverse;
     gap: 18px;
     padding-right: 0;

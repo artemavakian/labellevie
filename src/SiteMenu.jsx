@@ -62,10 +62,13 @@ export default function SiteMenu({
   onResults,
   onGallery,
   onContact,
+  variant,
 }) {
+  const isHero = variant === 'hero'
   const panelRef = useRef(null)
 
   useEffect(() => {
+    if (isHero) return undefined
     if (!open) return undefined
 
     const handleKeyDown = event => {
@@ -80,7 +83,7 @@ export default function SiteMenu({
       document.body.style.overflow = previousOverflow
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [open, onClose])
+  }, [open, onClose, isHero])
 
   const callbacks = {
     onAbout,
@@ -101,18 +104,18 @@ export default function SiteMenu({
 
   return (
     <div
-      className={`site-menu${open ? ' site-menu--open' : ''}`}
-      aria-hidden={!open}
-      onMouseDown={event => {
+      className={`site-menu${open ? ' site-menu--open' : ''}${isHero ? ' site-menu--hero' : ''}`}
+      aria-hidden={isHero ? undefined : !open}
+      onMouseDown={isHero ? undefined : event => {
         if (event.target === event.currentTarget) onClose?.()
       }}
     >
       <aside
         ref={panelRef}
         className="site-menu__panel"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Site menu"
+        role={isHero ? undefined : 'dialog'}
+        aria-modal={isHero ? undefined : true}
+        aria-label={isHero ? undefined : 'Site menu'}
         tabIndex={-1}
       >
         <button className="site-menu__logo-button" type="button" onClick={onHome} aria-label="Go to home page">

@@ -491,14 +491,22 @@ export default function App() {
         />
       )}
 
-      {/* Mobile-only hamburger for the hero — desktop keeps its inline
-          ABOUT US / TREATMENTS / MEMBERSHIPS links and no button at all. */}
+      {/* Mobile-only hero content: instead of a hamburger button that
+          opens the menu, the phone hero simply *is* the menu — same
+          logo, links and footer, same size and position, just rendered
+          in white directly over the video. Desktop/tablet never show
+          this (see .site-menu--hero in SiteMenu.css). */}
       {heroActive && (
-        <SiteMenuButton
-          onClick={() => setMenuOpen(current => !current)}
-          theme={menuTheme}
-          open={menuOpen}
-          className={`site-menu-button--hero${heroPhase !== 'done' ? ' site-menu-button--pending' : ''}`}
+        <SiteMenu
+          variant="hero"
+          open={heroPhase === 'done'}
+          onHome={returnToHero}
+          onAbout={() => goTo('about')}
+          onTreatments={() => goTo('treatments')}
+          onMemberships={() => goTo('memberships')}
+          onResults={() => goTo('results')}
+          onGallery={() => goTo('gallery')}
+          onContact={() => goTo('booking')}
         />
       )}
 

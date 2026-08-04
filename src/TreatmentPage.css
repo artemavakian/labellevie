@@ -761,6 +761,18 @@
     text-align: center;
   }
 
+  /* The desktop bleed trick (width: 100% + 2*padding, margin-left:
+     -padding) only centers correctly when align-self is left at its
+     flex default. This element also sets align-self: center, and that
+     combination makes the browser center the margin box against the
+     padding-reduced content area instead of the full tile — landing the
+     whole block visibly left of center on phones. Bypassing the padding
+     math entirely with a flat 100vw removes that interaction. */
+  .tx-book-group {
+    width: 100vw !important;
+    margin-left: 0 !important;
+  }
+
   /* The glow accent never had an explicit position (it relied on the
      desktop flex layout's default static position), which put it off to
      one side on phones. Anchor it dead-center, bleeding up from the

@@ -378,13 +378,15 @@ a.booking-detail__value:hover { text-decoration: none; }
     display: none;
   }
 
-  .booking-info > .booking-detail:nth-child(1) .contact-link,
-  .booking-info > .booking-detail:nth-child(2) .contact-link {
-    padding-left: 42px;
-  }
-
+  /* Phone/email keep their padding at 0 (unlike the desktop hover
+     version) so the text itself stays centered under its label — the
+     circle is pinned outside the link's own box, to its left, purely as
+     a floating design accent that never shifts the text off-center. */
   .booking-info > .booking-detail:nth-child(1) .contact-link__slot,
   .booking-info > .booking-detail:nth-child(2) .contact-link__slot {
+    top: 50%;
+    left: auto;
+    right: calc(100% + 12px);
     display: block;
   }
 

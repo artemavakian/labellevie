@@ -284,12 +284,6 @@
     opacity 420ms ease;
 }
 
-/* Only exists for the phone-width hero (see max-width: 640px below);
-   desktop/tablet keep the hero's inline text nav and no button. */
-.site-menu-button--hero {
-  display: none;
-}
-
 .site-menu-button__cross {
   position: relative;
   display: block;
@@ -393,18 +387,6 @@
     justify-content: center;
     gap: 0;
     border-radius: 50%;
-  }
-
-  .site-menu-button--hero {
-    display: inline-flex;
-    border-color: rgba(10, 8, 6, 0.12);
-    background: #fff;
-    color: #000;
-  }
-
-  .site-menu-button--pending {
-    opacity: 0;
-    pointer-events: none;
   }
 
   .site-menu-button__text {
@@ -523,6 +505,70 @@
   .site-menu__footer {
     margin-top: 28px;
     padding-top: 20px;
+  }
+}
+
+/* ── Phone hero content ───────────────────────────────────────
+   On phones the hero has no hamburger button at all — the same menu
+   markup (logo, links, footer) is rendered permanently in place, in
+   white, straight over the video. It reuses every layout rule above
+   (same sizes/positions as the real menu); only color/background is
+   overridden here. Desktop/tablet never render or show this. */
+.site-menu--hero {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .site-menu--hero {
+    display: block;
+    background: transparent !important;
+    opacity: 0;
+    transition: opacity 900ms var(--lbv-ease), visibility 0s linear 900ms;
+  }
+
+  .site-menu--hero.site-menu--open {
+    opacity: 1;
+    transition: opacity 900ms var(--lbv-ease), visibility 0s linear 0s;
+  }
+
+  .site-menu--hero .site-menu__panel {
+    background: transparent;
+    box-shadow: none;
+    color: #fff;
+    transform: none;
+    transition: none;
+  }
+
+  .site-menu--hero .site-menu__logo {
+    filter: brightness(0) invert(1);
+  }
+
+  .site-menu--hero .site-menu__logo-caption,
+  .site-menu--hero .site-menu__nav-link,
+  .site-menu--hero .site-menu__copyright {
+    color: #fff;
+  }
+
+  .site-menu--hero .site-menu__nav-link--secondary {
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  .site-menu--hero .site-menu__nav-link::after,
+  .site-menu--hero .site-menu__footer a::after {
+    background: #fff;
+  }
+
+  .site-menu--hero .site-menu__footer {
+    border-top-color: rgba(255, 255, 255, 0.28);
+  }
+
+  .site-menu--hero .site-menu__footer a {
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .site-menu--hero .site-menu__socials a {
+    border-color: rgba(255, 255, 255, 0.4);
+    color: #fff;
   }
 }
 
