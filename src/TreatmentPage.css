@@ -97,21 +97,23 @@
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 350ms var(--lbv-ease);
-}
-
-.tx-hdr-btn:hover .tx-hdr-btn__label::after,
-.tx-hdr-btn:focus-visible .tx-hdr-btn__label::after {
+}.tx-hdr-btn:focus-visible .tx-hdr-btn__label::after {
   transform: scaleX(1);
+}
+@media (hover: hover) {
+.tx-hdr-btn:hover .tx-hdr-btn__label::after {
+  transform: scaleX(1);
+}
 }
 
 .tx-browse-btn .tx-hdr-btn__label::after {
   transform-origin: right;
-}
-
+}@media (hover: hover) {
 .tx-browse-btn:hover .tx-hdr-btn__icon {
   border-color: rgba(255, 255, 255, 0.72);
   background: rgba(255, 255, 255, 0.1);
   transform: translate(-2px, -2px);
+}
 }
 
 .tx-hdr-btn:focus-visible,
@@ -338,10 +340,10 @@
   padding: clamp(20px, 2.6vw, 31px) 0;
   text-align: left;
   transition: color 200ms ease;
-}
-
+}@media (hover: hover) {
 .tx-faq-item__q:hover {
   color: var(--lbv-gold-deep);
+}
 }
 
 .tx-faq-item__icon {
@@ -490,23 +492,23 @@
 .tx-book-btn .tx-hdr-btn__icon svg {
   width: 23px;
   height: 23px;
-}
-
+}@media (hover: hover) {
 .tx-git-wrap:hover .tx-hdr-btn__label::after {
   transform: scaleX(1);
 }
-
+}@media (hover: hover) {
 .tx-git-wrap:hover .tx-book-btn .tx-hdr-btn__icon {
   opacity: 0;
   transform: translate(8px, -8px);
 }
+}
 
 .tx-book-btn .tx-hdr-btn__label {
   transition: transform 350ms var(--lbv-ease);
-}
-
+}@media (hover: hover) {
 .tx-git-wrap:hover .tx-book-btn .tx-hdr-btn__label {
   transform: translateX(clamp(24px, 3vw, 38px));
+}
 }
 
 .tx-git-icons {
@@ -524,17 +526,20 @@
   stroke-width: 1.35;
   transform: translateY(7px);
   transition: opacity 180ms ease, transform 250ms var(--lbv-ease);
-}
-
+}@media (hover: hover) {
 .tx-git-wrap:hover .tx-git-icon {
   opacity: 1;
   transform: translateY(0);
 }
-
+}@media (hover: hover) {
 .tx-git-wrap:hover .tx-git-icon--1 { transition-delay: 180ms; }
+}@media (hover: hover) {
 .tx-git-wrap:hover .tx-git-icon--2 { transition-delay: 250ms; }
+}@media (hover: hover) {
 .tx-git-wrap:hover .tx-git-icon--3 { transition-delay: 320ms; }
+}@media (hover: hover) {
 .tx-git-wrap:hover .tx-git-icon--4 { transition-delay: 390ms; }
+}
 
 .tx-book-tagline {
   position: relative;
@@ -546,10 +551,10 @@
   letter-spacing: 0.02em;
   transform: translateY(-35px);
   transition: transform 400ms var(--lbv-ease);
-}
-
+}@media (hover: hover) {
 .tx-git-wrap:hover ~ .tx-book-tagline {
   transform: translateY(0);
+}
 }
 
 .tx-not-found {
@@ -745,5 +750,28 @@
   .tx-book-tagline,
   .tx-git-icon {
     transition: none;
+  }
+}
+
+/* Phone-only: the closing "Get In Touch" block should sit dead-center
+   under its own kicker — desktop keeps its current position. */
+@media (max-width: 700px) {
+  .tx-book-group {
+    align-items: center;
+    text-align: center;
+  }
+
+  .tx-git-wrap {
+    align-items: center;
+    margin-inline: auto;
+  }
+
+  .tx-git-icons {
+    justify-content: center;
+  }
+
+  .tx-book-tagline {
+    margin-inline: auto;
+    text-align: center;
   }
 }

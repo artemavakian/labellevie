@@ -425,18 +425,24 @@
   width: 17px;
   height: 17px;
   stroke-width: 1.5;
-}
-
-.results-cta__action:hover .results-cta__action-label::after,
-.results-cta__action:focus-visible .results-cta__action-label::after {
+}.results-cta__action:focus-visible .results-cta__action-label::after {
   transform: scaleX(1);
 }
-
-.results-cta__action:hover .results-cta__action-icon,
-.results-cta__action:focus-visible .results-cta__action-icon {
+@media (hover: hover) {
+.results-cta__action:hover .results-cta__action-label::after {
+  transform: scaleX(1);
+}
+}.results-cta__action:focus-visible .results-cta__action-icon {
   border-color: var(--lbv-gold);
   color: var(--lbv-gold);
   transform: translate(2px, -2px);
+}
+@media (hover: hover) {
+.results-cta__action:hover .results-cta__action-icon {
+  border-color: var(--lbv-gold);
+  color: var(--lbv-gold);
+  transform: translate(2px, -2px);
+}
 }
 
 .results-cta__action:focus-visible {
@@ -590,6 +596,127 @@
   .results-cta__action,
   .results-cta__action * {
     transition: none;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Phone-only layout. The desktop/tablet experience (scroll-pinned
+   wipe reveal, split-screen before/after, wide CTA) is untouched
+   above 700px — this section only ever runs on phone-width screens
+   and fully re-specifies every property it touches so it wins
+   regardless of the two overlapping rule sets above.
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 700px) {
+  .results-intro__lead {
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+  }
+
+  /* The scroll-pinned wipe reveal needs a tall sticky viewport to work;
+     on phones there isn't room for both the image and its text inside
+     one screen, so it becomes a normal stacked block: image pair on
+     top, full-width text below. */
+  .ba-wrapper {
+    height: auto;
+  }
+
+  .ba-sticky {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  .ba-images {
+    order: 1;
+    display: flex;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    flex: none;
+  }
+
+  .ba-before-img,
+  .ba-after-img {
+    position: relative;
+    inset: auto;
+    width: 50%;
+    height: 100%;
+    flex: 1;
+    clip-path: none !important;
+  }
+
+  .ba-before-img {
+    border-right: 1px solid rgba(255, 255, 255, 0.22);
+  }
+
+  .ba-divider {
+    display: none;
+  }
+
+  .ba-text,
+  .ba-text--right {
+    order: 2;
+    width: 100%;
+    min-height: 0;
+    padding: 36px var(--lbv-page-gutter) 56px;
+    border: 0;
+  }
+
+  .ba-text__inner {
+    width: 100%;
+    max-width: none;
+  }
+
+  .ba-chapter {
+    margin-bottom: 20px;
+  }
+
+  .ba-title {
+    max-width: none;
+    font-size: clamp(2rem, 8.5vw, 2.6rem);
+  }
+
+  .ba-desc {
+    max-width: none;
+  }
+
+  .ba-scroll-note {
+    display: none;
+  }
+
+  .ba-consent-img {
+    bottom: 10px;
+    font-size: 0.5rem;
+  }
+
+  .results-cta {
+    height: auto;
+    min-height: 0;
+    padding: 90px var(--lbv-page-gutter) 96px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 26px;
+    text-align: center;
+  }
+
+  .results-cta__eyebrow {
+    margin-left: 0;
+  }
+
+  .results-cta__text {
+    max-width: 16ch;
+    font-size: clamp(2.3rem, 10.5vw, 3.1rem);
+  }
+
+  .results-cta__actions {
+    align-self: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 22px;
+    padding-right: 0;
   }
 }
 
@@ -825,12 +952,15 @@
 
 .results-cta__action-label::after {
   background: #e9d2ad;
-}
-
-.results-cta__action:hover .results-cta__action-icon,
-.results-cta__action:focus-visible .results-cta__action-icon {
+}.results-cta__action:focus-visible .results-cta__action-icon {
   border-color: #e9d2ad;
   color: #e9d2ad;
+}
+@media (hover: hover) {
+.results-cta__action:hover .results-cta__action-icon {
+  border-color: #e9d2ad;
+  color: #e9d2ad;
+}
 }
 
 @media (max-width: 900px) {

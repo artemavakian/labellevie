@@ -44,9 +44,9 @@
   display: flex;
   align-items: center;
   position: relative; /* anchors ::before */
-}
-
+}@media (hover: hover) {
 .header__link:hover { opacity: 1; }
+}
 
 /* Flower icon — appears immediately left of hovered nav item */
 .header__link::before {
@@ -62,19 +62,23 @@
   opacity: 0;
   transition: opacity 0.15s;
   pointer-events: none;
-}
-
+}@media (hover: hover) {
 .header__link:hover::before { opacity: 1; }
-
-/* TREATMENTS link stays "active" (bright + flower) while dropdown is open/hovered */
-.header__dropdown-wrap:hover > .header__link,
-.header__dropdown-wrap--open > .header__link {
+}.header__dropdown-wrap--open > .header__link {
   opacity: 1;
 }
-
-.header__dropdown-wrap:hover > .header__link::before,
-.header__dropdown-wrap--open > .header__link::before {
+@media (hover: hover) {
+/* TREATMENTS link stays "active" (bright + flower) while dropdown is open/hovered */
+.header__dropdown-wrap:hover > .header__link {
   opacity: 1;
+}
+}.header__dropdown-wrap--open > .header__link::before {
+  opacity: 1;
+}
+@media (hover: hover) {
+.header__dropdown-wrap:hover > .header__link::before {
+  opacity: 1;
+}
 }
 
 /* ── Treatments dropdown ─────────────────────────────────────── */
@@ -132,11 +136,13 @@
 .header__dropdown::before {
   background: #fff;
   border-color: #fff;
-}
-
-.header__dropdown-wrap:hover .header__dropdown,
-.header__dropdown-wrap--open .header__dropdown {
+}.header__dropdown-wrap--open .header__dropdown {
   display: grid;
+}
+@media (hover: hover) {
+.header__dropdown-wrap:hover .header__dropdown {
+  display: grid;
+}
 }
 
 .header__dropdown-col  { display: flex; flex-direction: column; gap: 9px; }
@@ -160,9 +166,9 @@
   text-decoration: none;
   transition: color 0.15s;
   line-height: 1.5;
-}
-
+}@media (hover: hover) {
 .header__dropdown-item:hover { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+}
 
 /* ── Hero (video + nav overlay + text) ──────────────────────── */
 .hero {
@@ -486,14 +492,14 @@
 
 .hero-text__book-outline {
   opacity: 0;
-}
-
+}@media (hover: hover) {
 .hero-text__book:hover .hero-text__book-fill {
   opacity: 0;
 }
-
+}@media (hover: hover) {
 .hero-text__book:hover .hero-text__book-outline {
   opacity: 1;
+}
 }
 
 .hero-text__results {
@@ -527,10 +533,10 @@
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.25s ease;
-}
-
+}@media (hover: hover) {
 .hero-text__results:hover .hero-text__results-label::after {
   transform: scaleX(1);
+}
 }
 
 .hero-text__results-icon {
@@ -550,12 +556,12 @@
   width: 14px;
   height: 14px;
   stroke-width: 2.5;
-}
-
+}@media (hover: hover) {
 .hero-text__results:hover .hero-text__results-icon {
   transform: translate(2px, -2px);
   border-color: rgba(255, 255, 255, 0.55);
   background: rgba(255, 255, 255, 0.14);
+}
 }
 
 /* ── Reviews section ─────────────────────────────────────────── */
@@ -585,9 +591,9 @@
   border-bottom: 1px solid #ddd;
   padding-bottom: 1px;
   transition: color 0.2s, border-color 0.2s;
-}
-
+}@media (hover: hover) {
 .cs-reviews-link:hover { color: #555; border-color: #aaa; }
+}
 
 /* Marquees */
 .marquee-row { display: flex; overflow: hidden; }
@@ -935,11 +941,11 @@
   padding: 18px 56px;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
-}
-
+}@media (hover: hover) {
 .cta-btn:hover {
   background: #1a1208;
   color: #faeeca;
+}
 }
 
 /* ── Footer ──────────────────────────────────────────────────── */
@@ -984,9 +990,9 @@
   display: flex;
   align-items: center;
   transition: color 0.15s;
-}
-
+}@media (hover: hover) {
 .footer__social-link:hover { color: #fff; }
+}
 
 .footer__contact-link {
   font-family: 'Montserrat', system-ui, sans-serif;
@@ -995,9 +1001,9 @@
   color: rgba(255, 255, 255, 0.6);
   text-decoration: none;
   transition: color 0.15s;
-}
-
+}@media (hover: hover) {
 .footer__contact-link:hover { color: #fff; }
+}
 
 .footer__nav,
 .footer__legal {
@@ -1035,12 +1041,13 @@
   text-align: left;
   transition: color 0.15s;
   letter-spacing: 0.02em;
+}@media (hover: hover) {
+.footer__nav-link:hover { color: #fff; }
 }
 
-.footer__nav-link:hover { color: #fff; }
-
-.footer__by { cursor: pointer; }
+.footer__by { cursor: pointer; }@media (hover: hover) {
 .footer__by:hover { color: #fff; }
+}
 
 .footer__bottom {
   padding: 24px 0;
@@ -1140,11 +1147,11 @@
   padding: 16px 40px;
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s;
-}
-
+}@media (hover: hover) {
 .contact-submit:hover {
   background: rgba(26, 18, 8, 0.07);
   border-color: rgba(26, 18, 8, 0.7);
+}
 }
 
 /* ── Cursor indicator ────────────────────────────────────────── */
@@ -1183,9 +1190,9 @@
   cursor: pointer;
   color: #555;
   padding: 4px 8px;
-}
-
+}@media (hover: hover) {
 .legal-modal__close:hover { color: #000; }
+}
 
 .legal-modal__title {
   font-family: var(--lbv-serif);
@@ -1221,3 +1228,75 @@
 .legal-modal__body h3:first-child { margin-top: 0; }
 
 .legal-modal__body p { margin: 0 0 14px; }
+
+/* ══════════════════════════════════════════════════════════════
+   Phone-only hero layout. Nothing here runs above 640px, so the
+   desktop/tablet hero (video, nav links, book/results buttons) is
+   completely untouched.
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  /* The intro's warm-white halves reveal whatever sits behind them as
+     they split apart; if the video's first frame isn't decoded yet the
+     gap showed the hero's plain black backdrop as a harsh flash. Using
+     the same warm tone the intro panels are built from makes that gap
+     invisible instead. */
+  .hero {
+    background: #f7eddd;
+  }
+
+  /* Crop from the left instead of centering — the right edge of the
+     frame stays flush with the right edge of the screen. */
+  .hero__video {
+    object-position: right center;
+  }
+
+  .hero-intro-logo {
+    width: calc((100vw - 48px) * 0.7);
+  }
+
+  .hero-intro-logo__text {
+    margin-top: 7px;
+    font-size: clamp(7.5px, 2.4vw, 10px);
+    letter-spacing: 0.2em;
+  }
+
+  /* No inline nav on phones — the hamburger (rendered separately in
+     App.jsx as .site-menu-button--hero) opens the full site menu. */
+  .hero-nav {
+    display: none;
+  }
+
+  .hero-text__actions {
+    display: none;
+  }
+
+  .hero-text {
+    left: 24px;
+    right: 24px;
+    top: auto;
+    bottom: 15vh;
+    max-width: none;
+    transform: none;
+  }
+
+  .hero-text__title {
+    font-size: clamp(2.5rem, 13vw, 3.4rem);
+    white-space: normal;
+  }
+
+  .hero-text__rotating-word {
+    width: 100%;
+  }
+
+  .hero-text__sub {
+    gap: 9px;
+    margin-top: 22px;
+    font-size: 11.5px;
+    white-space: normal;
+  }
+
+  .hero-text__care-location {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+}

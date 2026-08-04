@@ -117,13 +117,17 @@
   text-transform: uppercase;
   cursor: pointer;
   transition: border-color 300ms var(--lbv-ease), background 300ms var(--lbv-ease), color 300ms var(--lbv-ease);
-}
-
-.cf-submit:hover,
-.cf-submit:focus-visible {
+}.cf-submit:focus-visible {
   border-color: var(--lbv-gold-deep);
   background: var(--lbv-gold-deep);
   color: var(--lbv-white);
+}
+@media (hover: hover) {
+.cf-submit:hover {
+  border-color: var(--lbv-gold-deep);
+  background: var(--lbv-gold-deep);
+  color: var(--lbv-white);
+}
 }
 
 .cf-submit:focus-visible { outline: 1px solid var(--lbv-gold-deep); outline-offset: 4px; }
@@ -136,6 +140,14 @@
   .cf-submit-wrap { justify-content: stretch; }
   .cf-submit { width: 100%; }
   .cf-success__detail { font-size: 0.85rem; }
+}
+
+@media (max-width: 700px) {
+  /* iOS Safari zooms the page in on focus for any input under 16px. */
+  .cf-input,
+  .cf-textarea {
+    font-size: 16px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -133,10 +133,10 @@
   width: 15px;
   height: 15px;
   transition: transform 280ms var(--lbv-ease);
-}
-
+}@media (hover: hover) {
 .gallery-hero__footer button:hover svg {
   transform: translate(-3px, -3px);
+}
 }
 
 .gallery-content {
@@ -198,17 +198,91 @@
 
 .gallery-filter--active {
   color: var(--lbv-gold-deep);
-}
-
-.gallery-filter:not(.gallery-filter--active):hover,
-.gallery-filter:not(.gallery-filter--active):focus-visible {
+}.gallery-filter:not(.gallery-filter--active):focus-visible {
   color: var(--lbv-ink);
 }
-
-.gallery-filter:not(.gallery-filter--active):hover::after,
-.gallery-filter:not(.gallery-filter--active):focus-visible::after {
+@media (hover: hover) {
+.gallery-filter:not(.gallery-filter--active):hover {
+  color: var(--lbv-ink);
+}
+}.gallery-filter:not(.gallery-filter--active):focus-visible::after {
   transform: scaleX(1);
   transform-origin: left;
+}
+@media (hover: hover) {
+.gallery-filter:not(.gallery-filter--active):hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+}
+
+/* Phone-only "Filter" button + dropdown that replaces the sticky
+   category bar above (see max-width: 700px at the end of this file). */
+.gallery-filters-mobile {
+  display: none;
+}
+
+.gallery-filter-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid var(--lbv-line-dark);
+  border-radius: 999px;
+  padding: 11px 18px;
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--lbv-ink);
+  cursor: pointer;
+  font: 600 0.68rem / 1 var(--lbv-sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.gallery-filter-toggle svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 1.6;
+}
+
+.gallery-filter-scrim {
+  position: fixed;
+  z-index: 900;
+  inset: 0;
+  background: rgba(10, 8, 6, 0.28);
+}
+
+.gallery-filter-panel {
+  position: absolute;
+  z-index: 901;
+  top: calc(100% + 10px);
+  left: 0;
+  display: flex;
+  min-width: 220px;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--lbv-line-dark);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(10, 8, 6, 0.18);
+}
+
+.gallery-filter-option {
+  border: 0;
+  border-bottom: 1px solid var(--lbv-line-dark);
+  padding: 14px 18px;
+  background: transparent;
+  color: rgba(10, 8, 6, 0.7);
+  cursor: pointer;
+  font: 600 0.78rem / 1 var(--lbv-sans);
+  letter-spacing: 0.06em;
+  text-align: left;
+}
+
+.gallery-filter-option:last-child {
+  border-bottom: 0;
+}
+
+.gallery-filter-option--active {
+  color: var(--lbv-gold-deep);
 }
 
 .gallery-grid {
@@ -264,16 +338,19 @@
 .gallery-card__view svg {
   width: 13px;
   height: 13px;
-}
-
+}@media (hover: hover) {
 .gallery-card__image-button:hover img {
   transform: scale(1.018);
 }
-
-.gallery-card__image-button:hover .gallery-card__view,
-.gallery-card__image-button:focus-visible .gallery-card__view {
+}.gallery-card__image-button:focus-visible .gallery-card__view {
   opacity: 1;
   transform: translateY(0);
+}
+@media (hover: hover) {
+.gallery-card__image-button:hover .gallery-card__view {
+  opacity: 1;
+  transform: translateY(0);
+}
 }
 
 .gallery-card__image-button:focus-visible {
@@ -368,15 +445,15 @@
 .gallery-cta button svg {
   width: 17px;
   height: 17px;
-}
-
+}@media (hover: hover) {
 .gallery-cta button:hover span {
   border-color: currentColor;
 }
-
+}@media (hover: hover) {
 .gallery-cta button:hover i {
   border-color: currentColor;
   transform: translate(2px, -2px);
+}
 }
 
 .gallery-lightbox {
@@ -440,12 +517,12 @@
   color: #fff;
   cursor: pointer;
   transition: background 250ms ease, color 250ms ease, transform 280ms var(--lbv-ease);
-}
-
+}@media (hover: hover) {
 .gallery-lightbox__close:hover,
 .gallery-lightbox__nav:hover {
   background: #fff;
   color: #000;
+}
 }
 
 .gallery-lightbox__close {
@@ -468,14 +545,14 @@
 
 .gallery-lightbox__nav svg {
   width: 18px;
-}
-
+}@media (hover: hover) {
 .gallery-lightbox__nav--prev:hover {
   transform: translateX(-3px);
 }
-
+}@media (hover: hover) {
 .gallery-lightbox__nav--next:hover {
   transform: translateX(3px);
+}
 }
 
 @media (max-width: 800px) {
@@ -582,5 +659,19 @@
   .gallery-lightbox__nav {
     animation: none;
     transition: none;
+  }
+}
+
+/* ── Phone-only "Filter" button instead of the sticky category bar ── */
+@media (max-width: 700px) {
+  .gallery-filters {
+    display: none;
+  }
+
+  .gallery-filters-mobile {
+    position: relative;
+    z-index: 20;
+    display: inline-block;
+    margin-bottom: 34px;
   }
 }

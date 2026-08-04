@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ArrowLeft, ArrowRight, X } from 'lucide-react'
+import { ArrowLeft, ArrowRight, SlidersHorizontal, X } from 'lucide-react'
 import './GalleryPage.css'
 
 const GALLERY_CATEGORY_ORDER = ['threads', 'injectables', 'coolsculpting', 'microneedling']
@@ -50,6 +50,7 @@ const FILTERS = [
 export default function GalleryPage() {
   const [filter, setFilter] = useState('all')
   const [selectedId, setSelectedId] = useState(null)
+  const [filterOpen, setFilterOpen] = useState(false)
 
   const visibleItems = useMemo(
     () => filter === 'all' ? GALLERY_ITEMS : GALLERY_ITEMS.filter(item => item.category === filter),
@@ -99,6 +100,48 @@ export default function GalleryPage() {
               {label}
             </button>
           ))}
+        </div>
+
+        {/* Phone-only replacement for the sticky filter bar above. */}
+        <div className="gallery-filters-mobile">
+          <button
+            className="gallery-filter-toggle"
+            type="button"
+            aria-haspopup="listbox"
+            aria-expanded={filterOpen}
+            onClick={() => setFilterOpen(open => !open)}
+          >
+            <SlidersHorizontal aria-hidden="true" />
+            Filter{filter !== 'all' ? ` · ${FILTERS.find(([value]) => value === filter)?.[1]}` : ''}
+          </button>
+
+          {filterOpen && (
+            <>
+              <div
+                className="gallery-filter-scrim"
+                onClick={() => setFilterOpen(false)}
+                aria-hidden="true"
+              />
+              <div className="gallery-filter-panel" role="listbox" aria-label="Filter gallery by treatment">
+                {FILTERS.map(([value, label]) => (
+                  <button
+                    key={value}
+                    className={filter === value ? 'gallery-filter-option gallery-filter-option--active' : 'gallery-filter-option'}
+                    type="button"
+                    role="option"
+                    aria-selected={filter === value}
+                    onClick={() => {
+                      setFilter(value)
+                      setSelectedId(null)
+                      setFilterOpen(false)
+                    }}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         <div className="gallery-grid">

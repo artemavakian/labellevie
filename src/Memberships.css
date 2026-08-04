@@ -87,12 +87,12 @@
 
 .mem-card--diamond {
   --tier-accent: var(--lbv-gold);
-}
-
+}@media (hover: hover) {
 .mem-card:hover {
   z-index: 2;
   transform: translateY(-8px);
   box-shadow: var(--lbv-shadow);
+}
 }
 
 .mem-card--dark {
@@ -214,16 +214,20 @@
   font-size: 1rem;
   font-weight: 300;
   transition: transform 280ms var(--lbv-ease);
-}
-
-.mem-card__cta:hover,
-.mem-card__cta:focus-visible {
+}.mem-card__cta:focus-visible {
   color: var(--lbv-gold);
 }
-
-.mem-card__cta:hover span:last-child,
-.mem-card__cta:focus-visible span:last-child {
+@media (hover: hover) {
+.mem-card__cta:hover {
+  color: var(--lbv-gold);
+}
+}.mem-card__cta:focus-visible span:last-child {
   transform: translate(3px, -3px);
+}
+@media (hover: hover) {
+.mem-card__cta:hover span:last-child {
+  transform: translate(3px, -3px);
+}
 }
 
 .mem-card__cta:focus-visible {
@@ -273,10 +277,10 @@
   border-right: 1px solid var(--lbv-line-dark);
   border-bottom: 1px solid var(--lbv-line-dark);
   transition: background 320ms var(--lbv-ease);
-}
-
+}@media (hover: hover) {
 .mem-hair-card:hover {
   background: var(--lbv-ivory);
+}
 }
 
 .mem-hair-card__topline,
@@ -403,12 +407,15 @@ a.mem-contact-value {
   width: fit-content;
   border-bottom: 1px solid transparent;
   transition: border-color 240ms var(--lbv-ease);
-}
-
-a.mem-contact-value:hover,
-a.mem-contact-value:focus-visible {
+}a.mem-contact-value:focus-visible {
   border-bottom-color: var(--lbv-gold-deep);
   outline: none;
+}
+@media (hover: hover) {
+a.mem-contact-value:hover {
+  border-bottom-color: var(--lbv-gold-deep);
+  outline: none;
+}
 }
 
 @media (max-width: 1100px) {
@@ -483,11 +490,11 @@ a.mem-contact-value:focus-visible {
 
   .mem-card__topline {
     margin-bottom: 38px;
-  }
-
-  .mem-card:hover {
+  }@media (hover: hover) {
+.mem-card:hover {
     transform: none;
   }
+}
 
   .mem-sub-title {
     font-size: clamp(2.7rem, 13vw, 4rem);
@@ -636,10 +643,10 @@ a.mem-contact-value:focus-visible {
   background:
     linear-gradient(125deg, rgba(232, 210, 172, 0.08), transparent 36%),
     #050403;
-}
-
+}@media (hover: hover) {
 .mem-card:hover {
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.42);
+}
 }
 
 .mem-card__topline {
@@ -715,10 +722,10 @@ a.mem-contact-value:focus-visible {
   min-height: 205px;
   border-color: rgba(255, 255, 255, 0.17);
   background: rgba(255, 255, 255, 0.015);
-}
-
+}@media (hover: hover) {
 .mem-hair-card:hover {
   background: linear-gradient(135deg, rgba(200, 164, 88, 0.14), rgba(255, 255, 255, 0.035));
+}
 }
 
 .mem-hair-area {
@@ -820,11 +827,17 @@ a.mem-contact-value:focus-visible {
   }
 
   .mem-title {
-    font-size: clamp(4.6rem, 22vw, 6.8rem);
+    font-size: clamp(2.7rem, 15vw, 3.8rem);
+  }
+
+  .mem-eyebrow {
+    margin-bottom: 12px;
   }
 
   .mem-header__intro {
-    margin-bottom: 58px;
+    margin-bottom: 40px;
+    font-size: 0.85rem;
+    line-height: 1.65;
   }
 
   .mem-tiers {
@@ -844,10 +857,11 @@ a.mem-contact-value:focus-visible {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .mem-card:hover {
+@media (prefers-reduced-motion: reduce) {@media (hover: hover) {
+.mem-card:hover {
     transform: none;
   }
+}
 }
 
 /* Light membership theme */
@@ -915,10 +929,10 @@ a.mem-contact-value:focus-visible {
 
 .mem-card--diamond {
   --tier-accent: #9a6840;
-}
-
+}@media (hover: hover) {
 .mem-card:hover {
   box-shadow: var(--lbv-shadow);
+}
 }
 
 .mem-card__badge {
@@ -954,10 +968,10 @@ a.mem-contact-value:focus-visible {
 
 .mem-hair-card {
   background: rgba(255, 255, 255, 0.3);
-}
-
+}@media (hover: hover) {
 .mem-hair-card:hover {
   background: linear-gradient(135deg, rgba(255, 214, 138, 0.2), rgba(255, 255, 255, 0.6));
+}
 }
 
 .mem-hair-area {
@@ -1055,28 +1069,37 @@ a.mem-contact-value:focus-visible {
   display: block;
   transform: translateX(-42px);
   transition: transform 500ms var(--lbv-ease);
-}
-
-.mem-contact-link:hover,
-.mem-contact-link:focus-visible {
+}.mem-contact-link:focus-visible {
   border-bottom-color: transparent;
 }
-
-a.mem-contact-link,
-a.mem-contact-link:hover,
+@media (hover: hover) {
+.mem-contact-link:hover {
+  border-bottom-color: transparent;
+}
+}a.mem-contact-link,
 a.mem-contact-link:focus-visible {
   border-bottom: 0;
 }
-
-.mem-contact-link:hover .mem-contact-link__circle,
-.mem-contact-link:focus-visible .mem-contact-link__circle {
+@media (hover: hover) {
+a.mem-contact-link:hover {
+  border-bottom: 0;
+}
+}.mem-contact-link:focus-visible .mem-contact-link__circle {
   opacity: 1;
   transform: translateX(0);
 }
-
-.mem-contact-link:hover .mem-contact-link__text,
-.mem-contact-link:focus-visible .mem-contact-link__text {
+@media (hover: hover) {
+.mem-contact-link:hover .mem-contact-link__circle {
+  opacity: 1;
   transform: translateX(0);
+}
+}.mem-contact-link:focus-visible .mem-contact-link__text {
+  transform: translateX(0);
+}
+@media (hover: hover) {
+.mem-contact-link:hover .mem-contact-link__text {
+  transform: translateX(0);
+}
 }
 
 .mem-hair-card {
@@ -1103,12 +1126,15 @@ a.mem-contact-link:focus-visible {
   cursor: pointer;
   font: 300 1.25rem / 1 var(--lbv-sans);
   transition: transform 280ms var(--lbv-ease), color 280ms var(--lbv-ease);
-}
-
-.mem-hair-card__cta:hover,
-.mem-hair-card__cta:focus-visible {
+}.mem-hair-card__cta:focus-visible {
   color: var(--lbv-gold-deep);
   transform: translateX(4px);
+}
+@media (hover: hover) {
+.mem-hair-card__cta:hover {
+  color: var(--lbv-gold-deep);
+  transform: translateX(4px);
+}
 }
 
 .mem-hair-card__cta:focus-visible {

@@ -184,27 +184,33 @@
   opacity: 0;
   transform: translateY(14px);
   transition: opacity 400ms ease, transform 600ms var(--lbv-ease);
-}
-
+}@media (hover: hover) {
 .treatments-directory__tile:hover .treatments-directory__tile-img {
   filter: saturate(0.78);
   transform: scale(1.035);
 }
-
+}@media (hover: hover) {
 .treatments-directory__tile:hover .treatments-directory__tile-overlay {
   opacity: 1;
 }
-
-.treatments-directory__tile:hover .treatments-directory__tile-items,
-.treatments-directory__tile:focus-within .treatments-directory__tile-items {
+}.treatments-directory__tile:focus-within .treatments-directory__tile-items {
   opacity: 1;
   transform: translateY(0);
 }
-
-.treatments-directory__tile:hover .treatments-directory__tile-prompt,
-.treatments-directory__tile:focus-within .treatments-directory__tile-prompt {
+@media (hover: hover) {
+.treatments-directory__tile:hover .treatments-directory__tile-items {
+  opacity: 1;
+  transform: translateY(0);
+}
+}.treatments-directory__tile:focus-within .treatments-directory__tile-prompt {
   opacity: 0;
   transform: translateY(8px);
+}
+@media (hover: hover) {
+.treatments-directory__tile:hover .treatments-directory__tile-prompt {
+  opacity: 0;
+  transform: translateY(8px);
+}
 }
 
 .treatments-directory__item {
@@ -235,17 +241,20 @@
   opacity: 0;
   transform: translate(-7px, 7px);
   transition: opacity 180ms ease, transform 300ms var(--lbv-ease);
-}
-
+}@media (hover: hover) {
 .treatments-directory__item:hover {
   padding-left: 8px;
   color: var(--lbv-sand);
 }
-
-.treatments-directory__item:hover svg,
-.treatments-directory__item:focus-visible svg {
+}.treatments-directory__item:focus-visible svg {
   opacity: 1;
   transform: translate(0);
+}
+@media (hover: hover) {
+.treatments-directory__item:hover svg {
+  opacity: 1;
+  transform: translate(0);
+}
 }
 
 .treatments-directory__item:focus-visible {

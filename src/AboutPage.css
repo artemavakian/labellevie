@@ -228,9 +228,11 @@
   user-select: none;
   -webkit-user-drag: none;
 }
-.about-page__reviews-link svg { width: 14px; transition: transform 300ms var(--lbv-ease); }
+.about-page__reviews-link svg { width: 14px; transition: transform 300ms var(--lbv-ease); }@media (hover: hover) {
 .about-page__reviews-link:hover { color: var(--lbv-white); }
+}@media (hover: hover) {
 .about-page__reviews-link:hover svg { transform: translate(2px, -2px); }
+}
 .about-page__reviews-link:focus-visible { outline: 1px solid var(--lbv-gold); outline-offset: 6px; }
 
 /* Ivory portrait editorial */
@@ -320,11 +322,11 @@
   filter: saturate(0.78) sepia(0.08);
   transition: filter 900ms var(--lbv-ease), transform 1.2s var(--lbv-ease);
   -webkit-user-drag: none;
-}
-
+}@media (hover: hover) {
 .about-page__team-card:hover .about-page__team-portrait img {
   filter: saturate(0.92) sepia(0.04);
   transform: scale(1.025);
+}
 }
 
 .about-page__team-number {
@@ -431,9 +433,11 @@
   transition: transform 300ms var(--lbv-ease);
 }
 
-.about-page__action-icon svg { width: 0.85em; height: 0.85em; stroke-width: 1.3; }
+.about-page__action-icon svg { width: 0.85em; height: 0.85em; stroke-width: 1.3; }@media (hover: hover) {
 .about-page__action:hover { border-color: var(--lbv-gold); color: var(--lbv-ivory); }
+}@media (hover: hover) {
 .about-page__action:hover .about-page__action-icon { transform: translate(3px, -3px); }
+}
 .about-page__action:focus-visible { outline: 1px solid var(--lbv-gold); outline-offset: 8px; }
 
 @media (max-width: 1050px) {
@@ -646,13 +650,17 @@
 
 .about-page__team-portrait::before {
   display: none;
+}.about-page__team-portrait img {
+  filter: none;
+  transform: none;
+  transition: none;
 }
-
-.about-page__team-portrait img,
+@media (hover: hover) {
 .about-page__team-card:hover .about-page__team-portrait img {
   filter: none;
   transform: none;
   transition: none;
+}
 }
 
 .about-page__footer {
@@ -721,23 +729,29 @@
   width: 17px;
   height: 17px;
   stroke-width: 1.5;
-}
-
+}@media (hover: hover) {
 .about-page__action:hover {
   border-color: transparent;
   color: #fff;
 }
-
-.about-page__action:hover .about-page__action-label::after,
-.about-page__action:focus-visible .about-page__action-label::after {
+}.about-page__action:focus-visible .about-page__action-label::after {
   transform: scaleX(1);
 }
-
-.about-page__action:hover .about-page__action-icon,
-.about-page__action:focus-visible .about-page__action-icon {
+@media (hover: hover) {
+.about-page__action:hover .about-page__action-label::after {
+  transform: scaleX(1);
+}
+}.about-page__action:focus-visible .about-page__action-icon {
   border-color: #fff;
   color: #fff;
   transform: translate(2px, -2px);
+}
+@media (hover: hover) {
+.about-page__action:hover .about-page__action-icon {
+  border-color: #fff;
+  color: #fff;
+  transform: translate(2px, -2px);
+}
 }
 
 @media (max-width: 800px) {
@@ -897,10 +911,10 @@
 .about-page__review-rotator .about-page__reviews-link {
   margin: 12px 0 0 auto;
   color: rgba(10, 8, 6, 0.58);
-}
-
+}@media (hover: hover) {
 .about-page__review-rotator .about-page__reviews-link:hover {
   color: var(--lbv-ink);
+}
 }
 
 @keyframes about-review-enter {
@@ -947,21 +961,26 @@
 
 .about-page__action {
   color: #e9d2ad;
-}
-
-.about-page__action:hover,
-.about-page__action:focus-visible {
+}.about-page__action:focus-visible {
   color: #e9d2ad;
+}
+@media (hover: hover) {
+.about-page__action:hover {
+  color: #e9d2ad;
+}
 }
 
 .about-page__action-icon {
   border-color: rgba(233, 210, 173, 0.42);
-}
-
-.about-page__action:hover .about-page__action-icon,
-.about-page__action:focus-visible .about-page__action-icon {
+}.about-page__action:focus-visible .about-page__action-icon {
   border-color: #e9d2ad;
   color: #e9d2ad;
+}
+@media (hover: hover) {
+.about-page__action:hover .about-page__action-icon {
+  border-color: #e9d2ad;
+  color: #e9d2ad;
+}
 }
 
 @media (max-width: 900px) {
@@ -1118,10 +1137,10 @@
 .about-page__reviews-band .about-page__reviews-link {
   margin: 0;
   color: rgba(255, 255, 255, 0.84);
-}
-
+}@media (hover: hover) {
 .about-page__reviews-band .about-page__reviews-link:hover {
   color: var(--lbv-white);
+}
 }
 
 .about-page__footer {
@@ -1274,10 +1293,10 @@
 
 .about-page__reviews-band .about-page__reviews-link {
   color: rgba(10, 8, 6, 0.58);
-}
-
+}@media (hover: hover) {
 .about-page__reviews-band .about-page__reviews-link:hover {
   color: var(--lbv-ink);
+}
 }
 
 .about-page__footer-logo {
@@ -1764,4 +1783,42 @@
 
 .about-page__team-role {
   font-size: clamp(0.572rem, 0.693vw, 0.704rem);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Phone-only fixes. "Meet the specialists" (team grid) and the
+   reviews marquee are intentionally left alone — only the opening
+   statement and the closing dark panel are touched here.
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 700px) {
+  /* "warm, passionate service." is set to stay on one unbroken line
+     for the wide desktop layout; on a phone that overflows and gets
+     clipped mid-word, so it just wraps like normal text instead. */
+  .about-page__statement > .about-page__statement-final {
+    width: auto;
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  .about-page__bio {
+    font-size: clamp(1.6rem, 6.4vw, 2.6rem);
+    line-height: 1.35;
+    letter-spacing: -0.03em;
+  }
+
+  .about-page__footer {
+    gap: 48px;
+    padding: clamp(72px, 12vh, 110px) var(--lbv-page-gutter);
+  }
+
+  .about-page__footer-copy {
+    padding-bottom: 0;
+    transform: none;
+  }
+
+  .about-page__actions {
+    width: 100%;
+    align-items: center;
+    gap: 16px;
+  }
 }

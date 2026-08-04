@@ -105,9 +105,9 @@
   color: var(--lbv-ink-soft);
   font: 300 clamp(0.93rem, 1.2vw, 1.08rem) / 1.7 var(--lbv-sans);
   text-decoration: none;
-}
-
+}@media (hover: hover) {
 a.booking-detail__value:hover { text-decoration: none; }
+}
 
 .booking-detail--hours .booking-detail__label { color: rgba(154, 104, 64, 0.65); }
 .booking-detail--hours .booking-detail__value {
@@ -185,12 +185,15 @@ a.booking-detail__value:hover { text-decoration: none; }
   border-color: var(--lbv-ink);
   background: var(--lbv-ink);
   color: var(--lbv-ivory-light);
-}
-
-.booking-form-card .cf-submit--card:hover,
-.booking-form-card .cf-submit--card:focus-visible {
+}.booking-form-card .cf-submit--card:focus-visible {
   border-color: var(--lbv-gold-deep);
   background: var(--lbv-gold-deep);
+}
+@media (hover: hover) {
+.booking-form-card .cf-submit--card:hover {
+  border-color: var(--lbv-gold-deep);
+  background: var(--lbv-gold-deep);
+}
 }
 
 .contact-link {
@@ -231,12 +234,13 @@ a.booking-detail__value:hover { text-decoration: none; }
   display: block;
   transform: translateX(-42px);
   transition: transform 500ms var(--lbv-ease);
+}.contact-link:focus-visible .contact-link__circle { opacity: 1; transform: translateX(0); }
+@media (hover: hover) {
+.contact-link:hover .contact-link__circle { opacity: 1; transform: translateX(0); }
+}.contact-link:focus-visible .contact-link__text { transform: translateX(0); }
+@media (hover: hover) {
+.contact-link:hover .contact-link__text { transform: translateX(0); }
 }
-
-.contact-link:hover .contact-link__circle,
-.contact-link:focus-visible .contact-link__circle { opacity: 1; transform: translateX(0); }
-.contact-link:hover .contact-link__text,
-.contact-link:focus-visible .contact-link__text { transform: translateX(0); }
 .contact-link:focus-visible { outline: 1px solid var(--lbv-gold); outline-offset: 7px; }
 
 .booking-policy {
@@ -259,11 +263,13 @@ a.booking-detail__value:hover { text-decoration: none; }
   color: rgba(23, 18, 13, 0.42);
   text-decoration: none;
   transition: color 300ms var(--lbv-ease);
-}
-
-.booking-policy a:hover,
-.booking-policy a:focus-visible {
+}.booking-policy a:focus-visible {
   color: var(--lbv-ink);
+}
+@media (hover: hover) {
+.booking-policy a:hover {
+  color: var(--lbv-ink);
+}
 }
 
 @media (max-width: 900px) {
@@ -295,4 +301,100 @@ a.booking-detail__value:hover { text-decoration: none; }
 @media (prefers-reduced-motion: reduce) {
   .contact-link__circle,
   .contact-link__text { transition: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Phone-only redesign. Nothing here runs above 700px, so the
+   desktop two-column layout, hover reveal on the contact links,
+   and every word of copy stay exactly as they are.
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 700px) {
+  .booking-page {
+    padding: 92px 0 56px;
+  }
+
+  .booking-page::before {
+    display: none;
+  }
+
+  .booking-inner {
+    width: calc(100% - 40px);
+    gap: 52px;
+  }
+
+  .booking-header__meta {
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+  }
+
+  .booking-title {
+    font-size: clamp(2.6rem, 14vw, 3.8rem);
+    line-height: 0.96;
+  }
+
+  .booking-title em {
+    margin-left: 0;
+  }
+
+  .booking-intro {
+    width: 100%;
+    margin: 20px 0 0;
+    font-size: 0.92rem;
+    line-height: 1.65;
+  }
+
+  .booking-grid {
+    gap: 48px;
+  }
+
+  .booking-left {
+    gap: 44px;
+    padding-top: 0;
+  }
+
+  .booking-info {
+    gap: 28px;
+  }
+
+  /* The icon-reveal is a hover interaction that never fires on a
+     touchscreen, so the reserved space for it just becomes clutter. */
+  .contact-link {
+    padding-left: 0;
+  }
+
+  .contact-link__slot {
+    display: none;
+  }
+
+  .booking-detail--hours .booking-detail__value {
+    line-height: 1.85;
+  }
+
+  .booking-promo {
+    padding-top: 20px;
+    padding-left: 16px;
+  }
+
+  .booking-promo__headline {
+    font-size: clamp(1.35rem, 7vw, 1.7rem);
+  }
+
+  .booking-form-card {
+    margin: 0;
+    padding: 32px 22px;
+  }
+
+  .booking-form-card::after {
+    inset: 8px;
+  }
+
+  .booking-form-card__heading {
+    margin-bottom: 32px;
+  }
+
+  .booking-policy {
+    justify-content: center;
+    margin-top: 0;
+    padding-top: 20px;
+  }
 }

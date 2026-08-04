@@ -485,6 +485,17 @@ export default function App() {
         />
       )}
 
+      {/* Mobile-only hamburger for the hero — desktop keeps its inline
+          ABOUT US / TREATMENTS / MEMBERSHIPS links and no button at all. */}
+      {heroActive && (
+        <SiteMenuButton
+          onClick={() => setMenuOpen(current => !current)}
+          theme={menuTheme}
+          open={menuOpen}
+          className={`site-menu-button--hero${heroPhase !== 'done' ? ' site-menu-button--pending' : ''}`}
+        />
+      )}
+
       <SiteMenu
         open={menuOpen}
         onClose={() => setMenuOpen(false)}

@@ -48,3 +48,11 @@ body {
 *::after {
   box-sizing: border-box;
 }
+
+@media (hover: none) {
+  a,
+  button,
+  [role='button'] {
+    -webkit-tap-highlight-color: transparent;
+  }
+}

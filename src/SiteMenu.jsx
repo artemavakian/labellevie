@@ -16,12 +16,12 @@ const SECONDARY_LINKS = [
   ['Leave Review', null, REVIEW_URL],
 ]
 
-export function SiteMenuButton({ onClick, theme = 'light', open = false }) {
+export function SiteMenuButton({ onClick, theme = 'light', open = false, className = '' }) {
   const resolvedTheme = theme === 'dark' ? 'dark' : 'light'
 
   return (
     <button
-      className={`site-menu-button site-menu-button--${resolvedTheme}${open ? ' site-menu-button--open' : ''}`}
+      className={`site-menu-button site-menu-button--${resolvedTheme}${open ? ' site-menu-button--open' : ''}${className ? ` ${className}` : ''}`}
       type="button"
       onClick={onClick}
       aria-label={open ? 'Close site menu' : 'Open site menu'}
