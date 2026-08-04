@@ -175,6 +175,12 @@
   /* no overflow:hidden so the dropdown can extend below the nav */
 }
 
+/* Kept mounted off-page instead of unmounted so the hero video element
+   never has to reload/redecode when navigating back to it. */
+.hero--inactive {
+  display: none;
+}
+
 .hero,
 .hero * {
   user-select: none;

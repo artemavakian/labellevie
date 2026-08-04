@@ -148,7 +148,7 @@ export default function GalleryPage() {
             <ArrowLeft />
           </button>
           <figure className="gallery-lightbox__figure">
-            <img src={selected.src} alt={`Before and after result for ${selected.treatment}`} draggable={false} />
+            <img src={selected.src} alt={`Before and after result for ${selected.treatment}`} draggable={false} decoding="async" />
             <figcaption>
               <span>{String(selectedPosition).padStart(2, '0')} / {String(visibleItems.length).padStart(2, '0')}</span>
               <span>Treatment · {selected.treatment}</span>

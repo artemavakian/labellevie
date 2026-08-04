@@ -118,15 +118,20 @@ function RotatingHeroWord({ active }) {
   )
 }
 
-function HeroVideo({ complete, shouldPlay, onComplete }) {
+function HeroVideo({ complete, shouldPlay, onComplete, isVisible }) {
   const [ready, setReady] = useState(!complete)
   const videoRef = useRef(null)
 
   useEffect(() => {
     const video = videoRef.current
-    if (!video || complete || !shouldPlay) return
+    if (!video) return
+    if (!isVisible) {
+      video.pause()
+      return
+    }
+    if (complete || !shouldPlay) return
     video.play().catch(() => {})
-  }, [complete, shouldPlay])
+  }, [complete, shouldPlay, isVisible])
 
   return (
     <video
@@ -154,12 +159,40 @@ function HeroVideo({ complete, shouldPlay, onComplete }) {
   )
 }
 
+/* ── URL ⇄ page mapping — keeps the browser back/forward buttons in
+   sync with in-app navigation, without changing any page's content. ── */
+const PAGE_PATHS = {
+  home: '/',
+  about: '/about',
+  results: '/results',
+  gallery: '/gallery',
+  treatments: '/treatments',
+  memberships: '/memberships',
+  booking: '/contact',
+}
+
+function pageToPath(page) {
+  if (page.startsWith('tx:')) return `/treatments/${page.slice(3)}`
+  return PAGE_PATHS[page] || '/'
+}
+
+function pathToPage(pathname) {
+  const path = pathname.replace(/\/+$/, '') || '/'
+  if (path.startsWith('/treatments/')) return 'tx:' + path.slice('/treatments/'.length)
+  const match = Object.entries(PAGE_PATHS).find(([, value]) => value === path)
+  return match ? match[0] : 'home'
+}
+
 /* ── App ────────────────────────────────────────────────────── */
 export default function App() {
-  const [page, setPage]               = useState('home')
+  const [page, setPage]               = useState(() => pathToPage(window.location.pathname))
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [menuOpen, setMenuOpen]       = useState(false)
-  const [menuTheme, setMenuTheme]     = useState('dark')
+  const [menuTheme, setMenuTheme]     = useState(() =>
+    ['about', 'results', 'gallery', 'treatments', 'memberships'].includes(pathToPage(window.location.pathname))
+      ? 'light'
+      : 'dark',
+  )
   const [heroPhase, setHeroPhase]     = useState('intro') // intro | logo-exit | reveal | done
   const [heroVideoStarted, setHeroVideoStarted] = useState(false)
   const [heroVideoComplete, setHeroVideoComplete] = useState(false)
@@ -167,6 +200,7 @@ export default function App() {
   const dropdownRef  = useRef(null)
   const lenisRef     = useRef(null)
   const skipHeroIntroRef = useRef(false)
+  const heroIntroPlayedRef = useRef(false)
 
   useEffect(() => {
     if (!dropdownOpen) return
@@ -214,7 +248,10 @@ export default function App() {
     const logoExitTimer = setTimeout(() => setHeroPhase('logo-exit'), 2250)
     const revealTimer = setTimeout(() => setHeroPhase('reveal'), 2500)
     const videoTimer = setTimeout(() => setHeroVideoStarted(true), 2500)
-    const doneTimer = setTimeout(() => setHeroPhase('done'), 3400)
+    const doneTimer = setTimeout(() => {
+      setHeroPhase('done')
+      heroIntroPlayedRef.current = true
+    }, 3400)
     return () => {
       clearTimeout(logoExitTimer)
       clearTimeout(revealTimer)
@@ -245,7 +282,9 @@ export default function App() {
     }
   }, [page])
 
-  const goTo = to => {
+  // Shared by clicks (goTo) and browser back/forward (popstate) so both
+  // paths update state identically.
+  const applyNavigation = to => {
     setPage(to)
     setMenuTheme(['about', 'results', 'gallery', 'treatments', 'memberships'].includes(to) ? 'light' : 'dark')
     setMenuOpen(false)
@@ -253,6 +292,30 @@ export default function App() {
     lenisRef.current?.scrollTo(0, { immediate: true })
     window.scrollTo(0, 0)
   }
+
+  const goTo = to => {
+    applyNavigation(to)
+    window.history.pushState({ page: to }, '', pageToPath(to))
+  }
+
+  // Keep the initial history entry tagged with its page, and restore the
+  // correct page whenever the user presses the browser back/forward buttons.
+  useEffect(() => {
+    window.history.replaceState({ page }, '', pageToPath(page))
+
+    const onPopState = event => {
+      const targetPage = event.state?.page ?? pathToPage(window.location.pathname)
+      // Only skip the intro replay if the hero has already been shown once
+      // this session — e.g. deep-linking straight into another page and
+      // then navigating back to a hero that never played should still
+      // play it normally rather than snapping straight to "done".
+      if (targetPage === 'home' && heroIntroPlayedRef.current) skipHeroIntroRef.current = true
+      applyNavigation(targetPage)
+    }
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const nav = to => e => { e?.preventDefault(); goTo(to) }
   const navAbout = nav('about')
@@ -262,18 +325,22 @@ export default function App() {
     goTo('home')
   }
 
+  const heroActive = page === 'home'
+
   return (
     <>
-      {page === 'home' && (
-        <>
-          {/* ── Hero: video + nav overlay + hero text ─────────── */}
-          <section className="hero" ref={heroRef}>
-            {/* Plays once; the decoded video itself remains on its final frame. */}
-            <HeroVideo
-              complete={heroVideoComplete}
-              shouldPlay={heroVideoStarted}
-              onComplete={() => setHeroVideoComplete(true)}
-            />
+      {/* ── Hero: video + nav overlay + hero text ─────────────────
+          Kept mounted (rather than unmounted per-page) so the video
+          element never has to re-fetch/re-decode when navigating back
+          to the hero — that reload was the source of the black flash. */}
+      <section className={`hero${heroActive ? '' : ' hero--inactive'}`} ref={heroRef} aria-hidden={!heroActive}>
+        {/* Plays once; the decoded video itself remains on its final frame. */}
+        <HeroVideo
+          complete={heroVideoComplete}
+          shouldPlay={heroVideoStarted}
+          isVisible={heroActive}
+          onComplete={() => setHeroVideoComplete(true)}
+        />
 
             {/* Warm-white opening screen reveals the hero after the logo exits. */}
             {heroPhase !== 'done' && (
@@ -378,9 +445,7 @@ export default function App() {
                 </span>
               </button>
             </div>
-          </section>
-        </>
-      )}
+      </section>
 
       {page === 'about' && (
         <AboutPage

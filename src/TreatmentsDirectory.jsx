@@ -7,12 +7,12 @@ const COL2 = ['Skin & Body', 'Wellness & Medical', 'Men\u2019s Health']
 
 /* object-position: X% = (crop_left / 42) × 100, for a 58:75 container with 4:3 source */
 const CATEGORY_META = {
-  'Neurotoxins & Fillers': { img: '/fillers.png',     pos: '50% 50%'   },
-  'Skin & Body':           { img: '/bodyskin.png',    pos: '14.3% 50%' },
-  'Laser & Aesthetics':    { img: '/laser.png',       pos: '23.8% 50%' },
-  'Women\u2019s Health':   { img: '/womenhealth.png', pos: '100% 50%'  },
-  'Men\u2019s Health':     { img: '/menhealth.png',   pos: '0% 50%'    },
-  'Wellness & Medical':    { img: '/medical.png',     pos: '52.4% 50%' },
+  'Neurotoxins & Fillers': { img: '/fillers.webp',     pos: '50% 50%'   },
+  'Skin & Body':           { img: '/bodyskin.webp',    pos: '14.3% 50%' },
+  'Laser & Aesthetics':    { img: '/laser.webp',       pos: '23.8% 50%' },
+  'Women\u2019s Health':   { img: '/womenhealth.webp', pos: '100% 50%'  },
+  'Men\u2019s Health':     { img: '/menhealth.webp',   pos: '0% 50%'    },
+  'Wellness & Medical':    { img: '/medical.webp',     pos: '52.4% 50%' },
 }
 
 function CategoryTile({ column, index, onSelect, titleSide = 'left' }) {
@@ -30,6 +30,7 @@ function CategoryTile({ column, index, onSelect, titleSide = 'left' }) {
           src={meta.img}
           alt=""
           draggable="false"
+          decoding="async"
           style={{ objectPosition: meta.pos }}
         />
         <div className="treatments-directory__tile-overlay" aria-hidden="true" />

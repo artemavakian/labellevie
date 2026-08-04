@@ -26,13 +26,13 @@ const REVIEWS = rawReviews
   .filter(Boolean)
 
 const TEAM = [
-  { img: '/kelly.png', name: 'Kelly Lance', role: 'MSN, APRN, FNP-C' },
+  { img: '/kelly.webp', name: 'Kelly Lance', role: 'MSN, APRN, FNP-C' },
   {
-    img: '/mackenzie.png',
+    img: '/mackenzie.webp',
     name: 'MacKenzie Stewart',
     role: 'Master Esthetician\nCoolSculpting Specialist',
   },
-  { img: '/rylan.png', name: 'Rylan Baum', role: 'Master Esthetician' },
+  { img: '/rylan.webp', name: 'Rylan Baum', role: 'Master Esthetician' },
 ]
 
 function ReviewCard({ name, text }) {
@@ -95,7 +95,7 @@ export default function AboutPage({ onResults, onTreatments }) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="/google.png" alt="Google" className="about-page__reviews-google-icon" aria-hidden="true" draggable={false} />
+            <img src="/google.png" alt="Google" className="about-page__reviews-google-icon" aria-hidden="true" draggable={false} decoding="async" />
             See Reviews <ArrowUpRight aria-hidden="true" />
           </a>
         </div>
@@ -112,7 +112,7 @@ export default function AboutPage({ onResults, onTreatments }) {
             {TEAM.map((member, index) => (
               <div key={member.name} className="about-page__team-card">
                 <div className="about-page__team-portrait">
-                  <img src={member.img} alt={member.name} draggable={false} />
+                  <img src={member.img} alt={member.name} draggable={false} loading="lazy" decoding="async" />
                   <span className="about-page__team-number" aria-hidden="true">
                     0{index + 1}
                   </span>

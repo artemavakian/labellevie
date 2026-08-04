@@ -29,33 +29,47 @@ function RevealSection({
   const dividerRef = useRef(null)
 
   useEffect(() => {
-    let raf
+    // Driven by scroll/resize (rAF-throttled) rather than a perpetual
+    // rAF loop, so it stays idle — and off the main thread — when the
+    // page isn't actually being scrolled.
+    let frame = 0
 
     const update = () => {
-      if (wrapperRef.current) {
-        const rect = wrapperRef.current.getBoundingClientRect()
-        const vh = window.innerHeight
-        const scrollable = wrapperRef.current.offsetHeight - vh
-        const progress = Math.max(0, Math.min(1, -rect.top / scrollable))
-        const pct = progress * 100
+      frame = 0
+      if (!wrapperRef.current) return
 
-        if (afterImgRef.current) {
-          afterImgRef.current.style.clipPath = revealDir === 'rtl'
-            ? `inset(0 0 0 ${100 - pct}%)`
-            : `inset(0 ${100 - pct}% 0 0)`
-        }
+      const rect = wrapperRef.current.getBoundingClientRect()
+      const vh = window.innerHeight
+      const scrollable = wrapperRef.current.offsetHeight - vh
+      const progress = Math.max(0, Math.min(1, -rect.top / scrollable))
+      const pct = progress * 100
 
-        if (dividerRef.current) {
-          dividerRef.current.style.left = revealDir === 'rtl' ? `${100 - pct}%` : `${pct}%`
-          dividerRef.current.classList.toggle('ba-divider--done', pct >= 99)
-        }
+      if (afterImgRef.current) {
+        afterImgRef.current.style.clipPath = revealDir === 'rtl'
+          ? `inset(0 0 0 ${100 - pct}%)`
+          : `inset(0 ${100 - pct}% 0 0)`
       }
 
-      raf = requestAnimationFrame(update)
+      if (dividerRef.current) {
+        dividerRef.current.style.left = revealDir === 'rtl' ? `${100 - pct}%` : `${pct}%`
+        dividerRef.current.classList.toggle('ba-divider--done', pct >= 99)
+      }
     }
 
-    raf = requestAnimationFrame(update)
-    return () => cancelAnimationFrame(raf)
+    const onScroll = () => {
+      if (frame) return
+      frame = requestAnimationFrame(update)
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    onScroll()
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (frame) cancelAnimationFrame(frame)
+    }
   }, [revealDir])
 
   const initClip = revealDir === 'rtl' ? 'inset(0 0 0 100%)' : 'inset(0 100% 0 0)'
@@ -68,6 +82,7 @@ function RevealSection({
         className="ba-before-img"
         alt={`${treatment} before treatment`}
         draggable={false}
+        decoding="async"
       />
       <img
         ref={afterImgRef}
@@ -75,6 +90,7 @@ function RevealSection({
         className="ba-after-img"
         alt={`${treatment} after treatment`}
         draggable={false}
+        decoding="async"
         style={{ clipPath: initClip }}
       />
       <div ref={dividerRef} className="ba-divider" style={{ left: initLeft }} />
@@ -132,8 +148,8 @@ export default function ResultsPage({ onBook, onGallery }) {
       </section>
 
       <RevealSection
-        beforeImg="/renuvabefore.png"
-        afterImg="/renuvaafter.png"
+        beforeImg="/renuvabefore.webp"
+        afterImg="/renuvaafter.webp"
         number="01"
         treatment="Renuva"
         reversed={false}
@@ -154,8 +170,8 @@ export default function ResultsPage({ onBook, onGallery }) {
       <div className="ba-section-divider" />
 
       <RevealSection
-        beforeImg="/coolsculptbefore.png"
-        afterImg="/coolsculptafter.png"
+        beforeImg="/coolsculptbefore.webp"
+        afterImg="/coolsculptafter.webp"
         number="02"
         treatment="CoolSculpting"
         reversed
