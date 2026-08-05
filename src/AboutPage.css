@@ -1790,6 +1790,17 @@
    reviews marquee are intentionally left alone — only the opening
    statement and the closing dark panel are touched here.
    ══════════════════════════════════════════════════════════════ */
+/* Each line of the opening statement is its own display:block span so
+   the browser cannot soft-wrap within a line regardless of text-wrap. */
+.about-page__statement-line {
+  display: block;
+  color: #111;
+}
+
+.about-page__statement-line--gold {
+  color: var(--lbv-gold-deep);
+}
+
 @media (max-width: 700px) {
   /* "warm, passionate service." is set to stay on one unbroken line
      for the wide desktop layout; on a phone that overflows and gets

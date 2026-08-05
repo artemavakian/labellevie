@@ -78,10 +78,11 @@ export default function AboutPage({ onResults, onTreatments }) {
       <section className="about-page__opening" aria-labelledby="about-page-statement">
         <div className="about-page__statement-wrap">
           <h1 id="about-page-statement" className="about-page__statement">
-            <span className="about-page__statement-primary">
-              Aesthetic medicine delivered with decades of <em>experience &amp;</em>
-            </span>
-            <em className="about-page__statement-final">warm, passionate service.</em>
+            <span className="about-page__statement-line">Aesthetic medicine</span>
+            <span className="about-page__statement-line">delivered with</span>
+            <span className="about-page__statement-line">decades of</span>
+            <span className="about-page__statement-line about-page__statement-line--gold">experience &amp;</span>
+            <span className="about-page__statement-line about-page__statement-final">warm, passionate service.</span>
           </h1>
         </div>
       </section>
