@@ -957,7 +957,7 @@
   }
 
   .ba-images {
-    order: 1;
+    order: 2;
     position: relative;
     display: flex !important;
     width: 100%;
@@ -1008,7 +1008,7 @@
 
   .ba-text,
   .ba-text--right {
-    order: 2;
+    order: 1;
     display: block;
     width: 100%;
     min-height: 0 !important;

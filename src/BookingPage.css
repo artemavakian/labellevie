@@ -401,10 +401,13 @@ a.booking-detail__value:hover { text-decoration: none; }
     transform: translateX(0);
   }
 
-  /* The address spans two lines inside an inline-flex link; text-align
-     must be set on the text span itself (not just the parent flex
-     container) so both lines are centered independently. */
+  /* The address spans two lines inside an inline-flex link. Two things
+     needed: (a) text-align on the span itself so both lines center
+     independently, and (b) reset the base transform that normally
+     slides text right on hover — without this, the address is shifted
+     42px left even though padding-left is 0 on mobile. */
   .contact-link__text {
+    transform: translateX(0);
     text-align: center;
   }
 
