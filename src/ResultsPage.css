@@ -284,33 +284,6 @@
   cursor: default;
 }
 
-/* Hover tooltip — anchored to the RIGHT of the handle circle so it never
-   extends leftward out of .ba-images (which has overflow:hidden). */
-.ba-divider::before {
-  position: absolute;
-  top: 50%;
-  /* Start 20px right of the divider centre (clears the 13px circle radius). */
-  left: calc(50% + 20px);
-  z-index: 20;
-  padding: 5px 10px;
-  border-radius: 3px;
-  background: rgba(248, 242, 232, 0.93);
-  color: var(--lbv-ink);
-  font: 600 8px / 1 var(--lbv-sans);
-  letter-spacing: 0.2em;
-  white-space: nowrap;
-  content: 'SCROLL TO TRANSFORM';
-  transform: translate(0, calc(-50% - 30px));
-  opacity: 0;
-  transition: opacity 280ms ease;
-  pointer-events: none;
-}
-
-@media (hover: hover) {
-  .ba-divider:hover::before {
-    opacity: 1;
-  }
-}
 
 .ba-divider::after {
   position: absolute;
@@ -776,8 +749,30 @@
   filter: none;
 }
 
+/* Dark-glass hover overlay: dims the image panel and shows hint text
+   when the user hovers over the divider handle on pointer devices.
+   Base state is fully transparent (invisible); `:has` triggers it. */
 .ba-images::before {
-  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: transparent;
+  font: 300 clamp(0.82rem, 1vw, 1rem) / 1 var(--lbv-serif);
+  letter-spacing: 0.14em;
+  content: 'Scroll to transform';
+  transition: background 400ms ease, color 400ms ease;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .ba-images:has(.ba-divider:hover)::before {
+    background: rgba(0, 0, 0, 0.38);
+    color: rgba(248, 242, 232, 0.9);
+  }
 }
 
 .ba-images::after {

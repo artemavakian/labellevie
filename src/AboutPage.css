@@ -1851,6 +1851,22 @@
     color: rgba(10, 8, 6, 0.72) !important;
   }
 
+  /* "See Reviews" link: pull it below the marquee strip and centre it
+     on mobile. On desktop it sits inside the positioned reviews band
+     and is styled separately; on mobile we give it its own row. */
+  .about-page__reviews-band-link {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    padding-inline: var(--lbv-page-gutter);
+    background: transparent !important;
+  }
+
+  .about-page__reviews-link {
+    margin: 0 !important;
+    color: rgba(10, 8, 6, 0.55) !important;
+  }
+
   /* No longer need large top-pad that reserved room for the floating banner. */
   .about-page__team {
     padding-top: 40px !important;
