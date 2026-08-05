@@ -415,16 +415,19 @@
     box-shadow: none;
   }
 
+  /* Widen the logo button so the caption fits on one line, matching
+     the intro screen's layout (which uses ~240px and letter-spacing 0.2em). */
   .site-menu__logo-button {
-    width: min(148px, 44%);
+    width: min(200px, 56%);
     margin: 0 auto;
     text-align: center;
   }
 
   .site-menu__logo-caption {
     margin-top: 7px;
-    font-size: 7.5px;
-    white-space: normal; /* base sets nowrap; allow it to wrap on phones so it stays centered under the logo */
+    font-size: clamp(7.5px, 2.4vw, 10px);
+    letter-spacing: 0.2em;
+    white-space: nowrap; /* force one line; container is now wide enough */
   }
 
   .site-menu__nav {
