@@ -1118,6 +1118,17 @@
     object-position: 85% center;
   }
 
+  /* Dark-glass veil over the video so the white overlay text stays
+     legible against any frame of the video without washing it out. */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 2;
+    pointer-events: none;
+  }
+
   .hero-intro-logo {
     width: calc((100vw - 48px) * 0.7);
   }

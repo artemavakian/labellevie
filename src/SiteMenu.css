@@ -424,6 +424,7 @@
   .site-menu__logo-caption {
     margin-top: 7px;
     font-size: 7.5px;
+    white-space: normal; /* base sets nowrap; allow it to wrap on phones so it stays centered under the logo */
   }
 
   .site-menu__nav {

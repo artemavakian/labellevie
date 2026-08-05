@@ -401,6 +401,13 @@ a.booking-detail__value:hover { text-decoration: none; }
     transform: translateX(0);
   }
 
+  /* The address spans two lines inside an inline-flex link; text-align
+     must be set on the text span itself (not just the parent flex
+     container) so both lines are centered independently. */
+  .contact-link__text {
+    text-align: center;
+  }
+
   .booking-detail--hours .booking-detail__value {
     line-height: 1.85;
   }

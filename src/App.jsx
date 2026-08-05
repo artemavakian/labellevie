@@ -203,6 +203,13 @@ export default function App() {
   const heroIntroPlayedRef = useRef(false)
 
   useEffect(() => {
+    // Portrait lock: works on Android Chrome; silently ignored on iOS Safari.
+    if (window.matchMedia('(max-width: 640px)').matches) {
+      screen.orientation?.lock?.('portrait').catch(() => {})
+    }
+  }, [])
+
+  useEffect(() => {
     if (!dropdownOpen) return
     const close = e => { if (!dropdownRef.current?.contains(e.target)) setDropdownOpen(false) }
     document.addEventListener('mousedown', close)

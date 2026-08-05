@@ -980,6 +980,28 @@
     border-right: 1px solid rgba(255, 255, 255, 0.22);
   }
 
+  /* CoolSculpting images are wide-aspect; side-by-side halving squashes
+     them badly. Stack them vertically instead so each shows the full
+     subject without cropping. */
+  .ba-wrapper--final .ba-images {
+    flex-direction: column;
+    aspect-ratio: auto;
+    height: auto !important;
+  }
+
+  .ba-wrapper--final .ba-before-img,
+  .ba-wrapper--final .ba-after-img {
+    width: 100% !important;
+    height: 260px !important;
+    flex: none !important;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+  }
+
+  .ba-wrapper--final .ba-after-img {
+    border-bottom: none;
+  }
+
   .ba-divider {
     display: none;
   }
@@ -1044,20 +1066,31 @@
     clip-path: none;
   }
 
+  /* Remove the eyebrow; the Full Gallery button takes its visual slot
+     by floating to the top of the CTA column via order/display:contents. */
   .results-cta__eyebrow {
-    margin-left: 0;
+    display: none;
   }
 
   .results-cta__text {
+    order: 2;
     max-width: 16ch;
     font-size: clamp(1.73rem, 7.9vw, 2.33rem);
   }
 
+  /* Flatten the actions wrapper so both buttons become direct logical
+     children of the CTA flex column and can be reordered individually. */
   .results-cta__actions {
-    align-self: center !important;
-    align-items: center !important;
-    flex-direction: column-reverse;
-    gap: 18px;
-    padding-right: 0;
+    display: contents;
+  }
+
+  /* Full Gallery (second in DOM) → first visually, above the text */
+  .results-cta__actions .results-cta__action:last-child {
+    order: 1;
+  }
+
+  /* Book Consultation (first in DOM) → below the text */
+  .results-cta__actions .results-cta__action:first-child {
+    order: 3;
   }
 }
