@@ -88,13 +88,8 @@ export default function AboutPage({ onResults, onTreatments }) {
             <em className="about-page__statement-final">warm, passionate service.</em>
           </h1>
         </div>
-        {/* Mobile-only: marquee at the bottom of the opening section */}
-        <div className="about-page__mobile-marquee" aria-hidden="true">
-          <MarqueeRow items={REVIEWS} />
-        </div>
       </section>
 
-      {/* Desktop-only reviews band (hidden on mobile) */}
       <section className="about-page__reviews-band" aria-label="Patient reviews">
         <MarqueeRow items={REVIEWS} />
         <div className="about-page__reviews-band-link">
@@ -112,18 +107,6 @@ export default function AboutPage({ onResults, onTreatments }) {
 
       {/* Team wrapper — provides the scroll range for sticky to work */}
       <div className="about-team-wrapper">
-        {/* Mobile-only: Google link at the top of the team section */}
-        <div className="about-page__team-google-mobile">
-          <a
-            className="about-page__reviews-link"
-            href={GOOGLE_REVIEWS_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img src="/google.png" alt="Google" className="about-page__reviews-google-icon" aria-hidden="true" draggable={false} decoding="async" />
-            See Reviews <ArrowUpRight aria-hidden="true" />
-          </a>
-        </div>
         <section className="about-page__team" aria-label="Our specialists">
           <header className="about-page__team-header">
             <p className="about-page__eyebrow">The people behind your care</p>

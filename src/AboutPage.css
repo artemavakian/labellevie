@@ -1795,83 +1795,90 @@
    statement and the closing dark panel are touched here.
    ══════════════════════════════════════════════════════════════ */
 
-/* Desktop: hide mobile-only elements */
+/* Desktop: hide any leftover mobile-only helpers */
 .about-page__opening-marquee { display: none; }
-.about-page__mobile-marquee  { display: none; }
-.about-page__team-google-mobile { display: none; }
 
 @media (max-width: 700px) {
-  /* Opening section: shrink to auto height, marquee sits at the bottom. */
+  /* Shrink the opening from full-screen to just tall enough to hold
+     the text. Reviews band is restored to static flow so it appears
+     directly below. */
   .about-page__opening {
     height: auto !important;
     min-height: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
     padding-top: clamp(150px, 32svh, 240px) !important;
-    padding-bottom: 0 !important;
+    padding-bottom: clamp(40px, 9svh, 70px) !important;
   }
 
-  /* Reset desktop absolute/transform on the statement wrap. */
+  /* Reset the desktop absolute/transform positioning on the statement wrap. */
   .about-page__statement-wrap {
     position: static !important;
     top: auto !important;
     bottom: auto !important;
     transform: none !important;
     padding-inline: var(--lbv-page-gutter) !important;
-    padding-bottom: clamp(40px, 9svh, 70px) !important;
   }
 
-  /* Mobile-only marquee: shown at the bottom of the opening section,
-     floats on the opening section's warm gradient background. */
-  .about-page__mobile-marquee {
-    display: block;
-    overflow: hidden;
-    margin-top: auto;  /* pushes marquee to the bottom of the flex column */
+  /* The opening section has warm golden gradients on top of --lbv-ivory-light
+     (#fdfaf5 ≈ near-white). Without those gradients the reviews band area
+     reads as a plain white strip. Using --lbv-ivory (#f8f2e8) as the page
+     base gives the transparent reviews band a warm cream tone that blends
+     with the gradient-tinted opening section above it. */
+  .about-page {
+    background: var(--lbv-ivory) !important;
   }
 
-  /* Review cards inside the mobile marquee need dark text (ivory background). */
-  .about-page__mobile-marquee .about-page__marquee {
+  /* Restore reviews band to normal document flow so it sits right below
+     the opening section on mobile. */
+  .about-page__reviews-band {
+    position: static !important;
+    top: auto !important;
+    pointer-events: auto !important;
+    background: transparent !important;
+  }
+
+  /* Strip all backgrounds and any blur from the marquee and its children
+     so the ivory page background shows through cleanly. */
+  .about-page__reviews-band .about-page__marquee {
     background: transparent !important;
     backdrop-filter: none !important;
-    border-top: 1px solid rgba(10, 8, 6, 0.12) !important;
-    border-bottom: none !important;
+    border: 0 !important;
   }
 
-  .about-page__mobile-marquee .about-page__review-card {
-    border-right-color: rgba(10, 8, 6, 0.15) !important;
+  .about-page__reviews-band .about-page__marquee *,
+  .about-page__reviews-band-link {
+    background: transparent !important;
   }
 
-  .about-page__mobile-marquee .about-page__review-name {
+  /* Review cards need dark text/borders on the light ivory background. */
+  .about-page__reviews-band .about-page__review-card {
+    border-color: rgba(10, 8, 6, 0.15) !important;
+  }
+
+  .about-page__reviews-band .about-page__review-name {
     color: var(--lbv-ink) !important;
   }
 
-  .about-page__mobile-marquee .about-page__review-stars {
+  .about-page__reviews-band .about-page__review-stars {
     color: var(--lbv-gold-deep) !important;
   }
 
-  .about-page__mobile-marquee .about-page__review-text {
+  .about-page__reviews-band .about-page__review-text {
     color: rgba(10, 8, 6, 0.72) !important;
   }
 
-  /* Desktop reviews band: completely hidden on mobile. */
-  .about-page__reviews-band {
-    display: none !important;
+  /* "See Reviews" link: ensure it sits below the marquee with dark text
+     on the ivory background. Right-aligned (matching its desktop position). */
+  .about-page__reviews-link {
+    color: rgba(10, 8, 6, 0.55) !important;
   }
 
-  /* Mobile Google link: shown at the top of the team wrapper (dark background),
-     so it uses the default light text colour. Right-aligned to match desktop. */
-  .about-page__team-google-mobile {
-    display: flex;
-    justify-content: flex-end;
-    padding: 16px var(--lbv-page-gutter) 0;
-  }
-
-  /* No longer need large top-pad reserved for the floating reviews banner. */
+  /* No longer need large top-pad that reserved room for the floating banner. */
   .about-page__team {
-    padding-top: 24px !important;
+    padding-top: 40px !important;
   }
 
-  /* "warm, passionate service." wraps normally on phones. */
+  /* "warm, passionate service." is set to stay on one unbroken line
+     for the wide desktop layout; on a phone it just wraps normally. */
   .about-page__statement > .about-page__statement-final {
     width: auto;
     max-width: 100%;
