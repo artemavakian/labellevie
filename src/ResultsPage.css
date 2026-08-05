@@ -276,7 +276,7 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  z-index: 4;
+  z-index: 10;
   width: 1px;
   background: rgba(255, 255, 255, 0.82);
   transform: translateX(-50%);
@@ -284,11 +284,13 @@
   cursor: default;
 }
 
-/* Hover tooltip — appears above the handle circle on pointer devices */
+/* Hover tooltip — appears above the handle circle on pointer devices.
+   z-index: 9999 keeps it above any sibling within the same stacking context. */
 .ba-divider::before {
   position: absolute;
   top: 50%;
   left: 50%;
+  z-index: 9999;
   padding: 5px 10px;
   border-radius: 3px;
   background: rgba(248, 242, 232, 0.93);

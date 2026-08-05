@@ -25,6 +25,11 @@ const REVIEWS = rawReviews
   })
   .filter(Boolean)
 
+// Mobile: split reviews in half so each of the two marquees gets its own set
+const REVIEWS_MID = Math.ceil(REVIEWS.length / 2)
+const REVIEWS_A = REVIEWS.slice(0, REVIEWS_MID)   // top marquee (reversed)
+const REVIEWS_B = REVIEWS.slice(REVIEWS_MID)       // bottom marquee (forward)
+
 const TEAM = [
   { img: '/kelly.webp', name: 'Kelly Lance', role: 'MSN, APRN, FNP-C' },
   {
@@ -47,12 +52,15 @@ function ReviewCard({ name, text }) {
   )
 }
 
-function MarqueeRow({ items }) {
+function MarqueeRow({ items, reverse = false }) {
   const doubled = [...items, ...items]
+  const trackClass = reverse
+    ? 'about-page__marquee-track about-page__marquee-track--right'
+    : 'about-page__marquee-track about-page__marquee-track--left'
 
   return (
     <div className="about-page__marquee" aria-label="Patient reviews">
-      <div className="about-page__marquee-track about-page__marquee-track--left">
+      <div className={trackClass}>
         {doubled.map((review, index) => (
           <ReviewCard key={`${review.name}-${index}`} {...review} />
         ))}
@@ -76,6 +84,10 @@ export default function AboutPage({ onResults, onTreatments }) {
   return (
     <main className="about-page" data-menu-theme="light">
       <section className="about-page__opening" aria-labelledby="about-page-statement">
+        {/* Mobile-only: reversed marquee (first half) above the text */}
+        <div className="about-page__opening-marquee" aria-hidden="true">
+          <MarqueeRow items={REVIEWS_A} reverse />
+        </div>
         <div className="about-page__statement-wrap">
           <h1 id="about-page-statement" className="about-page__statement">
             <span className="about-page__statement-primary">
@@ -91,7 +103,14 @@ export default function AboutPage({ onResults, onTreatments }) {
       </section>
 
       <section className="about-page__reviews-band" aria-label="Patient reviews">
-        <MarqueeRow items={REVIEWS} />
+        {/* Desktop: full reviews list, forward direction */}
+        <div className="about-page__reviews-variant about-page__reviews-variant--desktop">
+          <MarqueeRow items={REVIEWS} />
+        </div>
+        {/* Mobile: second half only, forward direction (below text) */}
+        <div className="about-page__reviews-variant about-page__reviews-variant--mobile">
+          <MarqueeRow items={REVIEWS_B} />
+        </div>
         <div className="about-page__reviews-band-link">
           <a
             className="about-page__reviews-link"
