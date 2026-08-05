@@ -761,8 +761,9 @@
   justify-content: center;
   background: transparent;
   color: transparent;
-  font: 300 clamp(0.82rem, 1vw, 1rem) / 1 var(--lbv-serif);
-  letter-spacing: 0.14em;
+  font: 600 clamp(3.28rem, 4vw, 4rem) / 1 var(--lbv-sans);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   content: 'Scroll to transform';
   transition: background 400ms ease, color 400ms ease;
   pointer-events: none;
@@ -770,7 +771,7 @@
 
 @media (hover: hover) {
   .ba-images:has(.ba-divider:hover)::before {
-    background: rgba(0, 0, 0, 0.38);
+    background: rgba(0, 0, 0, 0.76);
     color: rgba(248, 242, 232, 0.9);
   }
 }

@@ -1818,6 +1818,12 @@
     padding-inline: var(--lbv-page-gutter) !important;
   }
 
+  /* Give the page itself the ivory background so the transparent reviews
+     band "floats" on it — same warmth as the opening section above. */
+  .about-page {
+    background: var(--lbv-ivory-light) !important;
+  }
+
   /* Restore reviews band to normal document flow so it sits right below
      the opening section on mobile. */
   .about-page__reviews-band {
@@ -1827,9 +1833,15 @@
     background: transparent !important;
   }
 
-  /* Strip all backgrounds from every child of the reviews band so the
-     ivory page background shows through (reviews float transparently). */
-  .about-page__reviews-band *,
+  /* Strip all backgrounds and any blur from the marquee and its children
+     so the ivory page background shows through cleanly. */
+  .about-page__reviews-band .about-page__marquee {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    border: 0 !important;
+  }
+
+  .about-page__reviews-band .about-page__marquee *,
   .about-page__reviews-band-link {
     background: transparent !important;
   }
@@ -1851,19 +1863,9 @@
     color: rgba(10, 8, 6, 0.72) !important;
   }
 
-  /* "See Reviews" link: pull it below the marquee strip and centre it
-     on mobile. On desktop it sits inside the positioned reviews band
-     and is styled separately; on mobile we give it its own row. */
-  .about-page__reviews-band-link {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-    padding-inline: var(--lbv-page-gutter);
-    background: transparent !important;
-  }
-
+  /* "See Reviews" link: ensure it sits below the marquee with dark text
+     on the ivory background. Right-aligned (matching its desktop position). */
   .about-page__reviews-link {
-    margin: 0 !important;
     color: rgba(10, 8, 6, 0.55) !important;
   }
 
