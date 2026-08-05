@@ -27,6 +27,7 @@ function RevealSection({
   const wrapperRef = useRef(null)
   const afterImgRef = useRef(null)
   const dividerRef = useRef(null)
+  const scrollNoteRef = useRef(null)
 
   useEffect(() => {
     // Driven by scroll/resize (rAF-throttled) rather than a perpetual
@@ -72,6 +73,31 @@ function RevealSection({
     }
   }, [revealDir])
 
+  // Underline animation on scroll-note when user hovers the divider handle.
+  // Only wired on pointer devices (matchMedia hover check).
+  useEffect(() => {
+    const divider = dividerRef.current
+    const note = scrollNoteRef.current
+    if (!divider || !note) return
+    if (!window.matchMedia('(hover: hover)').matches) return
+
+    const onEnter = () => {
+      note.classList.remove('ba-scroll-note--erase')
+      note.classList.add('ba-scroll-note--draw')
+    }
+    const onLeave = () => {
+      note.classList.remove('ba-scroll-note--draw')
+      note.classList.add('ba-scroll-note--erase')
+    }
+
+    divider.addEventListener('mouseenter', onEnter)
+    divider.addEventListener('mouseleave', onLeave)
+    return () => {
+      divider.removeEventListener('mouseenter', onEnter)
+      divider.removeEventListener('mouseleave', onLeave)
+    }
+  }, [])
+
   const initClip = revealDir === 'rtl' ? 'inset(0 0 0 100%)' : 'inset(0 100% 0 0)'
   const initLeft = revealDir === 'rtl' ? '100%' : '0%'
 
@@ -105,7 +131,7 @@ function RevealSection({
           <span>{number}</span>
         </div>
         {text}
-        <p className="ba-scroll-note">Scroll to reveal the result</p>
+        <p ref={scrollNoteRef} className="ba-scroll-note">Scroll to reveal the result</p>
       </div>
     </div>
   )

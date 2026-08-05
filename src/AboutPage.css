@@ -1818,10 +1818,13 @@
     padding-inline: var(--lbv-page-gutter) !important;
   }
 
-  /* Give the page itself the ivory background so the transparent reviews
-     band "floats" on it — same warmth as the opening section above. */
+  /* The opening section has warm golden gradients on top of --lbv-ivory-light
+     (#fdfaf5 ≈ near-white). Without those gradients the reviews band area
+     reads as a plain white strip. Using --lbv-ivory (#f8f2e8) as the page
+     base gives the transparent reviews band a warm cream tone that blends
+     with the gradient-tinted opening section above it. */
   .about-page {
-    background: var(--lbv-ivory-light) !important;
+    background: var(--lbv-ivory) !important;
   }
 
   /* Restore reviews band to normal document flow so it sits right below
