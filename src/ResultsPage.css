@@ -203,7 +203,6 @@
 }
 
 .ba-scroll-note {
-  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -215,10 +214,14 @@
   transition: color 280ms ease;
 }
 
-/* Underline element — drawn/erased via JS-toggled classes.
-   Wraps in @media (hover) so it never fires on touch screens. */
+/* Underline lives on the text span only, not the whole flex row
+   (which would include the leading dash). */
+.ba-scroll-note__text {
+  position: relative;
+}
+
 @media (hover: hover) {
-  .ba-scroll-note::after {
+  .ba-scroll-note__text::after {
     content: '';
     position: absolute;
     bottom: -4px;
@@ -231,13 +234,13 @@
   }
 
   /* Draw: left → right */
-  .ba-scroll-note--draw::after {
+  .ba-scroll-note--draw .ba-scroll-note__text::after {
     transform-origin: left;
     animation: ba-underline-draw 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
-  /* Erase: also left → right (right origin collapses right edge inward) */
-  .ba-scroll-note--erase::after {
+  /* Erase: left → right (right origin keeps right edge fixed; left edge collapses right) */
+  .ba-scroll-note--erase .ba-scroll-note__text::after {
     transform-origin: right;
     animation: ba-underline-erase 340ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }

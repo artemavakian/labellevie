@@ -131,7 +131,9 @@ function RevealSection({
           <span>{number}</span>
         </div>
         {text}
-        <p ref={scrollNoteRef} className="ba-scroll-note">Scroll to reveal the result</p>
+        <p ref={scrollNoteRef} className="ba-scroll-note">
+          <span className="ba-scroll-note__text">Scroll to reveal the result</span>
+        </p>
       </div>
     </div>
   )
