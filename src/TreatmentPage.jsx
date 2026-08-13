@@ -1198,7 +1198,7 @@ export default function TreatmentPage({ treatmentKey, onBook, onBrowse }) {
           <p className="tx-kicker">Begin your consultation</p>
           <div className="tx-git-wrap">
             <button className="tx-hdr-btn tx-book-btn" type="button" onClick={onBook}>
-              <span className="tx-hdr-btn__label">Get In Touch</span>
+              <span className="tx-hdr-btn__label">Get in Touch</span>
               <span className="tx-hdr-btn__icon" aria-hidden="true"><ArrowUpRight /></span>
             </button>
             <div className="tx-git-icons" aria-hidden="true">

@@ -155,7 +155,7 @@ export default function SiteMenu({
           <div className="site-menu__legal">
             <a href="/privacy.html" target="_blank" rel="noopener noreferrer">Privacy</a>
             <a href="/terms.html" target="_blank" rel="noopener noreferrer">Terms</a>
-            <a href="https://areni.digital" target="_blank" rel="noopener noreferrer">Site by Areni</a>
+            <a href="mailto:artemavakian7@gmail.com">Site by Artem</a>
           </div>
 
           <div className="site-menu__socials" aria-label="Social media">

@@ -76,6 +76,7 @@ export default function AboutPage({ onResults, onTreatments }) {
   return (
     <main className="about-page" data-menu-theme="light">
       <section className="about-page__opening" aria-labelledby="about-page-statement">
+        <div className="about-page__watermark" aria-hidden="true" />
         <div className="about-page__statement-wrap">
           <h1 id="about-page-statement" className="about-page__statement">
             <span className="about-page__statement-primary">
@@ -110,7 +111,9 @@ export default function AboutPage({ onResults, onTreatments }) {
         <section className="about-page__team" aria-label="Our specialists">
           <header className="about-page__team-header">
             <p className="about-page__eyebrow">The people behind your care</p>
-            <h2 className="about-page__specialists-heading">Meet the specialists</h2>
+            <h2 className="about-page__specialists-heading">
+              Meet the <span className="about-page__specialists-word">specialists</span>
+            </h2>
           </header>
           <div className="about-page__team-grid">
             {TEAM.map((member, index) => (

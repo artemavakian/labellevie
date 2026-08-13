@@ -101,7 +101,7 @@
   background: transparent;
   color: var(--lbv-ink);
   cursor: pointer;
-  font: 300 clamp(38px, 4.6vw, 66px) / 1.1 var(--lbv-display);
+  font: 200 clamp(38px, 4.6vw, 66px) / 1.1 var(--lbv-display);
   letter-spacing: -0.045em;
   text-align: left;
 }
@@ -128,12 +128,15 @@
 }
 }
 
+/* Script at the old 11–14px would be unreadable — its x-height is only 0.36em
+   against the sans' ~0.52em — so the size is scaled up to match the previous
+   optical weight. */
 .site-menu__nav-link--secondary {
   padding: 2px 0;
   color: var(--lbv-gold-deep);
-  font: 500 clamp(11px, 1vw, 14px) / 1.5 var(--lbv-sans);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font: 400 clamp(18px, 1.6vw, 23px) / 1.4 var(--lbv-script);
+  letter-spacing: normal;
+  text-transform: none;
 }
 
 .site-menu__footer {
@@ -454,7 +457,7 @@
   }
 
   .site-menu__nav-link--secondary {
-    font-size: 13.75px;
+    font-size: 22px;
   }
 
   .site-menu__footer {

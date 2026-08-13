@@ -187,7 +187,7 @@
 .about-page__statement {
   margin: 0;
   color: var(--lbv-white);
-  font: 300 clamp(3.5rem, 6.75vw, 7.5rem) / 0.86 var(--lbv-display);
+  font: 200 clamp(3.5rem, 6.75vw, 7.5rem) / 0.86 var(--lbv-display);
   letter-spacing: -0.07em;
   text-wrap: balance;
 }
@@ -274,8 +274,23 @@
   max-width: 900px;
   margin: 0;
   color: var(--lbv-ink);
-  font: 300 clamp(4rem, 8.8vw, 9rem) / 0.82 var(--lbv-display);
+  font: 200 clamp(4rem, 8.8vw, 9rem) / 0.82 var(--lbv-display);
   letter-spacing: -0.07em;
+}
+
+/* Scaled with a transform rather than font-size so the word grows and shifts
+   purely visually — the heading keeps the exact box it had, so nothing on the
+   page reflows. inline-block is required for transforms to apply. */
+.about-page__specialists-word {
+  display: inline-block;
+  position: relative;
+  z-index: 20;
+  font-family: var(--lbv-script);
+  font-weight: 400;
+  font-size: 1.12em;
+  letter-spacing: normal;
+  transform: translateX(-75px) scale(1.15);
+  transform-origin: left center;
 }
 
 .about-page__team-grid {
@@ -353,7 +368,7 @@
 .about-page__team-name {
   margin: 0;
   color: var(--lbv-ink);
-  font: 300 clamp(1.55rem, 2.2vw, 2.6rem) / 1 var(--lbv-display);
+  font: 200 clamp(1.55rem, 2.2vw, 2.6rem) / 1 var(--lbv-display);
   letter-spacing: -0.045em;
 }
 
@@ -400,7 +415,7 @@
   max-width: 1330px;
   margin: 0;
   color: rgba(248, 242, 232, 0.86);
-  font: 300 clamp(2.25rem, 4.65vw, 5.35rem) / 1.04 var(--lbv-display);
+  font: 200 clamp(2.25rem, 4.65vw, 5.35rem) / 1.04 var(--lbv-display);
   letter-spacing: -0.055em;
 }
 
@@ -426,7 +441,7 @@
   border-bottom: 1px solid rgba(200, 164, 88, 0.42);
   background: transparent;
   color: var(--lbv-gold);
-  font: 300 clamp(1.35rem, 2.35vw, 2.7rem) / 1 var(--lbv-display);
+  font: 200 clamp(1.35rem, 2.35vw, 2.7rem) / 1 var(--lbv-display);
   letter-spacing: -0.035em;
   cursor: pointer;
   transition: border-color 300ms var(--lbv-ease), color 300ms var(--lbv-ease);
@@ -1527,7 +1542,7 @@
   max-width: 11.5ch;
   margin: 0;
   color: #111;
-  font: 300 clamp(4.35rem, 9.2vw, 10.4rem) / 0.82 var(--lbv-display);
+  font: 200 clamp(4.35rem, 9.2vw, 10.4rem) / 0.82 var(--lbv-display);
   letter-spacing: -0.06em;
   text-align: left;
   text-wrap: balance;
@@ -1905,5 +1920,39 @@
     width: 100%;
     align-items: center;
     gap: 16px;
+  }
+}
+
+/* ── Opening watermark ─────────────────────────────────────────────
+   The mark is the favicon used as a mask over a solid fill, so it takes the
+   same gold as "experience & warm, passionate service." and is faded back.
+   z-index 0 keeps it under the statement (which sits at 2) even where the
+   two overlap.
+
+   To resize it, change --watermark-size below — that single value drives
+   both dimensions. --watermark-fade controls how faint it is (0 = invisible,
+   1 = full-strength gold). */
+.about-page__watermark {
+  --watermark-size: 620px;
+  --watermark-fade: 0.14;
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  right: clamp(-2vw, 3vw, 90px);
+  width: var(--watermark-size);
+  height: var(--watermark-size);
+  background-color: var(--lbv-gold-deep);
+  opacity: var(--watermark-fade);
+  -webkit-mask: url('/lbvfavicon.png') center / contain no-repeat;
+  mask: url('/lbvfavicon.png') center / contain no-repeat;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 1000px) {
+  .about-page__watermark {
+    --watermark-size: 62vw;
+    --watermark-fade: 0.1;
+    right: -8vw;
   }
 }

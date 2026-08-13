@@ -36,15 +36,23 @@
   --beautifully-font-size: 1.2em; /* Adjust only this value to resize “beautifully.” */
   max-width: 10ch;
   margin: 0;
-  font: 300 clamp(3.4rem, 7.7vw, 8.5rem) / 0.87 var(--lbv-display);
+  font: 200 clamp(3.4rem, 7.7vw, 8.5rem) / 0.87 var(--lbv-display);
   letter-spacing: -0.065em;
 }
 
+/* The 1.15 scale and the nudge left are transforms, not font-size/margin, so
+   the title keeps its original box and nothing else on the page reflows. */
 .treatments-directory__title em {
+  display: inline-block;
+  position: relative;
+  z-index: 20;
   color: var(--lbv-gold-deep);
-  font-family: var(--lbv-serif);
+  font-family: var(--lbv-script);
   font-size: var(--beautifully-font-size);
   font-weight: 400;
+  letter-spacing: normal;
+  transform: translateX(-25px) scale(1.15);
+  transform-origin: left center;
 }
 
 .treatments-directory__lede {

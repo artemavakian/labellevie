@@ -63,8 +63,14 @@ export default function BookingPage() {
         {/* ── Two-column body ── */}
         <div className="booking-grid">
 
-          {/* LEFT: contact info + promo callout */}
+          {/* LEFT: promo callout + contact info */}
           <div className="booking-left">
+            {/* Promo callout */}
+            <div className="booking-promo">
+              <p className="booking-promo__headline">$100 Off Your First Treatment</p>
+              <p className="booking-promo__body">Ask About Our Current Specials &amp; Exclusive Offers</p>
+            </div>
+
             <div className="booking-info">
               <div className="booking-detail">
                 <span className="booking-detail__label">Phone</span>
@@ -99,12 +105,6 @@ export default function BookingPage() {
                   Friday – 9 AM–3 PM
                 </span>
               </div>
-            </div>
-
-            {/* Promo callout */}
-            <div className="booking-promo">
-              <p className="booking-promo__headline">$100 Off Your First Treatment</p>
-              <p className="booking-promo__body">Ask About Our Current Specials &amp; Exclusive Offers</p>
             </div>
           </div>
 

@@ -148,8 +148,10 @@
   max-width: 12ch;
   margin: 0;
   color: var(--lbv-white);
-  font: 300 clamp(4.1rem, 10.8vw, 11.5rem) / 0.82 var(--lbv-display);
-  letter-spacing: -0.065em;
+  /* 1.15 leading: titles wrap to two lines and the script descenders reach
+     -0.324em, which would collide with the next line at tighter values. */
+  font: 400 clamp(4.1rem, 10.8vw, 11.5rem) / 1.15 var(--lbv-script);
+  letter-spacing: normal;
   text-wrap: balance;
 }
 
@@ -204,14 +206,23 @@
 .tx-overview__heading {
   max-width: 14ch;
   margin: 0 0 clamp(35px, 5vw, 65px);
-  font: 400 clamp(2.3rem, 4.3vw, 4.4rem) / 1.02 var(--lbv-serif);
+  font: 400 clamp(2.3rem, 4.3vw, 4.4rem) / 1.12 var(--lbv-serif);
   letter-spacing: -0.035em;
 }
 
+/* Scaled via transform so the heading's box is unchanged and the copy below
+   stays exactly where it is. */
 .tx-overview__heading em {
+  display: inline-block;
+  position: relative;
+  z-index: 20;
   color: var(--lbv-gold-deep);
+  font-family: var(--lbv-script);
   font-size: 1.2em;
   font-weight: 400;
+  letter-spacing: normal;
+  transform: scale(1.15);
+  transform-origin: left center;
 }
 
 .tx-desc {
@@ -476,10 +487,10 @@
 
 .tx-book-btn {
   color: var(--lbv-ink);
-  font-family: var(--lbv-serif);
+  font-family: var(--lbv-script);
   font-size: clamp(2.2rem, 5.4vw, 5rem);
   font-weight: 400;
-  letter-spacing: -0.04em;
+  letter-spacing: normal;
   text-transform: none;
 }
 

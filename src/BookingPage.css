@@ -56,7 +56,7 @@
   max-width: 1100px;
   margin: 0;
   color: var(--lbv-ink);
-  font: 300 clamp(4rem, 9.5vw, 9rem) / 0.82 var(--lbv-display);
+  font: 200 clamp(4rem, 9.5vw, 9rem) / 0.82 var(--lbv-display);
   letter-spacing: -0.065em;
 }
 
@@ -64,10 +64,10 @@
   display: block;
   margin-left: clamp(0px, 7vw, 100px);
   color: var(--lbv-gold-deep);
-  font-family: var(--lbv-serif);
+  font-family: var(--lbv-script);
   font-size: 1.2em;
   font-weight: 400;
-  letter-spacing: -0.055em;
+  letter-spacing: normal;
 }
 
 .booking-intro {
@@ -116,12 +116,14 @@ a.booking-detail__value:hover { text-decoration: none; }
   line-height: 2.1;
 }
 
+/* Now the first block in the left column, so the top rule and its 30px of
+   padding are gone — those separated it from the contact list above it. The
+   headline now starts level with where the phone label used to sit. */
 .booking-promo {
   display: flex;
   flex-direction: column;
   gap: 9px;
-  padding: 30px 0 0 24px;
-  border-top: 1px solid var(--lbv-line-dark);
+  padding: 0 0 0 24px;
   border-left: 2px solid var(--lbv-gold);
 }
 

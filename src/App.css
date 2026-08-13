@@ -187,6 +187,34 @@
   display: none;
 }
 
+/* About sits above the pinned hero so it rides up over it as you scroll. */
+.home-about {
+  position: relative;
+  z-index: 2;
+}
+
+/* While the opening screen slides away the hero drifts up into place behind
+   it, covering a fraction of the panel's travel over the same 1500ms. That
+   difference in speed is what reads as depth rather than as a curtain. */
+.hero--intro-wait {
+  transform: translateY(14vh);
+}
+
+.hero--intro-move {
+  transform: translateY(0);
+  transition: transform 1500ms cubic-bezier(0.72, 0, 0.18, 1);
+}
+
+/* The hero's contents clear off in one movement as soon as the page starts to
+   scroll, leaving only the video for About to slide over. */
+.hero--scrolled .hero-nav,
+.hero--scrolled .hero-text,
+.hero--scrolled .hero-text__actions {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 480ms var(--lbv-ease);
+}
+
 .hero,
 .hero * {
   user-select: none;
@@ -206,100 +234,6 @@
 
 .hero__video--loading {
   visibility: hidden;
-}
-
-/* Warm-white opening screen */
-.hero-intro-screen {
-  position: fixed;
-  z-index: 1000;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.hero-intro-screen::before,
-.hero-intro-screen::after {
-  position: absolute;
-  z-index: 0;
-  right: 0;
-  left: 0;
-  height: calc(50% + 1px);
-  content: '';
-  pointer-events: none;
-  transition: transform 900ms cubic-bezier(0.76, 0, 0.24, 1);
-  will-change: transform;
-}
-
-.hero-intro-screen::before {
-  top: 0;
-  background:
-    radial-gradient(circle at 82% 20%, rgba(200, 164, 88, 0.1), transparent 34%),
-    linear-gradient(145deg, #fffdf8 0%, #f7eddd 100%);
-  box-shadow: 0 18px 42px rgba(255, 250, 241, 0.3);
-  transform: translateY(0);
-}
-
-.hero-intro-screen::after {
-  bottom: 0;
-  background:
-    radial-gradient(circle at 18% 80%, rgba(200, 164, 88, 0.07), transparent 38%),
-    linear-gradient(215deg, #fffdf8 0%, #f7eddd 100%);
-  box-shadow: 0 -18px 42px rgba(255, 250, 241, 0.3);
-  transform: translateY(0);
-}
-
-.hero-intro-screen--reveal::before {
-  transform: translateY(-102%);
-}
-
-.hero-intro-screen--reveal::after {
-  transform: translateY(102%);
-}
-
-/* Centered black logo on the opening screen */
-.hero-intro-logo {
-  --intro-logo-w: 520px; /* Change only this value to resize the opening logo */
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: min(var(--intro-logo-w), calc(100vw - 48px));
-  user-select: none;
-  filter: blur(0);
-  transform: scale(1);
-  transition:
-    opacity 650ms cubic-bezier(0.22, 1, 0.36, 1),
-    filter 650ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.hero-intro-logo--exit {
-  opacity: 0;
-  filter: blur(4px);
-  transform: scale(1.025);
-}
-
-.hero-intro-logo__img {
-  width: 100%;
-  height: auto;
-  display: block;
-  filter: brightness(0);
-  -webkit-user-drag: none;
-}
-
-.hero-intro-logo__text {
-  font-family: 'Montserrat', system-ui, sans-serif;
-  font-size: 20px;
-  font-weight: 300;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: #111;
-  margin-top: 9px;
 }
 
 /* Nav overlay */
@@ -1127,16 +1061,6 @@
     background: rgba(0, 0, 0, 0.35);
     z-index: 2;
     pointer-events: none;
-  }
-
-  .hero-intro-logo {
-    width: calc((100vw - 48px) * 0.7);
-  }
-
-  .hero-intro-logo__text {
-    margin-top: 7px;
-    font-size: clamp(7.5px, 2.4vw, 10px);
-    letter-spacing: 0.2em;
   }
 
   /* No inline nav, title, or action buttons on phones — the hero itself

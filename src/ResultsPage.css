@@ -35,7 +35,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(14px, 2.4vw, 38px);
+  gap: clamp(16px, 2.76vw, 44px);
   color: var(--lbv-sand);
   font: 500 clamp(0.68rem, 0.8vw, 0.82rem) / 1 var(--lbv-sans);
   letter-spacing: 0.28em;
@@ -48,6 +48,18 @@
   flex: 0 0 1px;
   background: var(--lbv-gold);
   opacity: 0.6;
+}
+
+/* The three words render in script — so the uppercase transform and wide
+   tracking that suited the sans label are dropped. Size is in `em` so the
+   mobile font-size override on the topline still scales it down. */
+.results-intro__topline span:not(.results-intro__divider) {
+  font-family: var(--lbv-script);
+  font-weight: 400;
+  font-size: 2.24em;
+  line-height: 1.15;
+  letter-spacing: normal;
+  text-transform: none;
 }
 
 .results-intro__body {
@@ -553,7 +565,7 @@
   }
 
   .results-intro__topline {
-    gap: 8px;
+    gap: 9px;
     font-size: 0.55rem;
     letter-spacing: 0.16em;
   }
@@ -705,7 +717,7 @@
 .results-intro__statement {
   max-width: 10.5ch;
   color: #111;
-  font: 300 clamp(4.35rem, 10vw, 11.2rem) / 0.82 var(--lbv-display);
+  font: 200 clamp(4.35rem, 10vw, 11.2rem) / 0.82 var(--lbv-display);
   letter-spacing: -0.06em;
 }
 
@@ -777,7 +789,7 @@
   max-width: 11ch;
   margin-bottom: clamp(24px, 3vw, 40px);
   color: var(--lbv-white);
-  font: 300 clamp(3.15rem, 5.35vw, 6rem) / 0.88 var(--lbv-display);
+  font: 200 clamp(3.15rem, 5.35vw, 6rem) / 0.88 var(--lbv-display);
   letter-spacing: -0.065em;
 }
 
@@ -860,7 +872,7 @@
 .results-cta__text {
   max-width: 13ch;
   color: var(--lbv-white);
-  font: 300 clamp(3.8rem, 8.6vw, 9.5rem) / 0.86 var(--lbv-display);
+  font: 200 clamp(3.8rem, 8.6vw, 9.5rem) / 0.86 var(--lbv-display);
   letter-spacing: -0.055em;
 }
 

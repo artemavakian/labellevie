@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Snell Roundhand';
+  src: url('/snellroundhand.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --lbv-ink: #0a0806;
   --lbv-ink-soft: #17120d;
@@ -13,6 +21,7 @@
   --lbv-section-space: clamp(88px, 13vw, 190px);
   --lbv-display: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --lbv-serif: 'Cormorant Garamond', Georgia, serif;
+  --lbv-script: 'Snell Roundhand', 'Apple Chancery', 'Segoe Script', cursive;
   --lbv-sans: 'Montserrat', system-ui, sans-serif;
   --lbv-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --lbv-shadow: 0 28px 80px rgba(46, 29, 10, 0.14);

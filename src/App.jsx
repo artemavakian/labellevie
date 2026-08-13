@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Lenis from 'lenis'
 import { ArrowUpRight } from 'lucide-react'
 import Memberships from './Memberships'
@@ -9,6 +9,7 @@ import ResultsPage from './ResultsPage'
 import GalleryPage from './GalleryPage'
 import TreatmentsDirectory from './TreatmentsDirectory'
 import SiteMenu, { SiteMenuButton } from './SiteMenu'
+import SiteIntro from './SiteIntro'
 import './App.css'
 
 /* ── Treatments data ────────────────────────────────────────── */
@@ -68,12 +69,6 @@ const HERO_WORDS = [
   'Rejuvenated',
   'Restored',
   'Maintained',
-  'Refined',
-  'Timeless',
-  'Radiant',
-  'Elevated',
-  'Renewed',
-  'Empowered',
 ]
 
 function RotatingHeroWord({ active }) {
@@ -90,7 +85,7 @@ function RotatingHeroWord({ active }) {
     const timer = setTimeout(() => {
       setPreviousIndex(index)
       setIndex(current => (current + 1) % HERO_WORDS.length)
-    }, 7000)
+    }, 10000)
 
     return () => clearTimeout(timer)
   }, [active, index])
@@ -193,14 +188,22 @@ export default function App() {
       ? 'light'
       : 'dark',
   )
-  const [heroPhase, setHeroPhase]     = useState('intro') // intro | logo-exit | reveal | done
+  // intro    — opening screen up, logo writing itself on
+  // entering — opening screen sliding away, hero video rolling
+  // settling — hero content fading in behind the tail of the slide
+  // done     — opening screen unmounted
+  const [heroPhase, setHeroPhase]     = useState('intro')
   const [heroVideoStarted, setHeroVideoStarted] = useState(false)
+  const [scrolledOffHero, setScrolledOffHero] = useState(false)
+  const [heroCovered, setHeroCovered] = useState(false)
   const [heroVideoComplete, setHeroVideoComplete] = useState(false)
   const heroRef      = useRef(null)
   const dropdownRef  = useRef(null)
   const lenisRef     = useRef(null)
   const skipHeroIntroRef = useRef(false)
   const heroIntroPlayedRef = useRef(false)
+  const enteringRef  = useRef(false)
+  const enterTimersRef = useRef([])
 
   useEffect(() => {
     // Portrait lock: works on Android Chrome; silently ignored on iOS Safari.
@@ -230,9 +233,11 @@ export default function App() {
     return () => { cancelAnimationFrame(id); lenisRef.current = null; lenis.destroy() }
   }, [])
 
-  // Lock the hero and full-screen overlays; other pages keep native Lenis scrolling.
+  // Lock scrolling behind full-screen overlays. The home page scrolls too now
+  // — down into the About section — but stays locked while the opening screen
+  // is still up.
   useEffect(() => {
-    if (menuOpen || page === 'home') {
+    if (menuOpen || (page === 'home' && heroPhase !== 'done')) {
       lenisRef.current?.stop()
       document.body.style.overflow = 'hidden'
     } else {
@@ -240,41 +245,97 @@ export default function App() {
       document.body.style.overflow = ''
     }
     return () => { document.body.style.overflow = '' }
-  }, [menuOpen, page])
+  }, [menuOpen, page, heroPhase])
+
+  // The hero is pinned to the top of the viewport, so shifting it by a quarter
+  // of the scroll distance is what makes the About section appear to slide up
+  // over a hero that's still drifting rather than one frozen in place.
+  useEffect(() => {
+    if (page !== 'home' || heroPhase !== 'done') return
+    const hero = heroRef.current
+    if (!hero) return
+    // null so the priming call below always syncs, even when returning to the
+    // hero with the flags left true from a previous visit.
+    let wasPast = null
+    let wasCovered = null
+
+    const onScroll = () => {
+      const y = window.scrollY || window.pageYOffset || 0
+      const vh = window.innerHeight || 1
+      hero.style.transform = `translateY(${(-Math.min(y, vh) * 0.25).toFixed(2)}px)`
+      // Once About has fully covered it there's nothing to composite.
+      hero.style.visibility = y > vh * 1.05 ? 'hidden' : ''
+      // The hero's contents leave as a single gesture the moment the page
+      // moves, rather than dissolving in step with the scroll.
+      hero.classList.toggle('hero--scrolled', y > 4)
+
+      const past = y > vh * 0.5
+      if (past !== wasPast) {
+        wasPast = past
+        setScrolledOffHero(past)
+      }
+
+      // About's top edge has reached the top of the viewport.
+      const covered = y >= vh * 0.98
+      if (covered !== wasCovered) {
+        wasCovered = covered
+        setHeroCovered(covered)
+      }
+    }
+
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      hero.style.transform = ''
+      hero.style.visibility = ''
+      hero.classList.remove('hero--scrolled')
+    }
+  }, [page, heroPhase])
 
   useEffect(() => {
     if (page !== 'home') return
     if (skipHeroIntroRef.current) {
       skipHeroIntroRef.current = false
+      enteringRef.current = true
       setHeroPhase('done')
       setHeroVideoStarted(true)
       return
     }
+    // SiteIntro holds the opening screen for a beat and then calls
+    // enterHero() itself; that's what starts the video.
+    enteringRef.current = false
     setHeroPhase('intro')
     setHeroVideoStarted(false)
-    // On phones the video can take a beat to actually start rendering frames
-    // once .play() is called, so it's started immediately (silently, fully
-    // hidden behind the opaque intro panels) instead of waiting for the
-    // reveal — by the time the intro splits open at 2500ms it's already
-    // playing smoothly. Desktop/tablet keep the original synced timing.
-    const isPhoneHero = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches
-    const logoExitTimer = setTimeout(() => setHeroPhase('logo-exit'), 2250)
-    const revealTimer = setTimeout(() => setHeroPhase('reveal'), 2500)
-    const videoTimer = setTimeout(() => setHeroVideoStarted(true), isPhoneHero ? 0 : 2500)
-    const doneTimer = setTimeout(() => {
-      setHeroPhase('done')
-      heroIntroPlayedRef.current = true
-    }, 3400)
     return () => {
-      clearTimeout(logoExitTimer)
-      clearTimeout(revealTimer)
-      clearTimeout(videoTimer)
-      clearTimeout(doneTimer)
+      enterTimersRef.current.forEach(clearTimeout)
+      enterTimersRef.current = []
     }
   }, [page])
 
+  const enterHero = useCallback(() => {
+    if (enteringRef.current) return
+    enteringRef.current = true
+    setHeroPhase('entering')
+    setHeroVideoStarted(true)
+    enterTimersRef.current = [
+      // Hero content comes up while the last of the white is still leaving,
+      // so it settles into place instead of popping in afterwards.
+      setTimeout(() => setHeroPhase('settling'), 950),
+      // Just past the 1500ms slide, so the panel is never unmounted mid-move.
+      setTimeout(() => {
+        setHeroPhase('done')
+        heroIntroPlayedRef.current = true
+      }, 1600),
+    ]
+  }, [])
+
   useEffect(() => {
-    if (page === 'home') return
+    // Home is included now that it scrolls onto the light About section, but
+    // not until the opening screen is out of the way.
+    if (page === 'home' && heroPhase !== 'done') return
 
     const fallback = ['about', 'results', 'gallery', 'treatments', 'memberships'].includes(page) ? 'light' : 'dark'
     const updateTheme = () => {
@@ -293,7 +354,7 @@ export default function App() {
       window.removeEventListener('scroll', updateTheme)
       window.removeEventListener('resize', updateTheme)
     }
-  }, [page])
+  }, [page, heroPhase])
 
   // Shared by clicks (goTo) and browser back/forward (popstate) so both
   // paths update state identically.
@@ -339,6 +400,12 @@ export default function App() {
   }
 
   const heroActive = page === 'home'
+  // Hero chrome shows from "settling" on — i.e. once the opening screen is
+  // most of the way out rather than fully gone.
+  const heroReady = heroPhase === 'settling' || heroPhase === 'done'
+  const heroDrift = !heroActive || heroPhase === 'done'
+    ? ''
+    : heroPhase === 'intro' ? ' hero--intro-wait' : ' hero--intro-move'
 
   return (
     <>
@@ -346,7 +413,12 @@ export default function App() {
           Kept mounted (rather than unmounted per-page) so the video
           element never has to re-fetch/re-decode when navigating back
           to the hero — that reload was the source of the black flash. */}
-      <section className={`hero${heroActive ? '' : ' hero--inactive'}`} ref={heroRef} aria-hidden={!heroActive}>
+      <section
+        className={`hero${heroActive ? '' : ' hero--inactive'}${heroDrift}`}
+        ref={heroRef}
+        aria-hidden={!heroActive}
+        data-menu-theme="dark"
+      >
         {/* Plays once; the decoded video itself remains on its final frame. */}
         <HeroVideo
           complete={heroVideoComplete}
@@ -355,18 +427,8 @@ export default function App() {
           onComplete={() => setHeroVideoComplete(true)}
         />
 
-            {/* Warm-white opening screen reveals the hero after the logo exits. */}
-            {heroPhase !== 'done' && (
-              <div className={`hero-intro-screen hero-intro-screen--${heroPhase}`}>
-                <div className={`hero-intro-logo${heroPhase !== 'intro' ? ' hero-intro-logo--exit' : ''}`}>
-                  <img src="/lbvlogo.png" alt="La Belle Vie" className="hero-intro-logo__img" draggable={false} />
-                  <span className="hero-intro-logo__text">Medical Care · Aesthetics</span>
-                </div>
-              </div>
-            )}
-
             {/* Nav overlay — center links only */}
-            <div className={`hero-nav${heroPhase !== 'done' ? ' hero-nav--hidden' : ' hero-nav--visible'}`}>
+            <div className={`hero-nav${heroReady ? ' hero-nav--visible' : ' hero-nav--hidden'}`}>
               <nav className="hero-nav__center">
                 <a href="#" className="header__link" draggable={false} onClick={navAbout}>ABOUT US</a>
                 <div
@@ -403,10 +465,10 @@ export default function App() {
             </div>
 
             {/* Hero text — vertically centered, left side */}
-            <div className={`hero-text${heroPhase !== 'done' ? ' hero-text--hidden' : ' hero-text--visible'}`}>
+            <div className={`hero-text${heroReady ? ' hero-text--visible' : ' hero-text--hidden'}`}>
               <h1 className="hero-text__title">
                 <span>Naturally</span>
-                <RotatingHeroWord active={heroPhase === 'done'} />
+                <RotatingHeroWord active={heroReady} />
               </h1>
               <div className="hero-text__sub">
                 <span>30+ Years of Experience</span>
@@ -422,7 +484,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className={`hero-text__actions${heroPhase !== 'done' ? ' hero-text__actions--hidden' : ' hero-text__actions--visible'}`}>
+            <div className={`hero-text__actions${heroReady ? ' hero-text__actions--visible' : ' hero-text__actions--hidden'}`}>
               <a
                 href="#"
                 className="hero-text__book"
@@ -460,6 +522,17 @@ export default function App() {
             </div>
       </section>
 
+      {/* The landing page continues into About, which scrolls up over the
+          pinned hero. */}
+      {heroActive && (
+        <div className="home-about">
+          <AboutPage
+            onResults={() => goTo('results')}
+            onTreatments={() => goTo('treatments')}
+          />
+        </div>
+      )}
+
       {page === 'about' && (
         <AboutPage
           onResults={() => goTo('results')}
@@ -490,7 +563,9 @@ export default function App() {
         />
       )}
 
-      {page !== 'home' && (
+      {/* On home the control is withheld until About has taken over the
+          viewport; the hero carries no menu of its own. */}
+      {(page !== 'home' || heroCovered) && (
         <SiteMenuButton
           onClick={() => setMenuOpen(current => !current)}
           theme={menuTheme}
@@ -506,7 +581,7 @@ export default function App() {
       {heroActive && (
         <SiteMenu
           variant="hero"
-          open={heroPhase === 'done'}
+          open={heroReady && !scrolledOffHero}
           onHome={returnToHero}
           onAbout={() => goTo('about')}
           onTreatments={() => goTo('treatments')}
@@ -515,6 +590,10 @@ export default function App() {
           onGallery={() => goTo('gallery')}
           onContact={() => goTo('booking')}
         />
+      )}
+
+      {heroActive && heroPhase !== 'done' && (
+        <SiteIntro leaving={heroPhase !== 'intro'} onEnter={enterHero} />
       )}
 
       <SiteMenu

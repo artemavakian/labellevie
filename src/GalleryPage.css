@@ -84,7 +84,7 @@
   max-width: 9ch;
   margin: 0;
   color: var(--lbv-ink);
-  font: 300 clamp(5rem, 11.5vw, 12rem) / 0.78 var(--lbv-display);
+  font: 200 clamp(5rem, 11.5vw, 12rem) / 0.78 var(--lbv-display);
   letter-spacing: -0.075em;
 }
 
@@ -407,7 +407,7 @@
 .gallery-cta h2 {
   max-width: 12ch;
   margin: 0;
-  font: 300 clamp(3.5rem, 8vw, 8.5rem) / 0.86 var(--lbv-display);
+  font: 200 clamp(3.5rem, 8vw, 8.5rem) / 0.86 var(--lbv-display);
   letter-spacing: -0.06em;
 }
 
