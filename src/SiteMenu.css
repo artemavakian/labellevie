@@ -634,5 +634,16 @@
     border-color: transparent;
     background: #fff;
     color: var(--lbv-ink);
+    /* Matches .hero-text--visible so both arrive together. */
+    transition:
+      border-color 300ms var(--lbv-ease),
+      background-color 300ms var(--lbv-ease),
+      color 300ms var(--lbv-ease),
+      opacity 0.55s ease 0.15s;
+  }
+
+  .site-menu-button--waiting {
+    opacity: 0;
+    pointer-events: none;
   }
 }

@@ -576,7 +576,12 @@ export default function App() {
           onClick={() => setMenuOpen(current => !current)}
           theme={menuTheme}
           open={menuOpen}
-          className={page === 'home' && !heroCovered && !menuOpen ? 'site-menu-button--hero' : ''}
+          className={[
+            page === 'home' && !heroCovered && !menuOpen ? 'site-menu-button--hero' : '',
+            // Over the phone hero the control waits for the intro to hand
+            // over, fading in alongside the headline.
+            phone && page === 'home' && !heroReady ? 'site-menu-button--waiting' : '',
+          ].filter(Boolean).join(' ')}
         />
       )}
 
