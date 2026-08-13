@@ -590,9 +590,10 @@
     display: none;
   }
 
-  /* Sits a little above centre to leave room for the three points. */
+  /* Centres the headline itself: the three points are taken out of flow
+     below it, so they don't pull the block off centre. */
   .hero-text {
-    top: 44%;
+    top: 50%;
     right: 0;
     left: 0;
     width: 100%;
@@ -617,8 +618,12 @@
   }
 
   .hero-text__sub {
+    position: absolute;
+    top: calc(100% + 26px);
+    right: 0;
+    left: 0;
     align-items: center;
-    margin-top: 26px;
+    margin-top: 0;
     font-size: clamp(0.62rem, 2.85vw, 0.78rem);
     text-align: center;
     white-space: normal;

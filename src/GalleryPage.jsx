@@ -51,6 +51,21 @@ export default function GalleryPage() {
   const [filter, setFilter] = useState('all')
   const [selectedId, setSelectedId] = useState(null)
   const [filterOpen, setFilterOpen] = useState(false)
+  const [phone, setPhone] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 700px)')
+    const sync = () => setPhone(mq.matches)
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
+  }, [])
+
+  const selectFilter = value => {
+    setFilter(value)
+    setSelectedId(null)
+    setFilterOpen(false)
+  }
 
   const visibleItems = useMemo(
     () => filter === 'all' ? GALLERY_ITEMS : GALLERY_ITEMS.filter(item => item.category === filter),
@@ -99,7 +114,9 @@ export default function GalleryPage() {
             Filter{filter !== 'all' ? ` · ${FILTERS.find(([value]) => value === filter)?.[1]}` : ''}
           </button>
 
-          {filterOpen && (
+          {/* Phones keep the floating panel; wider screens expand in flow
+              below, which is rendered as a sibling of this bar. */}
+          {phone && filterOpen && (
             <>
               <div
                 className="gallery-filter-scrim"
@@ -114,11 +131,7 @@ export default function GalleryPage() {
                     type="button"
                     role="option"
                     aria-selected={filter === value}
-                    onClick={() => {
-                      setFilter(value)
-                      setSelectedId(null)
-                      setFilterOpen(false)
-                    }}
+                    onClick={() => selectFilter(value)}
                   >
                     {label}
                   </button>
@@ -127,6 +140,31 @@ export default function GalleryPage() {
             </>
           )}
         </div>
+
+        {!phone && (
+          <div
+            className={filterOpen ? 'gallery-filter-list gallery-filter-list--open' : 'gallery-filter-list'}
+            role="listbox"
+            aria-label="Filter gallery by treatment"
+            aria-hidden={!filterOpen}
+          >
+            <div className="gallery-filter-list__inner">
+              {FILTERS.map(([value, label]) => (
+                <button
+                  key={value}
+                  className={filter === value ? 'gallery-filter-choice gallery-filter-choice--active' : 'gallery-filter-choice'}
+                  type="button"
+                  role="option"
+                  aria-selected={filter === value}
+                  tabIndex={filterOpen ? 0 : -1}
+                  onClick={() => selectFilter(value)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="gallery-grid">
           {visibleItems.map((item, index) => (

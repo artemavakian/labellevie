@@ -626,3 +626,13 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Over the phone hero the control is a solid white disc with black bars,
+   rather than the translucent dark treatment other dark sections use. */
+@media (max-width: 640px) {
+  .site-menu-button--hero {
+    border-color: transparent;
+    background: #fff;
+    color: var(--lbv-ink);
+  }
+}

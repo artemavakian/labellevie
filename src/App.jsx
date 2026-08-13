@@ -568,8 +568,6 @@ export default function App() {
         />
       )}
 
-      {/* On home the control is withheld until About has taken over the
-          viewport; the hero carries no menu of its own. */}
       {/* Hidden over the desktop hero, which carries its own nav. Phones have
           no hero nav, so the button stays; it also has to come back whenever
           the menu is open, or there'd be no way to close it. */}
@@ -578,6 +576,7 @@ export default function App() {
           onClick={() => setMenuOpen(current => !current)}
           theme={menuTheme}
           open={menuOpen}
+          className={page === 'home' && !heroCovered && !menuOpen ? 'site-menu-button--hero' : ''}
         />
       )}
 

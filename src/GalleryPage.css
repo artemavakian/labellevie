@@ -82,6 +82,13 @@
   width: 15px;
   height: 15px;
   stroke-width: 1.6;
+  transition: transform 420ms var(--lbv-ease);
+}
+
+@media (hover: hover) {
+  .gallery-filter-toggle:hover svg {
+    transform: rotate(90deg);
+  }
 }
 
 .gallery-filter-scrim {
@@ -417,6 +424,73 @@
   .gallery-filter-toggle {
     padding: 14px 26px;
     font-size: 0.82rem;
+  }
+
+  /* The options open in flow rather than over the page, so the grid is
+     pushed down to make room. Animating grid-template-rows between 0fr and
+     1fr gets a height transition without measuring the content. */
+  .gallery-filter-bar {
+    margin-bottom: 0;
+  }
+
+  .gallery-filter-list {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-rows 520ms var(--lbv-ease),
+      opacity 300ms var(--lbv-ease);
+  }
+
+  .gallery-filter-list--open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transition:
+      grid-template-rows 520ms var(--lbv-ease),
+      opacity 380ms var(--lbv-ease) 120ms;
+  }
+
+  .gallery-filter-list__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .gallery-filter-choice {
+    border: 0;
+    padding: 10px 0;
+    background: none;
+    color: rgba(10, 8, 6, 0.5);
+    cursor: pointer;
+    font: 500 0.82rem / 1 var(--lbv-sans);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    transition: color 260ms var(--lbv-ease);
+  }
+
+  .gallery-filter-choice:first-child {
+    padding-top: clamp(26px, 3vw, 40px);
+  }
+
+  .gallery-filter-choice--active {
+    color: var(--lbv-gold-deep);
+  }
+
+  .gallery-filter-choice:hover {
+    color: var(--lbv-ink);
+  }
+
+  .gallery-grid {
+    margin-top: clamp(58px, 7vw, 108px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-filter-list,
+  .gallery-filter-list--open,
+  .gallery-filter-toggle svg {
+    transition: none;
   }
 }
 
