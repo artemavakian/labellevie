@@ -4,7 +4,7 @@ import './SiteIntro.css'
 const HOLD_MS = 2500
 const FADE_MS = 700
 // A beat of empty off-white after the mark has gone, before the panel moves.
-const GAP_MS = 500
+const GAP_MS = 250
 
 /* The opening screen: the mark on warm off-white, held just long enough for
    the rest of the site to load behind it. The mark fades out first, then the

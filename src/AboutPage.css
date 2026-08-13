@@ -1875,13 +1875,3 @@
     display: inline;
   }
 }
-
-.about-page__statement-script {
-  font-family: var(--lbv-script);
-  font-style: normal;
-  /* Snell sits small on its em box, so it needs nudging up to read at the
-     same size as the display face — but only as far as the line can grow
-     before it runs past the right edge. */
-  font-size: 1.02em;
-  letter-spacing: normal;
-}
