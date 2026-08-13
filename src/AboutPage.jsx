@@ -49,6 +49,19 @@ function ReviewCard({ name, text }) {
   )
 }
 
+function MarqueeRow({ items }) {
+  const doubled = [...items, ...items]
+  return (
+    <div className="about-page__marquee" aria-label="Patient reviews">
+      <div className="about-page__marquee-track about-page__marquee-track--left">
+        {doubled.map((review, index) => (
+          <ReviewCard key={`${review.name}-${index}`} {...review} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 const REVIEW_ROWS = 3
 const REVIEW_SWAP_MS = 2500
 
@@ -77,6 +90,22 @@ function ReviewStack({ items }) {
   )
 }
 
+const PHONE_QUERY = '(max-width: 700px)'
+
+function usePhone() {
+  const [phone, setPhone] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia(PHONE_QUERY)
+    const sync = () => setPhone(mq.matches)
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
+  }, [])
+
+  return phone
+}
+
 function ActionButton({ children, onClick }) {
   return (
     <button type="button" className="about-page__action" onClick={onClick}>
@@ -89,25 +118,38 @@ function ActionButton({ children, onClick }) {
 }
 
 export default function AboutPage({ onResults, onTreatments }) {
+  // The marquee doubles all 77 reviews, so render only the variant in use
+  // rather than hiding one with CSS.
+  const phone = usePhone()
+
   return (
     <main className="about-page" data-menu-theme="light">
       <section className="about-page__opening" aria-labelledby="about-page-statement">
         <div className="about-page__statement-wrap">
+          {/* Desktop sets the breaks deliberately; a phone is too narrow for
+              that shape, so the sentence just flows. */}
           <h1 id="about-page-statement" className="about-page__statement">
             <span className="about-page__statement-primary">
-              Aesthetic<br />
-              medicine<br />
-              delivered with<br />
-              decades of<br />
+              {phone ? (
+                'Aesthetic medicine delivered with decades of '
+              ) : (
+                <>
+                  Aesthetic<br />
+                  medicine<br />
+                  delivered with<br />
+                  decades of<br />
+                </>
+              )}
               <em>experience &amp;</em>
             </span>
+            {phone ? ' ' : null}
             <em className="about-page__statement-final">warm, passionate service.</em>
           </h1>
         </div>
       </section>
 
       <section className="about-page__reviews-band" aria-label="Patient reviews">
-        <ReviewStack items={REVIEWS} />
+        {phone ? <ReviewStack items={REVIEWS} /> : <MarqueeRow items={REVIEWS} />}
         <div className="about-page__reviews-band-link">
           <a
             className="about-page__reviews-link"

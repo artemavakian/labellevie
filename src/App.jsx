@@ -196,6 +196,7 @@ export default function App() {
   const [heroVideoStarted, setHeroVideoStarted] = useState(false)
   const [heroCovered, setHeroCovered] = useState(false)
   const [heroVideoComplete, setHeroVideoComplete] = useState(false)
+  const [phone, setPhone] = useState(false)
   const heroRef      = useRef(null)
   const dropdownRef  = useRef(null)
   const lenisRef     = useRef(null)
@@ -203,6 +204,15 @@ export default function App() {
   const heroIntroPlayedRef = useRef(false)
   const enteringRef  = useRef(false)
   const enterTimersRef = useRef([])
+
+  // Phones show the menu button over the hero; wider screens use the hero nav.
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px)')
+    const sync = () => setPhone(mq.matches)
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
+  }, [])
 
   useEffect(() => {
     // Portrait lock: works on Android Chrome; silently ignored on iOS Safari.
@@ -474,21 +484,9 @@ export default function App() {
                   <span>Draper, Utah</span>
                 </span>
               </div>
-              {/* Phone-only: the hero's whole navigation is this one control. */}
-              <button
-                type="button"
-                className="hero-text__mobile-menu"
-                aria-label="Open site menu"
-                onClick={() => setMenuOpen(true)}
-              >
-                <span />
-                <span />
-                <span />
-              </button>
             </div>
 
-            {/* Phone-only mark, placed to match the menu panel's logo exactly
-                so opening the menu doesn't shift it. */}
+            {/* Phone-only mark in the top-left corner. */}
             <span className={`hero-mobile-logo${heroReady ? ' hero-mobile-logo--visible' : ''}`} aria-hidden="true" />
 
             <div className={`hero-text__actions${heroReady ? ' hero-text__actions--visible' : ' hero-text__actions--hidden'}`}>
@@ -572,10 +570,10 @@ export default function App() {
 
       {/* On home the control is withheld until About has taken over the
           viewport; the hero carries no menu of its own. */}
-      {/* Hidden over the hero, but it has to come back while the menu is open
-          — on phones the menu is reached from the hero's own hamburger, and
-          this is the only way to close it. */}
-      {(page !== 'home' || heroCovered || menuOpen) && (
+      {/* Hidden over the desktop hero, which carries its own nav. Phones have
+          no hero nav, so the button stays; it also has to come back whenever
+          the menu is open, or there'd be no way to close it. */}
+      {(page !== 'home' || heroCovered || menuOpen || phone) && (
         <SiteMenuButton
           onClick={() => setMenuOpen(current => !current)}
           theme={menuTheme}

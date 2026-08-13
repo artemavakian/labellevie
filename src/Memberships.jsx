@@ -228,8 +228,8 @@ export default function Memberships({ onScrollTo = () => {} }) {
               </div>
               <div className="mem-contact-detail">
                 <span className="mem-contact-label">Email</span>
-                <MembershipContactLink href="mailto:info@labelleviemedicalcare.com" icon={Mail}>
-                  info@labelleviemedicalcare.com
+                <MembershipContactLink href="mailto:info@labelleviecare.com" icon={Mail}>
+                  info@labelleviecare.com
                 </MembershipContactLink>
               </div>
               <div className="mem-contact-detail">

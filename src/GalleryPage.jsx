@@ -87,25 +87,7 @@ export default function GalleryPage() {
       <section className="gallery-content" aria-label="Before and after gallery">
         <h1 className="gallery-title">Full Gallery</h1>
 
-        <div className="gallery-filters" aria-label="Filter gallery by treatment">
-          {FILTERS.map(([value, label]) => (
-            <button
-              key={value}
-              className={filter === value ? 'gallery-filter gallery-filter--active' : 'gallery-filter'}
-              type="button"
-              aria-pressed={filter === value}
-              onClick={() => {
-                setFilter(value)
-                setSelectedId(null)
-              }}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {/* Phone-only replacement for the sticky filter bar above. */}
-        <div className="gallery-filters-mobile">
+        <div className="gallery-filter-bar">
           <button
             className="gallery-filter-toggle"
             type="button"

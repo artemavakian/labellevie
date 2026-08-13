@@ -5,10 +5,6 @@
   color: var(--lbv-ink);
 }
 
-/* Mobile-only marquee elements: hidden on desktop/tablet */
-.about-page__opening-marquee { display: none; }
-.about-page__reviews-variant--mobile { display: none; }
-
 /* Opening campaign */
 .about-page__opening {
   position: relative;
@@ -39,63 +35,6 @@
   content: '';
 }
 
-.about-page__opening-image {
-  position: absolute;
-  inset: 0 0 0 42%;
-  z-index: -2;
-  overflow: hidden;
-  background: var(--lbv-ink-soft);
-}
-
-.about-page__opening-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 22%;
-  filter: saturate(0.66) sepia(0.15) contrast(1.04);
-  transform: scale(1.035);
-  -webkit-user-drag: none;
-}
-
-.about-page__opening-light {
-  position: absolute;
-  z-index: -1;
-  top: -18%;
-  right: 4%;
-  width: min(42vw, 680px);
-  height: 138%;
-  background: linear-gradient(104deg, transparent 4%, rgba(232, 210, 172, 0.03) 27%, rgba(200, 164, 88, 0.3) 54%, transparent 75%);
-  filter: blur(8px);
-  mix-blend-mode: screen;
-  opacity: 0.9;
-  pointer-events: none;
-  transform: rotate(8deg);
-}
-
-.about-page__opening-meta {
-  position: absolute;
-  z-index: 5;
-  top: calc(var(--lbv-page-gutter) + 17px);
-  right: calc(var(--lbv-page-gutter) + 18px);
-  left: calc(var(--lbv-page-gutter) + 18px);
-  display: flex;
-  justify-content: space-between;
-  color: rgba(248, 242, 232, 0.68);
-  font: 600 9px / 1 var(--lbv-sans);
-  letter-spacing: 0.27em;
-  text-transform: uppercase;
-}
-
-.about-page__marquee-position {
-  position: absolute;
-  z-index: 3;
-  left: 0;
-  width: 100%;
-}
-
-.about-page__marquee-position--top { top: 14%; }
-.about-page__marquee-position--bottom { bottom: 4.5%; }
-
 .about-page__marquee {
   display: flex;
   width: 100%;
@@ -112,7 +51,6 @@
 }
 
 .about-page__marquee-track--left { animation: about-page-scroll-left 360s linear infinite; }
-.about-page__marquee-track--right { animation: about-page-scroll-right 300s linear infinite; }
 
 @keyframes about-page-scroll-left {
   from { transform: translateX(0); }
@@ -199,15 +137,6 @@
   color: var(--lbv-gold);
   font: inherit;
   font-size: 1.2em;
-}
-
-.about-page__statement-index {
-  display: block;
-  margin-top: clamp(22px, 3vw, 40px);
-  color: rgba(248, 242, 232, 0.5);
-  font: 500 8px / 1 var(--lbv-sans);
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
 }
 
 .about-page__reviews-link {
@@ -409,7 +338,6 @@
 }
 
 .about-page__footer-copy { position: relative; z-index: 1; }
-.about-page__eyebrow--light { color: var(--lbv-gold); }
 
 .about-page__bio {
   max-width: 1330px;
@@ -460,7 +388,6 @@
 .about-page__action:focus-visible { outline: 1px solid var(--lbv-gold); outline-offset: 8px; }
 
 @media (max-width: 1050px) {
-  .about-page__opening-image { left: 34%; }
   .about-page__statement-wrap { width: min(760px, 74vw); }
   .about-page__team-info { display: block; }
   .about-page__team-role { margin-top: 10px; text-align: left; }
@@ -474,13 +401,6 @@
       linear-gradient(90deg, rgba(10, 8, 6, 0.38), transparent 80%);
   }
   .about-page__opening::after { inset: 20px; }
-  .about-page__opening-image { inset: 0; }
-  .about-page__opening-image img { object-position: center 12%; }
-  .about-page__opening-light { right: -30%; width: 90vw; }
-  .about-page__opening-meta { top: 37px; right: 36px; left: 36px; }
-  .about-page__opening-meta span:last-child { display: none; }
-  .about-page__marquee-position--top { top: 11%; }
-  .about-page__marquee-position--bottom { bottom: 3.5%; }
   .about-page__review-card {
     flex-basis: 250px;
     width: 250px;
@@ -501,7 +421,6 @@
     line-height: 0.86;
   }
   .about-page__statement em { max-width: none; }
-  .about-page__statement-index { margin-top: 20px; }
   .about-page__reviews-link { margin-right: 34px; }
 
   .about-team-wrapper { padding-bottom: 220px; }
@@ -564,18 +483,6 @@
 .about-page__opening::after {
   z-index: 5;
   border-color: rgba(255, 255, 255, 0.3);
-}
-
-.about-page__opening-meta {
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.about-page__marquee-position--top {
-  top: 15%;
-}
-
-.about-page__marquee-position--bottom {
-  bottom: 5%;
 }
 
 .about-page__marquee {
@@ -653,10 +560,6 @@
   max-width: none;
   margin: 0;
   color: #fff;
-}
-
-.about-page__statement-index {
-  color: rgba(255, 255, 255, 0.62);
 }
 
 .about-page__reviews-link {
@@ -816,19 +719,6 @@
     min-height: 820px;
   }
 
-  .about-page__opening-meta {
-    right: 32px;
-    left: 32px;
-  }
-
-  .about-page__marquee-position--top {
-    top: 13%;
-  }
-
-  .about-page__marquee-position--bottom {
-    bottom: 4%;
-  }
-
   .about-page__review-card {
     min-width: 440px;
     grid-template-columns: auto auto minmax(200px, 1fr);
@@ -861,10 +751,6 @@
   border-color: var(--lbv-line-dark);
 }
 
-.about-page__opening-meta {
-  color: rgba(10, 8, 6, 0.5);
-}
-
 .about-page__statement-wrap {
   top: 39%;
   width: min(1540px, calc(100% - 2 * var(--lbv-page-gutter)));
@@ -882,14 +768,6 @@
   display: inline;
   color: var(--lbv-ink);
   font-size: 1em;
-}
-
-.about-page__review-rotator {
-  position: absolute;
-  z-index: 6;
-  right: calc(var(--lbv-page-gutter) + 18px);
-  bottom: clamp(54px, 8vh, 96px);
-  width: min(470px, 40vw);
 }
 
 .about-page__review-rotator .about-page__review-card {
@@ -966,10 +844,6 @@
     linear-gradient(145deg, #15100c 0%, #050403 64%, #000 100%);
 }
 
-.about-page__eyebrow--light {
-  color: #e9d2ad;
-}
-
 .about-page__bio {
   color: var(--lbv-white);
 }
@@ -1010,12 +884,6 @@
   .about-page__statement-wrap {
     top: 34%;
   }
-
-  .about-page__review-rotator {
-    right: 26px;
-    bottom: 72px;
-    width: min(470px, calc(100% - 52px));
-  }
 }
 
 @media (max-width: 580px) {
@@ -1029,10 +897,6 @@
 
   .about-page__statement {
     font-size: clamp(2.75rem, 12.3vw, 4rem);
-  }
-
-  .about-page__review-rotator {
-    bottom: 58px;
   }
 
   .about-page__review-rotator .about-page__review-card {
@@ -1318,15 +1182,6 @@
 }
 }
 
-.about-page__footer-logo {
-  width: clamp(128px, 13vw, 190px);
-  height: clamp(38px, 4vw, 58px);
-  margin-bottom: clamp(22px, 3vw, 36px);
-  background: #e9d2ad;
-  -webkit-mask: url('/lbvlogo.png') center / contain no-repeat;
-  mask: url('/lbvlogo.png') center / contain no-repeat;
-}
-
 @media (max-width: 580px) {
   .about-page__opening::after {
     right: -48vw;
@@ -1400,14 +1255,6 @@
   color: var(--lbv-gold-deep);
 }
 
-.about-page__statement-line--offset {
-  margin-left: clamp(34px, 9vw, 145px) !important;
-}
-
-.about-page__statement-line--final {
-  margin-left: clamp(72px, 18vw, 290px) !important;
-}
-
 .about-page__reviews-band {
   padding: clamp(52px, 7vw, 92px) 0 26px;
   background: var(--lbv-ivory-light);
@@ -1454,14 +1301,6 @@
   .about-page__statement {
     font-size: clamp(2.8rem, 7.5vw, 4.2rem);
   }
-
-  .about-page__statement-line--offset {
-    margin-left: clamp(18px, 5vw, 42px) !important;
-  }
-
-  .about-page__statement-line--final {
-    margin-left: clamp(36px, 10vw, 84px) !important;
-  }
 }
 
 @media (max-width: 580px) {
@@ -1475,11 +1314,6 @@
   .about-page__statement > em {
     width: auto;
     max-width: 100%;
-  }
-
-  .about-page__statement-line--offset,
-  .about-page__statement-line--final {
-    margin-left: 0 !important;
   }
 
   .about-page__reviews-band {
@@ -1602,10 +1436,6 @@
   line-clamp: 2;
 }
 
-.about-page__footer-logo {
-  transform: translateY(-42px);
-}
-
 @media (max-width: 800px) {
   .about-page__statement-wrap {
     transform: translateY(22px);
@@ -1663,12 +1493,6 @@
   background: linear-gradient(118deg, transparent 8%, rgba(233, 210, 173, 0.2) 48%, transparent 88%);
   filter: blur(18px);
   transform: rotate(-8deg);
-}
-
-.about-page__passionate-service {
-  color: inherit;
-  font: inherit;
-  white-space: nowrap;
 }
 
 .about-page__footer-copy {
@@ -1804,15 +1628,6 @@
   font-size: clamp(0.572rem, 0.693vw, 0.704rem);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   Phone-only fixes. "Meet the specialists" (team grid) and the
-   reviews marquee are intentionally left alone — only the opening
-   statement and the closing dark panel are touched here.
-   ══════════════════════════════════════════════════════════════ */
-
-/* Desktop: hide any leftover mobile-only helpers */
-.about-page__opening-marquee { display: none; }
-
 @media (max-width: 700px) {
   /* Shrink the opening from full-screen to just tall enough to hold
      the text. Reviews band is restored to static flow so it appears
@@ -1923,59 +1738,53 @@
   }
 }
 
+/* ── Reviews ───────────────────────────────────────────────────────
+   Desktop keeps the marquee floating over the opening/team boundary. Phones
+   render ReviewStack instead — three rows in normal flow, so they lengthen
+   the page and the Google link lands under the last one. */
+@media (max-width: 700px) {
+  .about-page__reviews-band {
+    padding: clamp(46px, 5.5vw, 84px) 0 0;
+  }
 
-/* ── Reviews: three stacked rows on a timer ────────────────────────
-   Back in normal flow (they used to float over the opening/team boundary),
-   so they lengthen the page and the Google link lands under the last row. */
-.about-page__reviews-band {
-  position: static;
-  padding: clamp(46px, 5.5vw, 84px) 0 0;
-  pointer-events: auto;
-}
+  .about-page__team {
+    padding-top: clamp(52px, 6.5vw, 92px);
+  }
 
-.about-page__team {
-  padding-top: clamp(52px, 6.5vw, 92px);
-}
+  .about-page__review-stack {
+    display: flex;
+    flex-direction: column;
+    padding: 0 var(--lbv-page-gutter);
+  }
 
-.about-page__review-stack {
-  display: flex;
-  flex-direction: column;
-  padding: 0 var(--lbv-page-gutter);
-}
+  .about-page__reviews-band .about-page__review-stack .about-page__review-card {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    flex: 0 0 auto;
+    flex-direction: column;
+    gap: 9px;
+    padding: 15px 0;
+    border: 0;
+    border-top: 1px solid rgba(10, 8, 6, 0.13) !important;
+    background: transparent;
+    animation: about-review-in 520ms var(--lbv-ease) both;
+  }
 
-.about-page__reviews-band .about-page__review-stack .about-page__review-card {
-  display: flex;
-  width: 100%;
-  min-width: 0;
-  min-height: 0;
-  flex: 0 0 auto;
-  flex-direction: column;
-  gap: 9px;
-  padding: clamp(17px, 2vw, 26px) 0;
-  border: 0;
-  border-top: 1px solid rgba(10, 8, 6, 0.13);
-  background: transparent;
-  animation: about-review-in 520ms var(--lbv-ease) both;
-}
+  .about-page__review-stack .about-page__review-card:last-child {
+    border-bottom: 1px solid rgba(10, 8, 6, 0.13);
+  }
 
-.about-page__review-stack .about-page__review-card:last-child {
-  border-bottom: 1px solid rgba(10, 8, 6, 0.13);
+  .about-page__reviews-band-link {
+    padding: 16px var(--lbv-page-gutter) 0;
+  }
 }
 
 @keyframes about-review-in {
   from {
     opacity: 0;
     transform: translateY(7px);
-  }
-}
-
-.about-page__reviews-band-link {
-  padding: clamp(16px, 2vw, 24px) var(--lbv-page-gutter) 0;
-}
-
-@media (max-width: 700px) {
-  .about-page__review-stack .about-page__review-card {
-    padding-block: 15px;
   }
 }
 
@@ -2030,4 +1839,39 @@
   margin-inline: auto;
   transform: scale(1.15);
   transform-origin: center;
+}
+
+/* ── Opening statement, phones ─────────────────────────────────────
+   Desktop sets the line breaks deliberately; on a phone that produces a very
+   narrow ragged column, so the forced breaks are dropped and the sentence is
+   allowed to flow and fill the width. */
+@media (max-width: 700px) {
+  /* The section already supplies the page gutter; the wrap was adding a
+     second one, costing ~48px of line length. */
+  .about-page__statement-wrap {
+    padding-inline: 0 !important;
+  }
+
+  .about-page__statement {
+    max-width: none;
+    /* Largest size that still sets in seven lines — 14vw spills to eight
+       and strands a single short word. */
+    font-size: clamp(2.6rem, 13.5vw, 4.6rem);
+    line-height: 0.96;
+    text-align: left;
+    text-wrap: wrap;
+  }
+
+  .about-page__statement-primary,
+  .about-page__statement-final {
+    display: inline;
+    width: auto;
+    max-width: none;
+    white-space: normal;
+  }
+
+  /* Without this the em would start a new line after "decades of". */
+  .about-page__statement-primary > em {
+    display: inline;
+  }
 }

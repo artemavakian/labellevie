@@ -343,7 +343,6 @@
   cursor: default;
 }
 
-
 .ba-divider::after {
   position: absolute;
   top: 50%;
@@ -710,10 +709,6 @@
   transform: translateY(42px);
 }
 
-.results-intro__eyebrow {
-  margin-left: clamp(3px, 7vw, 110px);
-}
-
 .results-intro__statement {
   max-width: 10.5ch;
   color: #111;
@@ -732,10 +727,6 @@
 .results-intro__footer {
   padding-top: 20px;
   border-top: 1px solid rgba(17, 17, 17, 0.14);
-}
-
-.results-intro__eyebrow {
-  color: #a87530;
 }
 
 .results-intro__scroll,
@@ -935,10 +926,6 @@
 
   .results-intro__body {
     padding-block: 84px 70px;
-  }
-
-  .results-intro__eyebrow {
-    margin-left: 0;
   }
 
   .results-intro__statement {

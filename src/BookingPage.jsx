@@ -80,8 +80,8 @@ export default function BookingPage() {
               </div>
               <div className="booking-detail">
                 <span className="booking-detail__label">Email</span>
-                <ContactLink href="mailto:info@labelleviemedicalcare.com" icon={<MailIcon />}>
-                  info@labelleviemedicalcare.com
+                <ContactLink href="mailto:info@labelleviecare.com" icon={<MailIcon />}>
+                  info@labelleviecare.com
                 </ContactLink>
               </div>
               <div className="booking-detail">
