@@ -814,3 +814,31 @@
     text-align: center;
   }
 }
+
+@media (max-width: 650px) {
+  /* Same clipping fix as the directory title: centre the script line rather
+     than letting it overhang the edge. The heading's ch-based max-width has
+     to go first, otherwise "centred" means centred in a narrow left-hand
+     column rather than on the screen. */
+  .tx-overview__heading {
+    max-width: none;
+  }
+
+  .tx-overview__heading em {
+    display: block;
+    width: fit-content;
+    margin-inline: auto;
+    text-align: center;
+    /* Slightly under the desktop 1.15 so the script's flourishes clear the
+       screen edges at this width. */
+    transform: scale(1.08);
+    transform-origin: center;
+  }
+
+  /* The ring around the arrow crowds the line at this size. */
+  .tx-book-btn .tx-hdr-btn__icon {
+    width: auto;
+    height: auto;
+    border: 0;
+  }
+}

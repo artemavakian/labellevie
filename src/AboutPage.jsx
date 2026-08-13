@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { ArrowUpRight } from 'lucide-react'
 import rawReviews from '../reviews?raw'
 import './AboutPage.css'
@@ -48,15 +49,30 @@ function ReviewCard({ name, text }) {
   )
 }
 
-function MarqueeRow({ items }) {
-  const doubled = [...items, ...items]
+const REVIEW_ROWS = 3
+const REVIEW_SWAP_MS = 2500
+
+/* Three full-width reviews stacked one above the other, the whole set turning
+   over on a timer rather than scrolling past. */
+function ReviewStack({ items }) {
+  const [page, setPage] = useState(0)
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const pages = Math.floor(items.length / REVIEW_ROWS)
+    if (pages < 2) return
+    const timer = setInterval(() => setPage(current => (current + 1) % pages), REVIEW_SWAP_MS)
+    return () => clearInterval(timer)
+  }, [items.length])
+
   return (
-    <div className="about-page__marquee" aria-label="Patient reviews">
-      <div className="about-page__marquee-track about-page__marquee-track--left">
-        {doubled.map((review, index) => (
-          <ReviewCard key={`${review.name}-${index}`} {...review} />
-        ))}
-      </div>
+    <div className="about-page__review-stack" aria-label="Patient reviews">
+      {Array.from({ length: REVIEW_ROWS }, (_, row) => {
+        const review = items[(page * REVIEW_ROWS + row) % items.length]
+        return (
+          <ReviewCard key={`${row}-${review.name}-${page}`} {...review} />
+        )
+      })}
     </div>
   )
 }
@@ -76,7 +92,6 @@ export default function AboutPage({ onResults, onTreatments }) {
   return (
     <main className="about-page" data-menu-theme="light">
       <section className="about-page__opening" aria-labelledby="about-page-statement">
-        <div className="about-page__watermark" aria-hidden="true" />
         <div className="about-page__statement-wrap">
           <h1 id="about-page-statement" className="about-page__statement">
             <span className="about-page__statement-primary">
@@ -92,7 +107,7 @@ export default function AboutPage({ onResults, onTreatments }) {
       </section>
 
       <section className="about-page__reviews-band" aria-label="Patient reviews">
-        <MarqueeRow items={REVIEWS} />
+        <ReviewStack items={REVIEWS} />
         <div className="about-page__reviews-band-link">
           <a
             className="about-page__reviews-link"

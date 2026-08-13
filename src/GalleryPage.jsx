@@ -85,6 +85,8 @@ export default function GalleryPage() {
   return (
     <main className="gallery-page" data-menu-theme="light">
       <section className="gallery-content" aria-label="Before and after gallery">
+        <h1 className="gallery-title">Full Gallery</h1>
+
         <div className="gallery-filters" aria-label="Filter gallery by treatment">
           {FILTERS.map(([value, label]) => (
             <button

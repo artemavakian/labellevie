@@ -28,7 +28,10 @@ export function SiteMenuButton({ onClick, theme = 'light', open = false, classNa
       aria-expanded={open}
     >
       <span className="site-menu-button__text">{open ? 'Close' : 'Menu'}</span>
+      {/* Two bars make the desktop plus; the third only appears on phones,
+          where the mark is a hamburger instead. */}
       <span className="site-menu-button__cross" aria-hidden="true">
+        <span />
         <span />
         <span />
       </span>

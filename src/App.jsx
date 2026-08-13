@@ -194,7 +194,6 @@ export default function App() {
   // done     — opening screen unmounted
   const [heroPhase, setHeroPhase]     = useState('intro')
   const [heroVideoStarted, setHeroVideoStarted] = useState(false)
-  const [scrolledOffHero, setScrolledOffHero] = useState(false)
   const [heroCovered, setHeroCovered] = useState(false)
   const [heroVideoComplete, setHeroVideoComplete] = useState(false)
   const heroRef      = useRef(null)
@@ -255,8 +254,7 @@ export default function App() {
     const hero = heroRef.current
     if (!hero) return
     // null so the priming call below always syncs, even when returning to the
-    // hero with the flags left true from a previous visit.
-    let wasPast = null
+    // hero with the flag left true from a previous visit.
     let wasCovered = null
 
     const onScroll = () => {
@@ -268,12 +266,6 @@ export default function App() {
       // The hero's contents leave as a single gesture the moment the page
       // moves, rather than dissolving in step with the scroll.
       hero.classList.toggle('hero--scrolled', y > 4)
-
-      const past = y > vh * 0.5
-      if (past !== wasPast) {
-        wasPast = past
-        setScrolledOffHero(past)
-      }
 
       // About's top edge has reached the top of the viewport.
       const covered = y >= vh * 0.98
@@ -482,7 +474,22 @@ export default function App() {
                   <span>Draper, Utah</span>
                 </span>
               </div>
+              {/* Phone-only: the hero's whole navigation is this one control. */}
+              <button
+                type="button"
+                className="hero-text__mobile-menu"
+                aria-label="Open site menu"
+                onClick={() => setMenuOpen(true)}
+              >
+                <span />
+                <span />
+                <span />
+              </button>
             </div>
+
+            {/* Phone-only mark, placed to match the menu panel's logo exactly
+                so opening the menu doesn't shift it. */}
+            <span className={`hero-mobile-logo${heroReady ? ' hero-mobile-logo--visible' : ''}`} aria-hidden="true" />
 
             <div className={`hero-text__actions${heroReady ? ' hero-text__actions--visible' : ' hero-text__actions--hidden'}`}>
               <a
@@ -565,30 +572,14 @@ export default function App() {
 
       {/* On home the control is withheld until About has taken over the
           viewport; the hero carries no menu of its own. */}
-      {(page !== 'home' || heroCovered) && (
+      {/* Hidden over the hero, but it has to come back while the menu is open
+          — on phones the menu is reached from the hero's own hamburger, and
+          this is the only way to close it. */}
+      {(page !== 'home' || heroCovered || menuOpen) && (
         <SiteMenuButton
           onClick={() => setMenuOpen(current => !current)}
           theme={menuTheme}
           open={menuOpen}
-        />
-      )}
-
-      {/* Mobile-only hero content: instead of a hamburger button that
-          opens the menu, the phone hero simply *is* the menu — same
-          logo, links and footer, same size and position, just rendered
-          in white directly over the video. Desktop/tablet never show
-          this (see .site-menu--hero in SiteMenu.css). */}
-      {heroActive && (
-        <SiteMenu
-          variant="hero"
-          open={heroReady && !scrolledOffHero}
-          onHome={returnToHero}
-          onAbout={() => goTo('about')}
-          onTreatments={() => goTo('treatments')}
-          onMemberships={() => goTo('memberships')}
-          onResults={() => goTo('results')}
-          onGallery={() => goTo('gallery')}
-          onContact={() => goTo('booking')}
         />
       )}
 

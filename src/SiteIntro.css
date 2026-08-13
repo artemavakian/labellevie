@@ -29,15 +29,16 @@
   user-select: none;
 }
 
-/* The artwork ships as a near-white mark, so it's used as a mask over a solid
-   fill rather than shown directly — that's what allows it to be tinted. */
+/* Masked over a solid fill rather than shown directly — that's what allows it
+   to be tinted. The vector source keeps the script crisp; the PNG is only
+   1024px wide and the intro draws it larger than that on a 2x display. */
 .site-intro__logo {
   display: block;
   width: 100%;
   aspect-ratio: 1024 / 340;
   background-color: var(--lbv-gold-deep);
-  -webkit-mask: url('/lbvlogo.png') center / contain no-repeat;
-  mask: url('/lbvlogo.png') center / contain no-repeat;
+  -webkit-mask: url('/lbvlogo.svg') center / contain no-repeat;
+  mask: url('/lbvlogo.svg') center / contain no-repeat;
 }
 
 .site-intro__caption {

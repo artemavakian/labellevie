@@ -1035,6 +1035,12 @@
    desktop/tablet hero (video, nav links, book/results buttons) is
    completely untouched.
    ══════════════════════════════════════════════════════════════ */
+/* Both are phone-only; above that width the hero carries its own nav. */
+.hero-text__mobile-menu,
+.hero-mobile-logo {
+  display: none;
+}
+
 @media (max-width: 640px) {
   /* The intro's warm-white halves reveal whatever sits behind them as
      they split apart; if the video's first frame isn't decoded yet the
@@ -1052,23 +1058,77 @@
     object-position: 85% center;
   }
 
-  /* Dark-glass veil over the video so the white overlay text stays
-     legible against any frame of the video without washing it out. */
-  .hero::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.35);
-    z-index: 2;
-    pointer-events: none;
-  }
-
-  /* No inline nav, title, or action buttons on phones — the hero itself
-     becomes the menu (see .site-menu--hero in SiteMenu.css), rendered
-     in white directly over the video once it's revealed. */
+  /* The phone hero is the mark, the headline and one control — nothing else,
+     and no veil over the footage. */
   .hero-nav,
-  .hero-text,
+  .hero-text__sub,
   .hero-text__actions {
     display: none;
   }
+
+  .hero-text {
+    right: 0;
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 24px;
+    text-align: center;
+  }
+
+  .hero-text__title {
+    margin-bottom: 0;
+    font-size: clamp(2.6rem, 13.6vw, 4.4rem);
+    text-align: center;
+  }
+
+  .hero-text__rotating-word {
+    width: 100%;
+  }
+
+  .hero-text__rotating-word > span {
+    right: 0;
+    text-align: center;
+  }
+
+  .hero-text__mobile-menu {
+    display: flex;
+    width: 30px;
+    height: 22px;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 32px auto 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  .hero-text__mobile-menu span {
+    display: block;
+    height: 1.4px;
+    background: #fff;
+  }
+
+  /* Matches .site-menu__logo-button at this breakpoint — 84px down, centred,
+     min(200px, 56%) wide — so opening the menu doesn't shift the mark. */
+  .hero-mobile-logo {
+    position: absolute;
+    z-index: 6;
+    top: 84px;
+    left: 50%;
+    display: block;
+    width: min(200px, 56%);
+    aspect-ratio: 1024 / 340;
+    background-color: #fff;
+    opacity: 0;
+    -webkit-mask: url('/lbvlogo.svg') center / contain no-repeat;
+    mask: url('/lbvlogo.svg') center / contain no-repeat;
+    transform: translateX(-50%);
+    transition: opacity 900ms var(--lbv-ease);
+  }
+
+  .hero-mobile-logo--visible {
+    opacity: 1;
+  }
 }
+

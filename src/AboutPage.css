@@ -1923,36 +1923,111 @@
   }
 }
 
-/* ── Opening watermark ─────────────────────────────────────────────
-   The mark is the favicon used as a mask over a solid fill, so it takes the
-   same gold as "experience & warm, passionate service." and is faded back.
-   z-index 0 keeps it under the statement (which sits at 2) even where the
-   two overlap.
 
-   To resize it, change --watermark-size below — that single value drives
-   both dimensions. --watermark-fade controls how faint it is (0 = invisible,
-   1 = full-strength gold). */
-.about-page__watermark {
-  --watermark-size: 620px;
-  --watermark-fade: 0.14;
-  position: absolute;
-  z-index: 0;
-  top: 50%;
-  right: clamp(-2vw, 3vw, 90px);
-  width: var(--watermark-size);
-  height: var(--watermark-size);
-  background-color: var(--lbv-gold-deep);
-  opacity: var(--watermark-fade);
-  -webkit-mask: url('/lbvfavicon.png') center / contain no-repeat;
-  mask: url('/lbvfavicon.png') center / contain no-repeat;
-  pointer-events: none;
-  transform: translateY(-50%);
+/* ── Reviews: three stacked rows on a timer ────────────────────────
+   Back in normal flow (they used to float over the opening/team boundary),
+   so they lengthen the page and the Google link lands under the last row. */
+.about-page__reviews-band {
+  position: static;
+  padding: clamp(46px, 5.5vw, 84px) 0 0;
+  pointer-events: auto;
 }
 
-@media (max-width: 1000px) {
-  .about-page__watermark {
-    --watermark-size: 62vw;
-    --watermark-fade: 0.1;
-    right: -8vw;
+.about-page__team {
+  padding-top: clamp(52px, 6.5vw, 92px);
+}
+
+.about-page__review-stack {
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--lbv-page-gutter);
+}
+
+.about-page__reviews-band .about-page__review-stack .about-page__review-card {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 9px;
+  padding: clamp(17px, 2vw, 26px) 0;
+  border: 0;
+  border-top: 1px solid rgba(10, 8, 6, 0.13);
+  background: transparent;
+  animation: about-review-in 520ms var(--lbv-ease) both;
+}
+
+.about-page__review-stack .about-page__review-card:last-child {
+  border-bottom: 1px solid rgba(10, 8, 6, 0.13);
+}
+
+@keyframes about-review-in {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
   }
+}
+
+.about-page__reviews-band-link {
+  padding: clamp(16px, 2vw, 24px) var(--lbv-page-gutter) 0;
+}
+
+@media (max-width: 700px) {
+  .about-page__review-stack .about-page__review-card {
+    padding-block: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-page__reviews-band .about-page__review-stack .about-page__review-card {
+    animation: none;
+  }
+}
+
+/* ── Opening statement scale ───────────────────────────────────────
+   Sized so the closing line runs almost to the right edge. The wrap's old
+   1440px cap is lifted here too, otherwise on wide screens the block stays
+   centred at 1440 and the line stops well short. Scoped above the phone
+   breakpoints so it doesn't clobber their smaller sizes further up. */
+@media (min-width: 801px) {
+  .about-page__statement-wrap {
+    width: calc(100% - 2 * var(--lbv-page-gutter));
+  }
+
+  .about-page__statement {
+    font-size: clamp(6rem, 9.6vw, 20rem);
+  }
+}
+
+/* ── Specialists heading ───────────────────────────────────────────
+   The script word used to be nudged with a fixed -75px, which only lands on
+   centre at one viewport width. Dropping the two-column grid for an overlaid
+   eyebrow lets the heading centre on the page and stay there at any width. */
+@media (min-width: 801px) {
+  .about-page__team-header {
+    position: relative;
+    display: block;
+  }
+
+  .about-page__team-header .about-page__eyebrow {
+    position: absolute;
+    bottom: clamp(48px, 7vw, 94px);
+    left: 0;
+    margin: 0;
+  }
+}
+
+.about-page__specialists-heading {
+  max-width: none;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.about-page__specialists-word {
+  display: block;
+  width: fit-content;
+  margin-inline: auto;
+  transform: scale(1.15);
+  transform-origin: center;
 }
