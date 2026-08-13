@@ -279,7 +279,6 @@
   letter-spacing: 0.2em;
   text-transform: uppercase;
   backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   transition:
     border-color 300ms var(--lbv-ease),
     background-color 300ms var(--lbv-ease),

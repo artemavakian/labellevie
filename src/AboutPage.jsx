@@ -143,7 +143,7 @@ export default function AboutPage({ onResults, onTreatments }) {
               <em>experience &amp;</em>
             </span>
             {phone ? ' ' : null}
-            <em className="about-page__statement-final">warm, passionate service.</em>
+            <em className="about-page__statement-final">warm, <span className="about-page__statement-script">passionate service.</span></em>
           </h1>
         </div>
       </section>

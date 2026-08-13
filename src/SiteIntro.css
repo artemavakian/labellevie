@@ -27,6 +27,11 @@
   align-items: center;
   width: min(var(--intro-logo-w), calc(100vw - 48px));
   user-select: none;
+  transition: opacity 700ms var(--lbv-ease);
+}
+
+.site-intro__stack--gone {
+  opacity: 0;
 }
 
 /* Masked over a solid fill rather than shown directly — that's what allows it
