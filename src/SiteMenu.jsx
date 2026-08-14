@@ -68,6 +68,10 @@ export default function SiteMenu({
   variant,
 }) {
   const isHero = variant === 'hero'
+  // The dock rides over the bottom of the hero rather than covering the page,
+  // so it takes none of the modal treatment — no backdrop, no scroll lock.
+  const isDock = variant === 'dock'
+  const isModal = !isHero && !isDock
   const panelRef = useRef(null)
 
   useEffect(() => {
@@ -77,16 +81,21 @@ export default function SiteMenu({
     const handleKeyDown = event => {
       if (event.key === 'Escape') onClose?.()
     }
+    window.addEventListener('keydown', handleKeyDown)
+
+    if (isDock) {
+      return () => window.removeEventListener('keydown', handleKeyDown)
+    }
+
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    window.addEventListener('keydown', handleKeyDown)
     requestAnimationFrame(() => panelRef.current?.focus({ preventScroll: true }))
 
     return () => {
       document.body.style.overflow = previousOverflow
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [open, onClose, isHero])
+  }, [open, onClose, isHero, isDock])
 
   const callbacks = {
     onAbout,
@@ -107,18 +116,18 @@ export default function SiteMenu({
 
   return (
     <div
-      className={`site-menu${open ? ' site-menu--open' : ''}${isHero ? ' site-menu--hero' : ''}`}
+      className={`site-menu${open ? ' site-menu--open' : ''}${isHero ? ' site-menu--hero' : ''}${isDock ? ' site-menu--dock' : ''}`}
       aria-hidden={isHero ? undefined : !open}
-      onMouseDown={isHero ? undefined : event => {
+      onMouseDown={isModal ? event => {
         if (event.target === event.currentTarget) onClose?.()
-      }}
+      } : undefined}
     >
       <aside
         ref={panelRef}
         className="site-menu__panel"
-        role={isHero ? undefined : 'dialog'}
-        aria-modal={isHero ? undefined : true}
-        aria-label={isHero ? undefined : 'Site menu'}
+        role={isModal ? 'dialog' : undefined}
+        aria-modal={isModal ? true : undefined}
+        aria-label={isModal ? 'Site menu' : undefined}
         tabIndex={-1}
       >
         <button className="site-menu__logo-button" type="button" onClick={onHome} aria-label="Go to home page">

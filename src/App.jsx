@@ -194,10 +194,9 @@ export default function App() {
   // done     — opening screen unmounted
   const [heroPhase, setHeroPhase]     = useState('intro')
   const [heroVideoStarted, setHeroVideoStarted] = useState(false)
-  const [heroCovered, setHeroCovered] = useState(false)
   const [heroVideoComplete, setHeroVideoComplete] = useState(false)
+  const [dockOpen, setDockOpen] = useState(false)
   const [phone, setPhone] = useState(false)
-  const heroRef      = useRef(null)
   const dropdownRef  = useRef(null)
   const lenisRef     = useRef(null)
   const skipHeroIntroRef = useRef(false)
@@ -242,11 +241,9 @@ export default function App() {
     return () => { cancelAnimationFrame(id); lenisRef.current = null; lenis.destroy() }
   }, [])
 
-  // Lock scrolling behind full-screen overlays. The home page scrolls too now
-  // — down into the About section — but stays locked while the opening screen
-  // is still up.
+  // Lock the hero and full-screen overlays; other pages keep native Lenis scrolling.
   useEffect(() => {
-    if (menuOpen || (page === 'home' && heroPhase !== 'done')) {
+    if (menuOpen || page === 'home') {
       lenisRef.current?.stop()
       document.body.style.overflow = 'hidden'
     } else {
@@ -254,48 +251,7 @@ export default function App() {
       document.body.style.overflow = ''
     }
     return () => { document.body.style.overflow = '' }
-  }, [menuOpen, page, heroPhase])
-
-  // The hero is pinned to the top of the viewport, so shifting it by a quarter
-  // of the scroll distance is what makes the About section appear to slide up
-  // over a hero that's still drifting rather than one frozen in place.
-  useEffect(() => {
-    if (page !== 'home' || heroPhase !== 'done') return
-    const hero = heroRef.current
-    if (!hero) return
-    // null so the priming call below always syncs, even when returning to the
-    // hero with the flag left true from a previous visit.
-    let wasCovered = null
-
-    const onScroll = () => {
-      const y = window.scrollY || window.pageYOffset || 0
-      const vh = window.innerHeight || 1
-      hero.style.transform = `translateY(${(-Math.min(y, vh) * 0.25).toFixed(2)}px)`
-      // Once About has fully covered it there's nothing to composite.
-      hero.style.visibility = y > vh * 1.05 ? 'hidden' : ''
-      // The hero's contents leave as a single gesture the moment the page
-      // moves, rather than dissolving in step with the scroll.
-      hero.classList.toggle('hero--scrolled', y > 4)
-
-      // About's top edge has reached the top of the viewport.
-      const covered = y >= vh * 0.98
-      if (covered !== wasCovered) {
-        wasCovered = covered
-        setHeroCovered(covered)
-      }
-    }
-
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-      hero.style.transform = ''
-      hero.style.visibility = ''
-      hero.classList.remove('hero--scrolled')
-    }
-  }, [page, heroPhase])
+  }, [menuOpen, page])
 
   useEffect(() => {
     if (page !== 'home') return
@@ -317,6 +273,59 @@ export default function App() {
     }
   }, [page])
 
+  // The hero doesn't scroll, so the scroll gesture is spent on the menu
+  // instead: on desktop it lifts the dock over the bottom of the video, and
+  // on phones — which have no dock — it opens the full menu.
+  useEffect(() => {
+    if (page !== 'home' || heroPhase !== 'done' || menuOpen) return
+    let touchOrigin = null
+
+    const reveal = () => {
+      if (phone) setMenuOpen(true)
+      else setDockOpen(true)
+    }
+    const dismiss = () => {
+      if (!phone) setDockOpen(false)
+    }
+
+    const onWheel = event => {
+      if (event.deltaY > 6) reveal()
+      else if (event.deltaY < -6) dismiss()
+    }
+    const onTouchStart = event => {
+      touchOrigin = event.touches[0]?.clientY ?? null
+    }
+    const onTouchMove = event => {
+      if (touchOrigin === null) return
+      const travelled = touchOrigin - (event.touches[0]?.clientY ?? touchOrigin)
+      // Far enough that a tap or a stray finger can't trigger it.
+      if (travelled > 28) {
+        touchOrigin = null
+        reveal()
+      } else if (travelled < -28) {
+        touchOrigin = null
+        dismiss()
+      }
+    }
+    // Keyboards get the same reach as the wheel; space is left alone so it
+    // keeps activating whichever hero control has focus.
+    const onKeyDown = event => {
+      if (event.key === 'ArrowDown' || event.key === 'PageDown') reveal()
+      else if (event.key === 'ArrowUp' || event.key === 'PageUp') dismiss()
+    }
+
+    window.addEventListener('wheel', onWheel, { passive: true })
+    window.addEventListener('touchstart', onTouchStart, { passive: true })
+    window.addEventListener('touchmove', onTouchMove, { passive: true })
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      window.removeEventListener('wheel', onWheel)
+      window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchmove', onTouchMove)
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [page, heroPhase, phone, menuOpen])
+
   const enterHero = useCallback(() => {
     if (enteringRef.current) return
     enteringRef.current = true
@@ -335,9 +344,7 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    // Home is included now that it scrolls onto the light About section, but
-    // not until the opening screen is out of the way.
-    if (page === 'home' && heroPhase !== 'done') return
+    if (page === 'home') return
 
     const fallback = ['about', 'results', 'gallery', 'treatments', 'memberships'].includes(page) ? 'light' : 'dark'
     const updateTheme = () => {
@@ -356,7 +363,7 @@ export default function App() {
       window.removeEventListener('scroll', updateTheme)
       window.removeEventListener('resize', updateTheme)
     }
-  }, [page, heroPhase])
+  }, [page])
 
   // Shared by clicks (goTo) and browser back/forward (popstate) so both
   // paths update state identically.
@@ -365,6 +372,7 @@ export default function App() {
     setMenuTheme(['about', 'results', 'gallery', 'treatments', 'memberships'].includes(to) ? 'light' : 'dark')
     setMenuOpen(false)
     setDropdownOpen(false)
+    setDockOpen(false)
     lenisRef.current?.scrollTo(0, { immediate: true })
     window.scrollTo(0, 0)
   }
@@ -408,6 +416,7 @@ export default function App() {
   const heroDrift = !heroActive || heroPhase === 'done'
     ? ''
     : heroPhase === 'intro' ? ' hero--intro-wait' : ' hero--intro-move'
+  const heroDocked = heroActive && dockOpen ? ' hero--docked' : ''
 
   return (
     <>
@@ -416,8 +425,7 @@ export default function App() {
           element never has to re-fetch/re-decode when navigating back
           to the hero — that reload was the source of the black flash. */}
       <section
-        className={`hero${heroActive ? '' : ' hero--inactive'}${heroDrift}`}
-        ref={heroRef}
+        className={`hero${heroActive ? '' : ' hero--inactive'}${heroDrift}${heroDocked}`}
         aria-hidden={!heroActive}
         data-menu-theme="dark"
       >
@@ -527,17 +535,6 @@ export default function App() {
             </div>
       </section>
 
-      {/* The landing page continues into About, which scrolls up over the
-          pinned hero. */}
-      {heroActive && (
-        <div className="home-about">
-          <AboutPage
-            onResults={() => goTo('results')}
-            onTreatments={() => goTo('treatments')}
-          />
-        </div>
-      )}
-
       {page === 'about' && (
         <AboutPage
           onResults={() => goTo('results')}
@@ -571,13 +568,13 @@ export default function App() {
       {/* Hidden over the desktop hero, which carries its own nav. Phones have
           no hero nav, so the button stays; it also has to come back whenever
           the menu is open, or there'd be no way to close it. */}
-      {(page !== 'home' || heroCovered || menuOpen || phone) && (
+      {(page !== 'home' || menuOpen || phone) && (
         <SiteMenuButton
           onClick={() => setMenuOpen(current => !current)}
           theme={menuTheme}
           open={menuOpen}
           className={[
-            page === 'home' && !heroCovered && !menuOpen ? 'site-menu-button--hero' : '',
+            page === 'home' && !menuOpen ? 'site-menu-button--hero' : '',
             // Over the phone hero the control waits for the intro to hand
             // over, fading in alongside the headline.
             phone && page === 'home' && !heroReady ? 'site-menu-button--waiting' : '',
@@ -587,6 +584,22 @@ export default function App() {
 
       {heroActive && heroPhase !== 'done' && (
         <SiteIntro leaving={heroPhase !== 'intro'} onEnter={enterHero} />
+      )}
+
+      {/* Scrolling the desktop hero brings this up over its bottom third. */}
+      {heroActive && !phone && (
+        <SiteMenu
+          variant="dock"
+          open={dockOpen}
+          onClose={() => setDockOpen(false)}
+          onHome={returnToHero}
+          onAbout={() => goTo('about')}
+          onTreatments={() => goTo('treatments')}
+          onMemberships={() => goTo('memberships')}
+          onResults={() => goTo('results')}
+          onGallery={() => goTo('gallery')}
+          onContact={() => goTo('booking')}
+        />
       )}
 
       <SiteMenu
