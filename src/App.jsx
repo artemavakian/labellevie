@@ -207,7 +207,12 @@ export default function App() {
   // Phones show the menu button over the hero; wider screens use the hero nav.
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 640px)')
-    const sync = () => setPhone(mq.matches)
+    const sync = () => {
+      setPhone(mq.matches)
+      // A dock left open at desktop width would otherwise keep the phone
+      // hero's copy hidden behind a panel phones never show.
+      if (mq.matches) setDockOpen(false)
+    }
     sync()
     mq.addEventListener('change', sync)
     return () => mq.removeEventListener('change', sync)
@@ -497,6 +502,12 @@ export default function App() {
             {/* Phone-only mark in the top-left corner. */}
             <span className={`hero-mobile-logo${heroReady ? ' hero-mobile-logo--visible' : ''}`} aria-hidden="true" />
 
+            {/* Takes the place of the hero's copy while the dock is up. */}
+            <span className="hero-dock-mark">
+              <span className="hero-dock-mark__logo" role="img" aria-label="La Belle Vie" />
+              <span className="hero-dock-mark__caption">Medical Care · Aesthetics</span>
+            </span>
+
             <div className={`hero-text__actions${heroReady ? ' hero-text__actions--visible' : ' hero-text__actions--hidden'}`}>
               <a
                 href="#"
@@ -592,7 +603,6 @@ export default function App() {
           variant="dock"
           open={dockOpen}
           onClose={() => setDockOpen(false)}
-          onHome={returnToHero}
           onAbout={() => goTo('about')}
           onTreatments={() => goTo('treatments')}
           onMemberships={() => goTo('memberships')}

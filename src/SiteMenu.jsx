@@ -130,10 +130,14 @@ export default function SiteMenu({
         aria-label={isModal ? 'Site menu' : undefined}
         tabIndex={-1}
       >
-        <button className="site-menu__logo-button" type="button" onClick={onHome} aria-label="Go to home page">
-          <img className="site-menu__logo" src="/lbvlogo.png" alt="La Belle Vie" draggable={false} />
-          <span className="site-menu__logo-caption">Medical Care · Aesthetics</span>
-        </button>
+        {/* The dock leaves the mark to the hero above it, which shows the same
+            lockup at a size the 36vh panel has no room for. */}
+        {!isDock && (
+          <button className="site-menu__logo-button" type="button" onClick={onHome} aria-label="Go to home page">
+            <img className="site-menu__logo" src="/lbvlogo.png" alt="La Belle Vie" draggable={false} />
+            <span className="site-menu__logo-caption">Medical Care · Aesthetics</span>
+          </button>
+        )}
 
         <nav className="site-menu__nav" aria-label="Main navigation">
           <div className="site-menu__nav-main">

@@ -589,31 +589,28 @@
   transform: translateY(0);
 }
 
-.site-menu--dock .site-menu__logo-button {
-  /* Caps at the side menu's 248px, but tracks viewport height below that:
-     36vh is only just deep enough for the two link rows and the footer, and
-     the mark is the one piece that can give without changing the type. */
-  width: min(248px, 24vh);
-  flex-shrink: 0;
-  margin: 0 auto;
-  transform: none;
-  text-align: center;
-}
-
+/* Both auto margins split the free space, which centres the links between the
+   panel's top edge and the footer while the footer stays pinned to the bottom. */
 .site-menu--dock .site-menu__nav {
   align-items: stretch;
-  margin-top: clamp(6px, 1.2vh, 16px);
+  margin-top: auto;
 }
 
 .site-menu--dock .site-menu__nav-main,
 .site-menu--dock .site-menu__nav-secondary {
   flex-direction: row;
   align-items: baseline;
-  justify-content: space-between;
-  gap: clamp(12px, 2vw, 42px);
+  justify-content: center;
+}
+
+/* 2.7vw is half the spacing the row used to fall into when it was justified
+   edge to edge, and it holds that ratio as the type scales with the window. */
+.site-menu--dock .site-menu__nav-main {
+  gap: clamp(14px, 2.7vw, 56px);
 }
 
 .site-menu--dock .site-menu__nav-secondary {
+  gap: clamp(16px, 2.2vw, 32px);
   margin-top: clamp(5px, 1.6vh, 18px);
 }
 

@@ -191,6 +191,8 @@
   object-fit: cover;
   object-position: center;
   pointer-events: none;
+  /* Matched to the dock's own travel so the frame and the panel move as one. */
+  transition: transform 760ms var(--lbv-ease);
 }
 
 .hero__video--loading {
@@ -254,19 +256,69 @@
 .hero-text--visible {
   opacity: 1;
   pointer-events: auto;
-  transition: opacity 0.55s ease 0.15s, transform 760ms var(--lbv-ease);
+  transition: opacity 0.55s ease 0.15s;
 }
 
-/* The dock takes the bottom 36% of the hero: the headline lifts so its
-   subline clears the panel's top edge, and the pinned buttons — which would
-   sit behind it — hand their job over to the menu. */
-.hero--docked .hero-text {
-  transform: translateY(-50%) translateY(-7vh);
-}
-
+/* ── Hero under the dock ──────────────────────────────────────
+   With the dock up, the hero hands everything over to it: the copy, the
+   nav and the buttons all leave, the video is pushed up so the frame
+   shifts with the panel, and only the mark below remains. */
+/* Quicker than their own fade-in, so the copy is clear of the frame before
+   the mark starts to arrive instead of crossing it. */
+.hero--docked .hero-nav,
+.hero--docked .hero-text,
 .hero--docked .hero-text__actions {
   opacity: 0;
   pointer-events: none;
+  transition: opacity 260ms var(--lbv-ease);
+}
+
+.hero--docked .hero__video {
+  transform: translateY(-7vh);
+}
+
+/* The mark stands alone over the video, centred in the band the dock leaves
+   showing, in the panel's own cream so the two read as one surface. It is
+   20% off the opening screen's 676px lockup. */
+.hero-dock-mark {
+  position: absolute;
+  top: 32vh;
+  left: 50%;
+  z-index: 7;
+  display: flex;
+  width: min(541px, calc(100vw - 48px));
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 400ms var(--lbv-ease);
+}
+
+/* Waits for the copy to finish leaving, then settles in with the panel. */
+.hero--docked .hero-dock-mark {
+  opacity: 1;
+  transition: opacity 520ms var(--lbv-ease) 300ms;
+}
+
+.hero-dock-mark__logo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1024 / 340;
+  background-color: var(--lbv-menu-cream);
+  -webkit-mask: url('/lbvlogo.svg') center / contain no-repeat;
+  mask: url('/lbvlogo.svg') center / contain no-repeat;
+}
+
+.hero-dock-mark__caption {
+  margin-top: 9.6px;
+  color: var(--lbv-menu-cream);
+  font: 300 20.8px / 1 var(--lbv-sans);
+  letter-spacing: 0.26em;
+  /* Keeps the tracked line optically centred. */
+  text-indent: 0.26em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .hero-text__title {
@@ -580,7 +632,9 @@
   }
 
   .hero-nav,
-  .hero-text__actions {
+  .hero-text__actions,
+  /* Phones open the full menu rather than the dock, so its mark never runs. */
+  .hero-dock-mark {
     display: none;
   }
 
