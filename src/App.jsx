@@ -502,6 +502,10 @@ export default function App() {
             {/* Phone-only mark in the top-left corner. */}
             <span className={`hero-mobile-logo${heroReady ? ' hero-mobile-logo--visible' : ''}`} aria-hidden="true" />
 
+            {/* Backdrop for the dock. It sits inside the hero, under the mark,
+                so only the video behind the menu is dimmed. */}
+            <span className="hero-dim" aria-hidden="true" />
+
             {/* Takes the place of the hero's copy while the dock is up. */}
             <span className="hero-dock-mark">
               <span className="hero-dock-mark__logo" role="img" aria-label="La Belle Vie" />

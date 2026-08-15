@@ -277,6 +277,23 @@
   transform: translateY(-7vh);
 }
 
+/* The same veil the menu drops over every other page, at the same weight and
+   speed. Layering it inside the hero — above the video, below the mark — is
+   what keeps the mark and the panel itself out of it. */
+.hero-dim {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  background: rgba(10, 8, 6, 0.46);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 520ms var(--lbv-ease);
+}
+
+.hero--docked .hero-dim {
+  opacity: 1;
+}
+
 /* The mark stands alone over the video, centred in the band the dock leaves
    showing, in the panel's own cream so the two read as one surface. It is
    20% off the opening screen's 676px lockup. */
@@ -633,8 +650,10 @@
 
   .hero-nav,
   .hero-text__actions,
-  /* Phones open the full menu rather than the dock, so its mark never runs. */
-  .hero-dock-mark {
+  /* Phones open the full menu rather than the dock, so neither its mark nor
+     its backdrop ever runs. */
+  .hero-dock-mark,
+  .hero-dim {
     display: none;
   }
 
