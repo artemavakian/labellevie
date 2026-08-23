@@ -272,17 +272,15 @@ export default function App() {
     }
   }, [page])
 
-  // The hero doesn't scroll, so the scroll gesture is spent on the menu
-  // instead, it opens the menu. Closing goes through the usual controls, so
-  // the gesture only ever has to bring it in.
+  // The phone hero doesn't scroll and carries no nav of its own, so a swipe
+  // there opens the full menu. Wider screens leave the hero fixed: the
+  // gesture does nothing, and the hero's own nav is the way through.
   useEffect(() => {
-    if (page !== 'home' || heroPhase !== 'done' || menuOpen) return
+    if (!phone || page !== 'home' || heroPhase !== 'done' || menuOpen) return
     let touchOrigin = null
 
-    const reveal = () => setMenuOpen(true)
-
     const onWheel = event => {
-      if (event.deltaY > 6) reveal()
+      if (event.deltaY > 6) setMenuOpen(true)
     }
     const onTouchStart = event => {
       touchOrigin = event.touches[0]?.clientY ?? null
@@ -292,26 +290,19 @@ export default function App() {
       // Far enough that a tap or a stray finger can't trigger it.
       if (touchOrigin - (event.touches[0]?.clientY ?? touchOrigin) > 28) {
         touchOrigin = null
-        reveal()
+        setMenuOpen(true)
       }
-    }
-    // Keyboards get the same reach as the wheel; space is left alone so it
-    // keeps activating whichever hero control has focus.
-    const onKeyDown = event => {
-      if (event.key === 'ArrowDown' || event.key === 'PageDown') reveal()
     }
 
     window.addEventListener('wheel', onWheel, { passive: true })
     window.addEventListener('touchstart', onTouchStart, { passive: true })
     window.addEventListener('touchmove', onTouchMove, { passive: true })
-    window.addEventListener('keydown', onKeyDown)
     return () => {
       window.removeEventListener('wheel', onWheel)
       window.removeEventListener('touchstart', onTouchStart)
       window.removeEventListener('touchmove', onTouchMove)
-      window.removeEventListener('keydown', onKeyDown)
     }
-  }, [page, heroPhase, menuOpen])
+  }, [page, heroPhase, phone, menuOpen])
 
   const enterHero = useCallback(() => {
     if (enteringRef.current) return
@@ -563,8 +554,6 @@ export default function App() {
             // Over the phone hero the control waits for the intro to hand
             // over, fading in alongside the headline.
             phone && page === 'home' && !heroReady ? 'site-menu-button--waiting' : '',
-            // Follows the hero's menu across to the left edge.
-            heroActive && menuOpen ? 'site-menu-button--left' : '',
           ].filter(Boolean).join(' ')}
         />
       )}
@@ -573,11 +562,8 @@ export default function App() {
         <SiteIntro leaving={heroPhase !== 'intro'} onEnter={enterHero} />
       )}
 
-      {/* One menu for the whole site; over the hero it comes in from the
-          left rather than the right. */}
       <SiteMenu
         open={menuOpen}
-        side={heroActive ? 'left' : 'right'}
         onClose={() => setMenuOpen(false)}
         onHome={returnToHero}
         onAbout={() => goTo('about')}

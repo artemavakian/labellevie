@@ -66,7 +66,6 @@ export default function SiteMenu({
   onGallery,
   onContact,
   variant,
-  side,
 }) {
   const isHero = variant === 'hero'
   const panelRef = useRef(null)
@@ -108,7 +107,7 @@ export default function SiteMenu({
 
   return (
     <div
-      className={`site-menu${open ? ' site-menu--open' : ''}${isHero ? ' site-menu--hero' : ''}${side === 'left' ? ' site-menu--left' : ''}`}
+      className={`site-menu${open ? ' site-menu--open' : ''}${isHero ? ' site-menu--hero' : ''}`}
       aria-hidden={isHero ? undefined : !open}
       onMouseDown={isHero ? undefined : event => {
         if (event.target === event.currentTarget) onClose?.()

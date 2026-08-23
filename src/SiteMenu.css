@@ -552,34 +552,6 @@
   }
 }
 
-/* ── Left-hand menu ───────────────────────────────────────────
-   The hero opens the same menu as everywhere else, only against the other
-   edge. Phones show it full-screen, where an edge doesn't apply, so this is
-   left to wider screens. */
-@media (min-width: 641px) {
-  .site-menu--left .site-menu__panel {
-    right: auto;
-    left: 0;
-    /* Shadow, gold cast and gradient all turn with the panel, so it reads as
-       the same surface seen against the opposite edge. */
-    box-shadow: 32px 0 90px rgba(10, 8, 6, 0.2);
-    background:
-      radial-gradient(circle at 0% 0%, rgba(200, 164, 88, 0.18), transparent 30%),
-      linear-gradient(215deg, #fffdf8 0%, #f5ead8 100%);
-    transform: translateX(-100%);
-  }
-
-  .site-menu--left.site-menu--open .site-menu__panel {
-    transform: translateX(0);
-  }
-
-  /* Keeps Close over the panel rather than stranded in the far corner. */
-  .site-menu-button--left {
-    right: auto;
-    left: 22px;
-  }
-}
-
 /* ── Phone hero content ───────────────────────────────────────
    On phones the hero has no hamburger button at all — the same menu
    markup (logo, links, footer) is rendered permanently in place, in
