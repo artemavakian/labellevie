@@ -15,9 +15,6 @@
   --lbv-gold: #c8a458;
   --lbv-gold-deep: #b78a4e;
   --lbv-white: #fff;
-  /* Sampled from the middle of the menu panel's gradient, for marks that need
-     to read as the same surface as the menu. */
-  --lbv-menu-cream: #faf4e8;
   --lbv-line-light: rgba(255, 255, 255, 0.2);
   --lbv-line-dark: rgba(26, 18, 8, 0.16);
   --lbv-page-gutter: clamp(24px, 5.5vw, 88px);

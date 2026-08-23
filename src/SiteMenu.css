@@ -552,113 +552,31 @@
   }
 }
 
-/* ── Desktop hero dock ────────────────────────────────────────
-   A scroll gesture on the hero lifts this over the bottom 36% of the
-   viewport. Everything it shows is the side menu's own markup, so the
-   background, type sizes and contents come along unchanged — only the
-   stacking is horizontal, and the panel enters from the bottom. */
-.site-menu--dock {
-  background: transparent !important;
-  /* Only the panel is interactive; the hero behind it stays clickable. */
-  pointer-events: none;
-  transition: visibility 0s linear 760ms;
-}
+/* ── Left-hand menu ───────────────────────────────────────────
+   The hero opens the same menu as everywhere else, only against the other
+   edge. Phones show it full-screen, where an edge doesn't apply, so this is
+   left to wider screens. */
+@media (min-width: 641px) {
+  .site-menu--left .site-menu__panel {
+    right: auto;
+    left: 0;
+    /* Shadow, gold cast and gradient all turn with the panel, so it reads as
+       the same surface seen against the opposite edge. */
+    box-shadow: 32px 0 90px rgba(10, 8, 6, 0.2);
+    background:
+      radial-gradient(circle at 0% 0%, rgba(200, 164, 88, 0.18), transparent 30%),
+      linear-gradient(215deg, #fffdf8 0%, #f5ead8 100%);
+    transform: translateX(-100%);
+  }
 
-.site-menu--dock.site-menu--open {
-  transition: visibility 0s linear 0s;
-}
+  .site-menu--left.site-menu--open .site-menu__panel {
+    transform: translateX(0);
+  }
 
-.site-menu--dock .site-menu__panel {
-  top: auto;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: flex;
-  width: 100%;
-  height: 36vh;
-  flex-direction: column;
-  overflow: hidden;
-  padding: clamp(12px, 1.6vh, 22px) clamp(26px, 3vw, 54px) clamp(10px, 1.4vh, 18px);
-  box-shadow: 0 -30px 80px rgba(10, 8, 6, 0.24);
-  pointer-events: auto;
-  transform: translateY(100%);
-  transition: transform 760ms var(--lbv-ease);
-}
-
-.site-menu--dock.site-menu--open .site-menu__panel {
-  transform: translateY(0);
-}
-
-/* Both auto margins split the free space, which centres the links between the
-   panel's top edge and the footer while the footer stays pinned to the bottom. */
-.site-menu--dock .site-menu__nav {
-  align-items: stretch;
-  margin-top: auto;
-}
-
-.site-menu--dock .site-menu__nav-main,
-.site-menu--dock .site-menu__nav-secondary {
-  flex-direction: row;
-  align-items: baseline;
-  justify-content: center;
-}
-
-/* 2.7vw is half the spacing the row used to fall into when it was justified
-   edge to edge, and it holds that ratio as the type scales with the window. */
-.site-menu--dock .site-menu__nav-main {
-  gap: clamp(14px, 2.7vw, 56px);
-}
-
-.site-menu--dock .site-menu__nav-secondary {
-  gap: clamp(16px, 2.2vw, 32px);
-  margin-top: clamp(5px, 1.6vh, 18px);
-}
-
-.site-menu--dock .site-menu__nav-link {
-  white-space: nowrap;
-}
-
-/* Same ceiling and vw tracking as the side menu; only the 38px floor is
-   dropped, since four links abreast can't hold it on a narrow window. The
-   script row keeps the side menu's own size, so it's scoped to the main row. */
-.site-menu--dock .site-menu__nav-main .site-menu__nav-link {
-  font-size: clamp(20px, 4.6vw, 66px);
-}
-
-.site-menu--dock .site-menu__footer {
-  grid-template-columns: 1fr auto auto;
-  align-items: center;
-  justify-content: normal;
-  gap: clamp(16px, 2vw, 36px);
-  margin-top: auto;
-  padding-top: clamp(7px, 1.1vh, 14px);
-}
-
-/* The row is pinned explicitly: the copyright comes last in the markup but
-   sits in the first column, which sparse auto-placement would otherwise
-   push onto a second row. */
-.site-menu--dock .site-menu__copyright {
-  position: static;
-  grid-area: 1 / 1;
-  justify-self: start;
-}
-
-.site-menu--dock .site-menu__legal {
-  grid-area: 1 / 2;
-  flex-direction: row;
-  align-items: center;
-  gap: clamp(14px, 1.6vw, 28px);
-  justify-self: end;
-}
-
-.site-menu--dock .site-menu__socials {
-  grid-area: 1 / 3;
-}
-
-/* Phones open the full menu on the same gesture instead. */
-@media (max-width: 640px) {
-  .site-menu--dock {
-    display: none;
+  /* Keeps Close over the panel rather than stranded in the far corner. */
+  .site-menu-button--left {
+    right: auto;
+    left: 22px;
   }
 }
 

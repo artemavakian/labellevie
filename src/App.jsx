@@ -195,7 +195,6 @@ export default function App() {
   const [heroPhase, setHeroPhase]     = useState('intro')
   const [heroVideoStarted, setHeroVideoStarted] = useState(false)
   const [heroVideoComplete, setHeroVideoComplete] = useState(false)
-  const [dockOpen, setDockOpen] = useState(false)
   const [phone, setPhone] = useState(false)
   const dropdownRef  = useRef(null)
   const lenisRef     = useRef(null)
@@ -207,12 +206,7 @@ export default function App() {
   // Phones show the menu button over the hero; wider screens use the hero nav.
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 640px)')
-    const sync = () => {
-      setPhone(mq.matches)
-      // A dock left open at desktop width would otherwise keep the phone
-      // hero's copy hidden behind a panel phones never show.
-      if (mq.matches) setDockOpen(false)
-    }
+    const sync = () => setPhone(mq.matches)
     sync()
     mq.addEventListener('change', sync)
     return () => mq.removeEventListener('change', sync)
@@ -279,44 +273,32 @@ export default function App() {
   }, [page])
 
   // The hero doesn't scroll, so the scroll gesture is spent on the menu
-  // instead: on desktop it lifts the dock over the bottom of the video, and
-  // on phones — which have no dock — it opens the full menu.
+  // instead, it opens the menu. Closing goes through the usual controls, so
+  // the gesture only ever has to bring it in.
   useEffect(() => {
     if (page !== 'home' || heroPhase !== 'done' || menuOpen) return
     let touchOrigin = null
 
-    const reveal = () => {
-      if (phone) setMenuOpen(true)
-      else setDockOpen(true)
-    }
-    const dismiss = () => {
-      if (!phone) setDockOpen(false)
-    }
+    const reveal = () => setMenuOpen(true)
 
     const onWheel = event => {
       if (event.deltaY > 6) reveal()
-      else if (event.deltaY < -6) dismiss()
     }
     const onTouchStart = event => {
       touchOrigin = event.touches[0]?.clientY ?? null
     }
     const onTouchMove = event => {
       if (touchOrigin === null) return
-      const travelled = touchOrigin - (event.touches[0]?.clientY ?? touchOrigin)
       // Far enough that a tap or a stray finger can't trigger it.
-      if (travelled > 28) {
+      if (touchOrigin - (event.touches[0]?.clientY ?? touchOrigin) > 28) {
         touchOrigin = null
         reveal()
-      } else if (travelled < -28) {
-        touchOrigin = null
-        dismiss()
       }
     }
     // Keyboards get the same reach as the wheel; space is left alone so it
     // keeps activating whichever hero control has focus.
     const onKeyDown = event => {
       if (event.key === 'ArrowDown' || event.key === 'PageDown') reveal()
-      else if (event.key === 'ArrowUp' || event.key === 'PageUp') dismiss()
     }
 
     window.addEventListener('wheel', onWheel, { passive: true })
@@ -329,7 +311,7 @@ export default function App() {
       window.removeEventListener('touchmove', onTouchMove)
       window.removeEventListener('keydown', onKeyDown)
     }
-  }, [page, heroPhase, phone, menuOpen])
+  }, [page, heroPhase, menuOpen])
 
   const enterHero = useCallback(() => {
     if (enteringRef.current) return
@@ -377,7 +359,6 @@ export default function App() {
     setMenuTheme(['about', 'results', 'gallery', 'treatments', 'memberships'].includes(to) ? 'light' : 'dark')
     setMenuOpen(false)
     setDropdownOpen(false)
-    setDockOpen(false)
     lenisRef.current?.scrollTo(0, { immediate: true })
     window.scrollTo(0, 0)
   }
@@ -421,7 +402,6 @@ export default function App() {
   const heroDrift = !heroActive || heroPhase === 'done'
     ? ''
     : heroPhase === 'intro' ? ' hero--intro-wait' : ' hero--intro-move'
-  const heroDocked = heroActive && dockOpen ? ' hero--docked' : ''
 
   return (
     <>
@@ -430,7 +410,7 @@ export default function App() {
           element never has to re-fetch/re-decode when navigating back
           to the hero — that reload was the source of the black flash. */}
       <section
-        className={`hero${heroActive ? '' : ' hero--inactive'}${heroDrift}${heroDocked}`}
+        className={`hero${heroActive ? '' : ' hero--inactive'}${heroDrift}`}
         aria-hidden={!heroActive}
         data-menu-theme="dark"
       >
@@ -501,16 +481,6 @@ export default function App() {
 
             {/* Phone-only mark in the top-left corner. */}
             <span className={`hero-mobile-logo${heroReady ? ' hero-mobile-logo--visible' : ''}`} aria-hidden="true" />
-
-            {/* Backdrop for the dock. It sits inside the hero, under the mark,
-                so only the video behind the menu is dimmed. */}
-            <span className="hero-dim" aria-hidden="true" />
-
-            {/* Takes the place of the hero's copy while the dock is up. */}
-            <span className="hero-dock-mark">
-              <span className="hero-dock-mark__logo" role="img" aria-label="La Belle Vie" />
-              <span className="hero-dock-mark__caption">Medical Care · Aesthetics</span>
-            </span>
 
             <div className={`hero-text__actions${heroReady ? ' hero-text__actions--visible' : ' hero-text__actions--hidden'}`}>
               <a
@@ -593,6 +563,8 @@ export default function App() {
             // Over the phone hero the control waits for the intro to hand
             // over, fading in alongside the headline.
             phone && page === 'home' && !heroReady ? 'site-menu-button--waiting' : '',
+            // Follows the hero's menu across to the left edge.
+            heroActive && menuOpen ? 'site-menu-button--left' : '',
           ].filter(Boolean).join(' ')}
         />
       )}
@@ -601,23 +573,11 @@ export default function App() {
         <SiteIntro leaving={heroPhase !== 'intro'} onEnter={enterHero} />
       )}
 
-      {/* Scrolling the desktop hero brings this up over its bottom third. */}
-      {heroActive && !phone && (
-        <SiteMenu
-          variant="dock"
-          open={dockOpen}
-          onClose={() => setDockOpen(false)}
-          onAbout={() => goTo('about')}
-          onTreatments={() => goTo('treatments')}
-          onMemberships={() => goTo('memberships')}
-          onResults={() => goTo('results')}
-          onGallery={() => goTo('gallery')}
-          onContact={() => goTo('booking')}
-        />
-      )}
-
+      {/* One menu for the whole site; over the hero it comes in from the
+          left rather than the right. */}
       <SiteMenu
         open={menuOpen}
+        side={heroActive ? 'left' : 'right'}
         onClose={() => setMenuOpen(false)}
         onHome={returnToHero}
         onAbout={() => goTo('about')}

@@ -66,12 +66,9 @@ export default function SiteMenu({
   onGallery,
   onContact,
   variant,
+  side,
 }) {
   const isHero = variant === 'hero'
-  // The dock rides over the bottom of the hero rather than covering the page,
-  // so it takes none of the modal treatment — no backdrop, no scroll lock.
-  const isDock = variant === 'dock'
-  const isModal = !isHero && !isDock
   const panelRef = useRef(null)
 
   useEffect(() => {
@@ -81,21 +78,16 @@ export default function SiteMenu({
     const handleKeyDown = event => {
       if (event.key === 'Escape') onClose?.()
     }
-    window.addEventListener('keydown', handleKeyDown)
-
-    if (isDock) {
-      return () => window.removeEventListener('keydown', handleKeyDown)
-    }
-
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', handleKeyDown)
     requestAnimationFrame(() => panelRef.current?.focus({ preventScroll: true }))
 
     return () => {
       document.body.style.overflow = previousOverflow
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [open, onClose, isHero, isDock])
+  }, [open, onClose, isHero])
 
   const callbacks = {
     onAbout,
@@ -116,28 +108,24 @@ export default function SiteMenu({
 
   return (
     <div
-      className={`site-menu${open ? ' site-menu--open' : ''}${isHero ? ' site-menu--hero' : ''}${isDock ? ' site-menu--dock' : ''}`}
+      className={`site-menu${open ? ' site-menu--open' : ''}${isHero ? ' site-menu--hero' : ''}${side === 'left' ? ' site-menu--left' : ''}`}
       aria-hidden={isHero ? undefined : !open}
-      onMouseDown={isModal ? event => {
+      onMouseDown={isHero ? undefined : event => {
         if (event.target === event.currentTarget) onClose?.()
-      } : undefined}
+      }}
     >
       <aside
         ref={panelRef}
         className="site-menu__panel"
-        role={isModal ? 'dialog' : undefined}
-        aria-modal={isModal ? true : undefined}
-        aria-label={isModal ? 'Site menu' : undefined}
+        role={isHero ? undefined : 'dialog'}
+        aria-modal={isHero ? undefined : true}
+        aria-label={isHero ? undefined : 'Site menu'}
         tabIndex={-1}
       >
-        {/* The dock leaves the mark to the hero above it, which shows the same
-            lockup at a size the 36vh panel has no room for. */}
-        {!isDock && (
-          <button className="site-menu__logo-button" type="button" onClick={onHome} aria-label="Go to home page">
-            <img className="site-menu__logo" src="/lbvlogo.png" alt="La Belle Vie" draggable={false} />
-            <span className="site-menu__logo-caption">Medical Care · Aesthetics</span>
-          </button>
-        )}
+        <button className="site-menu__logo-button" type="button" onClick={onHome} aria-label="Go to home page">
+          <img className="site-menu__logo" src="/lbvlogo.png" alt="La Belle Vie" draggable={false} />
+          <span className="site-menu__logo-caption">Medical Care · Aesthetics</span>
+        </button>
 
         <nav className="site-menu__nav" aria-label="Main navigation">
           <div className="site-menu__nav-main">
