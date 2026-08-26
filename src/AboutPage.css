@@ -1631,11 +1631,13 @@
 @media (max-width: 700px) {
   /* Shrink the opening from full-screen to just tall enough to hold
      the text. Reviews band is restored to static flow so it appears
-     directly below. */
+     directly below. The top matches where the Real Results intro starts
+     its own line of small caps: 30px of section padding plus the 12px that
+     line is nudged down by. */
   .about-page__opening {
     height: auto !important;
     min-height: 0 !important;
-    padding-top: clamp(150px, 32svh, 240px) !important;
+    padding-top: 42px !important;
     padding-bottom: clamp(40px, 9svh, 70px) !important;
   }
 
