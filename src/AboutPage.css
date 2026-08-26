@@ -1842,9 +1842,12 @@
 }
 
 /* ── Opening statement, phones ─────────────────────────────────────
-   Desktop sets the line breaks deliberately; on a phone that produces a very
-   narrow ragged column, so the forced breaks are dropped and the sentence is
-   allowed to flow and fill the width. */
+   Phones take the same four-line setting as the desktop composition, with
+   the label above it. The size is whatever keeps the closing line — the
+   longest of the four — unbroken: at this tracking the line sets about 9.3
+   times its own font size wide, against a column of the viewport less the
+   two gutters (24px each until 436px, 5.5vw after that). Both terms carry a
+   few percent of slack for font fallbacks. */
 @media (max-width: 700px) {
   /* The section already supplies the page gutter; the wrap was adding a
      second one, costing ~48px of line length. */
@@ -1852,26 +1855,118 @@
     padding-inline: 0 !important;
   }
 
-  .about-page__statement {
-    max-width: none;
-    /* Largest size that still sets in seven lines — 14vw spills to eight
-       and strands a single short word. */
-    font-size: clamp(2.6rem, 13.5vw, 4.6rem);
-    line-height: 0.96;
-    text-align: left;
-    text-wrap: wrap;
+  .about-page__opening-tag {
+    margin: 0 0 clamp(13px, 4vw, 20px);
+    color: var(--lbv-gold-deep);
+    font: 600 9px / 1.2 var(--lbv-sans);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
   }
 
-  .about-page__statement-primary,
-  .about-page__statement-final {
-    display: inline;
-    width: auto;
+  .about-page__statement {
     max-width: none;
-    white-space: normal;
+    font-size: min(9.2vw, calc(10.3vw - 5px));
+    line-height: 0.88;
+    text-align: left;
+  }
+
+  /* Written through the parent to outrank the earlier phone rules that cap
+     the primary block at 11.5ch and let the closing line wrap. */
+  .about-page__statement > .about-page__statement-primary,
+  .about-page__statement > .about-page__statement-final {
+    display: block;
+    width: max-content;
+    max-width: none;
+    white-space: nowrap;
   }
 
   /* Without this the em would start a new line after "decades of". */
   .about-page__statement-primary > em {
     display: inline;
+  }
+}
+
+/* ── Opening composition, desktop ──────────────────────────────────
+   Just the statement and the one label, with a head rule carrying the gold
+   out of the label and fading as it crosses the page. Section height stays
+   max(700px, 100svh), since the reviews band is absolutely positioned
+   against that same value, so everything here is sized to fit inside it
+   rather than to grow. Phones keep the plain stacked version. */
+@media (min-width: 701px) {
+  .about-page__opening {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    /* Clears the floating menu button before the head rule begins. */
+    padding: clamp(84px, 9.5svh, 112px) var(--lbv-page-gutter) clamp(30px, 4.2svh, 52px);
+    /* Same stack as the base, with one more warm pool answering the one in
+       the top left, so the quarter the type leaves open has some depth in
+       it rather than reading as flat paper. */
+    background:
+      radial-gradient(ellipse at 84% 20%, rgba(200, 164, 88, 0.17), transparent 30rem),
+      radial-gradient(ellipse at 18% 12%, rgba(233, 210, 173, 0.5), transparent 34rem),
+      radial-gradient(ellipse at 88% 78%, rgba(183, 138, 78, 0.13), transparent 32rem),
+      linear-gradient(145deg, #fff 0%, #faf4ea 100%);
+  }
+
+  .about-page__opening-topline {
+    display: flex;
+    align-items: center;
+    gap: clamp(20px, 2.4vw, 44px);
+  }
+
+  .about-page__opening-tag {
+    margin: 0;
+    color: var(--lbv-gold-deep);
+    font: 600 clamp(9px, 0.72vw, 11px) / 1.2 var(--lbv-sans);
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .about-page__opening-rule {
+    flex: 1;
+    height: 1px;
+    border: 0;
+    background: linear-gradient(90deg, rgba(183, 138, 78, 0.62), rgba(26, 18, 8, 0.14) 34%, rgba(26, 18, 8, 0.05));
+  }
+
+  .about-page__opening-body {
+    display: grid;
+    flex: 1;
+    /* A fixed track, so the closing line overhanging the gutter can't widen
+       the column. */
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
+  }
+
+  .about-page__statement-wrap {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    padding: 0;
+    transform: none;
+  }
+
+  /* The four-line setting needs the 11.5ch cap off, or the longer lines
+     wrap again. The floor of the old clamp is dropped too: below ~1000px it
+     overrode the vw term and pushed the closing line past the gutter. */
+  .about-page__statement {
+    font-size: clamp(3.5rem, 9.6vw, 20rem);
+  }
+
+  .about-page__statement > .about-page__statement-primary {
+    width: max-content;
+    max-width: none;
+    white-space: nowrap;
+  }
+}
+
+/* Short windows: give the statement the room by trimming the frame. */
+@media (min-width: 701px) and (max-height: 800px) {
+  .about-page__opening {
+    padding-top: 74px;
   }
 }

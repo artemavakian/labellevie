@@ -122,30 +122,38 @@ export default function AboutPage({ onResults, onTreatments }) {
   // rather than hiding one with CSS.
   const phone = usePhone()
 
+  const statement = (
+    <div className="about-page__statement-wrap">
+      {/* On a phone the label belongs to the statement block rather than to
+          the section, which keeps the section down to a single flex child. */}
+      {phone ? <p className="about-page__opening-tag">Premiere Med Spa in Utah</p> : null}
+      <h1 id="about-page-statement" className="about-page__statement">
+        <span className="about-page__statement-primary">
+          Aesthetic medicine<br />
+          delivered with<br />
+          decades of{' '}
+          <em>experience &amp;</em>
+        </span>
+        <em className="about-page__statement-final">warm, passionate service.</em>
+      </h1>
+    </div>
+  )
+
   return (
     <main className="about-page" data-menu-theme="light">
       <section className="about-page__opening" aria-labelledby="about-page-statement">
-        <div className="about-page__statement-wrap">
-          {/* Desktop sets the breaks deliberately; a phone is too narrow for
-              that shape, so the sentence just flows. */}
-          <h1 id="about-page-statement" className="about-page__statement">
-            <span className="about-page__statement-primary">
-              {phone ? (
-                'Aesthetic medicine delivered with decades of '
-              ) : (
-                <>
-                  Aesthetic<br />
-                  medicine<br />
-                  delivered with<br />
-                  decades of<br />
-                </>
-              )}
-              <em>experience &amp;</em>
-            </span>
-            {phone ? ' ' : null}
-            <em className="about-page__statement-final">warm, passionate service.</em>
-          </h1>
-        </div>
+        {/* The framing around the statement is a desktop composition; a phone
+            gets the statement on its own, as before. */}
+        {phone ? statement : (
+          <>
+            <div className="about-page__opening-topline">
+              <p className="about-page__opening-tag">Premiere Med Spa in Utah</p>
+              <span className="about-page__opening-rule" aria-hidden="true" />
+            </div>
+
+            <div className="about-page__opening-body">{statement}</div>
+          </>
+        )}
       </section>
 
       <section className="about-page__reviews-band" aria-label="Patient reviews">
