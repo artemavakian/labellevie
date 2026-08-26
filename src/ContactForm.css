@@ -29,13 +29,6 @@
   letter-spacing: -0.035em;
 }
 
-.cf-success__name {
-  color: var(--lbv-gold-deep);
-  font-family: var(--lbv-script);
-  font-size: 1.15em;
-  letter-spacing: normal;
-}
-
 .cf-success__detail {
   max-width: 360px;
   margin: 0;

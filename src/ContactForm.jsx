@@ -39,7 +39,7 @@ export default function ContactForm({
     return (
       <div className={successClass} role="status" aria-live="polite">
         <p className="cf-success__thanks">
-          Thank you, <span className="cf-success__name">{f.firstName}</span>
+          Thank you, {f.firstName}
         </p>
         <p className="cf-success__detail">
           We&apos;ve received your message and will be in touch.
