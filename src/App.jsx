@@ -272,11 +272,12 @@ export default function App() {
     }
   }, [page])
 
-  // The phone hero doesn't scroll and carries no nav of its own, so a swipe
-  // there opens the full menu. Wider screens leave the hero fixed: the
-  // gesture does nothing, and the hero's own nav is the way through.
+  // The hero doesn't scroll, so the gesture is spent on the menu instead: it
+  // brings in the same panel every other page opens, which is the only way to
+  // it here since the hero carries no menu control of its own. Closing goes
+  // through the usual Close, so the gesture only ever has to bring it in.
   useEffect(() => {
-    if (!phone || page !== 'home' || heroPhase !== 'done' || menuOpen) return
+    if (page !== 'home' || heroPhase !== 'done' || menuOpen) return
     let touchOrigin = null
 
     const onWheel = event => {
@@ -293,16 +294,23 @@ export default function App() {
         setMenuOpen(true)
       }
     }
+    // Keyboards get the same reach as the wheel; space is left alone so it
+    // keeps activating whichever hero control has focus.
+    const onKeyDown = event => {
+      if (event.key === 'ArrowDown' || event.key === 'PageDown') setMenuOpen(true)
+    }
 
     window.addEventListener('wheel', onWheel, { passive: true })
     window.addEventListener('touchstart', onTouchStart, { passive: true })
     window.addEventListener('touchmove', onTouchMove, { passive: true })
+    window.addEventListener('keydown', onKeyDown)
     return () => {
       window.removeEventListener('wheel', onWheel)
       window.removeEventListener('touchstart', onTouchStart)
       window.removeEventListener('touchmove', onTouchMove)
+      window.removeEventListener('keydown', onKeyDown)
     }
-  }, [page, heroPhase, phone, menuOpen])
+  }, [page, heroPhase, menuOpen])
 
   const enterHero = useCallback(() => {
     if (enteringRef.current) return
