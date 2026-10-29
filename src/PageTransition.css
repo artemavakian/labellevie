@@ -1,0 +1,18 @@
+/* The cloud wipe's canvas — over everything, including the menu and its
+   button. Out of the way until a transition plays; while one does, it also
+   swallows clicks so a second navigation can't start underneath it. */
+.page-transition {
+  position: fixed;
+  z-index: 5000;
+  inset: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  pointer-events: none;
+}
+
+.page-transition--active {
+  display: block;
+  pointer-events: auto;
+}

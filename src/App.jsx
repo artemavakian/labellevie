@@ -10,6 +10,7 @@ import GalleryPage from './GalleryPage'
 import TreatmentsDirectory from './TreatmentsDirectory'
 import SiteMenu, { SiteMenuButton } from './SiteMenu'
 import SiteIntro from './SiteIntro'
+import PageTransition, { preloadTransitionFrames } from './PageTransition'
 import './App.css'
 
 /* ── Treatments data ────────────────────────────────────────── */
@@ -188,10 +189,9 @@ export default function App() {
       ? 'light'
       : 'dark',
   )
-  // intro    — opening screen up, logo writing itself on
-  // entering — opening screen sliding away, hero video rolling
-  // settling — hero content fading in behind the tail of the slide
-  // done     — opening screen unmounted
+  // intro — opening screen up, flower drawing itself on
+  // done  — the page transition has covered the opening screen and taken it
+  //         away; hero video rolling
   const [heroPhase, setHeroPhase]     = useState('intro')
   const [heroVideoStarted, setHeroVideoStarted] = useState(false)
   const [heroVideoComplete, setHeroVideoComplete] = useState(false)
@@ -201,7 +201,18 @@ export default function App() {
   const skipHeroIntroRef = useRef(false)
   const heroIntroPlayedRef = useRef(false)
   const enteringRef  = useRef(false)
-  const enterTimersRef = useRef([])
+  const transitionRef = useRef(null)
+  // What the running transition will do once it covers the screen; cleared
+  // the moment it has. A back/forward press that lands after that point is
+  // held in lateNavigationRef until the wipe has finished.
+  const coverActionRef = useRef(null)
+  const lateNavigationRef = useRef(null)
+
+  // Frames load from the start, so they're decoded by the time the intro
+  // hands over or the first link is clicked.
+  useEffect(() => {
+    preloadTransitionFrames().catch(() => {})
+  }, [])
 
   // Phones show the menu button over the hero; wider screens use the hero nav.
   useEffect(() => {
@@ -266,10 +277,6 @@ export default function App() {
     enteringRef.current = false
     setHeroPhase('intro')
     setHeroVideoStarted(false)
-    return () => {
-      enterTimersRef.current.forEach(clearTimeout)
-      enterTimersRef.current = []
-    }
   }, [page])
 
   // The hero doesn't scroll, so the gesture is spent on the menu instead: it
@@ -312,21 +319,46 @@ export default function App() {
     }
   }, [page, heroPhase, menuOpen])
 
+  // Plays the cloud wipe and runs `action` (the page change) behind it once
+  // it fully covers the screen. With reduced motion, or before the frames
+  // have loaded, the change simply happens straight away.
+  const runTransition = action => {
+    const transition = transitionRef.current
+    if (!transition?.ready || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      action()
+      return
+    }
+    coverActionRef.current = action
+    transition.play(() => {
+      const covered = coverActionRef.current
+      coverActionRef.current = null
+      covered?.()
+    }).then(() => {
+      const late = lateNavigationRef.current
+      lateNavigationRef.current = null
+      late?.()
+    })
+  }
+
+  // The opening screen leaves the same way any page does: the wipe covers
+  // it, and the hero is what the cloud opens onto. The hero chrome fades in
+  // as the reveal plays.
   const enterHero = useCallback(() => {
     if (enteringRef.current) return
     enteringRef.current = true
-    setHeroPhase('entering')
-    setHeroVideoStarted(true)
-    enterTimersRef.current = [
-      // Hero content comes up while the last of the white is still leaving,
-      // so it settles into place instead of popping in afterwards.
-      setTimeout(() => setHeroPhase('settling'), 950),
-      // Just past the 1500ms slide, so the panel is never unmounted mid-move.
-      setTimeout(() => {
-        setHeroPhase('done')
-        heroIntroPlayedRef.current = true
-      }, 1600),
-    ]
+    const reveal = () => {
+      setHeroPhase('done')
+      setHeroVideoStarted(true)
+      heroIntroPlayedRef.current = true
+    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      reveal()
+      return
+    }
+    // Normally loaded long before the intro finishes; on a slow connection
+    // the intro waits for them, and if they fail it just steps aside.
+    preloadTransitionFrames().then(() => runTransition(reveal), reveal)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -363,8 +395,16 @@ export default function App() {
   }
 
   const goTo = to => {
-    applyNavigation(to)
-    window.history.pushState({ page: to }, '', pageToPath(to))
+    // One transition at a time; clicks during one are ignored.
+    if (transitionRef.current?.busy) return
+    if (to === page) {
+      applyNavigation(to)
+      return
+    }
+    runTransition(() => {
+      applyNavigation(to)
+      window.history.pushState({ page: to }, '', pageToPath(to))
+    })
   }
 
   // Keep the initial history entry tagged with its page, and restore the
@@ -378,8 +418,16 @@ export default function App() {
       // this session — e.g. deep-linking straight into another page and
       // then navigating back to a hero that never played should still
       // play it normally rather than snapping straight to "done".
-      if (targetPage === 'home' && heroIntroPlayedRef.current) skipHeroIntroRef.current = true
-      applyNavigation(targetPage)
+      const navigate = () => {
+        if (targetPage === 'home' && heroIntroPlayedRef.current) skipHeroIntroRef.current = true
+        applyNavigation(targetPage)
+      }
+      if (!transitionRef.current?.busy) runTransition(navigate)
+      // Mid-wipe, the newest history entry wins: before the cover point it
+      // replaces the pending change (so a click's pushState never lands on
+      // top of a back press), after it it waits for the wipe to finish.
+      else if (coverActionRef.current) coverActionRef.current = navigate
+      else lateNavigationRef.current = navigate
     }
     window.addEventListener('popstate', onPopState)
     return () => window.removeEventListener('popstate', onPopState)
@@ -390,17 +438,13 @@ export default function App() {
   const navAbout = nav('about')
   const selectTreatment = key => goTo('tx:' + key)
   const returnToHero = () => {
+    if (transitionRef.current?.busy) return
     skipHeroIntroRef.current = true
     goTo('home')
   }
 
   const heroActive = page === 'home'
-  // Hero chrome shows from "settling" on — i.e. once the opening screen is
-  // most of the way out rather than fully gone.
-  const heroReady = heroPhase === 'settling' || heroPhase === 'done'
-  const heroDrift = !heroActive || heroPhase === 'done'
-    ? ''
-    : heroPhase === 'intro' ? ' hero--intro-wait' : ' hero--intro-move'
+  const heroReady = heroPhase === 'done'
 
   return (
     <>
@@ -409,7 +453,7 @@ export default function App() {
           element never has to re-fetch/re-decode when navigating back
           to the hero — that reload was the source of the black flash. */}
       <section
-        className={`hero${heroActive ? '' : ' hero--inactive'}${heroDrift}`}
+        className={`hero${heroActive ? '' : ' hero--inactive'}`}
         aria-hidden={!heroActive}
         data-menu-theme="dark"
       >
@@ -567,7 +611,7 @@ export default function App() {
       )}
 
       {heroActive && heroPhase !== 'done' && (
-        <SiteIntro leaving={heroPhase !== 'intro'} onEnter={enterHero} />
+        <SiteIntro onDone={enterHero} />
       )}
 
       <SiteMenu
@@ -581,6 +625,8 @@ export default function App() {
         onGallery={() => goTo('gallery')}
         onContact={() => goTo('booking')}
       />
+
+      <PageTransition ref={transitionRef} />
     </>
   )
 }
