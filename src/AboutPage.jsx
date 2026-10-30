@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ArrowUpRight } from 'lucide-react'
 import rawReviews from '../reviews?raw'
+import FlowerButton from './FlowerButton'
 import './AboutPage.css'
 
 const GOOGLE_REVIEWS_URL =
@@ -106,17 +107,6 @@ function usePhone() {
   return phone
 }
 
-function ActionButton({ children, onClick }) {
-  return (
-    <button type="button" className="about-page__action" onClick={onClick}>
-      <span className="about-page__action-label">{children}</span>
-      <span className="about-page__action-icon" aria-hidden="true">
-        <ArrowUpRight />
-      </span>
-    </button>
-  )
-}
-
 export default function AboutPage({ onResults, onTreatments }) {
   // The marquee doubles all 77 reviews, so render only the variant in use
   // rather than hiding one with CSS.
@@ -177,7 +167,7 @@ export default function AboutPage({ onResults, onTreatments }) {
           <header className="about-page__team-header">
             <p className="about-page__eyebrow">The people behind your care</p>
             <h2 className="about-page__specialists-heading">
-              Meet the <span className="about-page__specialists-word">specialists</span>
+              Meet the<br />specialists
             </h2>
           </header>
           <div className="about-page__team-grid">
@@ -216,8 +206,8 @@ export default function AboutPage({ onResults, onTreatments }) {
           </p>
         </div>
         <div className="about-page__actions" aria-label="Explore La Belle Vie">
-          <ActionButton onClick={onResults}>View Real Results</ActionButton>
-          <ActionButton onClick={onTreatments}>Browse Treatments</ActionButton>
+          <FlowerButton onClick={onResults}>View Real Results</FlowerButton>
+          <FlowerButton onClick={onTreatments}>Browse Treatments</FlowerButton>
         </div>
       </section>
     </main>

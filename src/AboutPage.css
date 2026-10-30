@@ -1972,3 +1972,15 @@
     padding-top: 74px;
   }
 }
+
+/* ── Closing statement on the golden ground ──────────────────────
+   Warm golden ground (index.css) in place of black, every word of the
+   statement and both buttons in white. */
+.about-page__footer {
+  background: var(--lbv-golden-bg);
+}
+
+.about-page__bio,
+.about-page__highlight {
+  color: #fff;
+}

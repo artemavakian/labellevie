@@ -52,8 +52,8 @@ export default function BookingPage() {
             <span className="booking-header__edition" aria-hidden="true">Draper · Utah</span>
           </div>
           <h1 className="booking-title">
-            Let&apos;s begin with
-            <em>a conversation.</em>
+            Let&apos;s begin with<br />
+            a conversation.
           </h1>
           <p className="booking-intro">
             Call, text, email, or message to book a free consultation or ask us anything.

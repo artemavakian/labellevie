@@ -1,17 +1,6 @@
 import { useEffect, useRef } from 'react'
-import { ArrowUpRight } from 'lucide-react'
+import FlowerButton from './FlowerButton'
 import './ResultsPage.css'
-
-function ResultsAction({ children, onClick }) {
-  return (
-    <button type="button" className="results-cta__action" onClick={onClick}>
-      <span className="results-cta__action-label">{children}</span>
-      <span className="results-cta__action-icon" aria-hidden="true">
-        <ArrowUpRight />
-      </span>
-    </button>
-  )
-}
 
 function RevealSection({
   beforeImg,
@@ -148,7 +137,7 @@ function RevealSection({
   )
 }
 
-export default function ResultsPage({ onBook, onGallery }) {
+export default function ResultsPage({ onTreatments, onGallery }) {
   return (
     <main className="results-page">
       <section className="results-intro" data-menu-theme="light">
@@ -171,13 +160,13 @@ export default function ResultsPage({ onBook, onGallery }) {
 
         <div className="results-intro__footer">
           <p className="results-intro__scroll">Scroll to Explore</p>
-          <p className="results-intro__count">Selected results · 01—02</p>
+          <p className="results-intro__count">Shared with patient consent</p>
         </div>
       </section>
 
       <RevealSection
-        beforeImg="/renuvabefore.webp"
-        afterImg="/renuvaafter.webp"
+        beforeImg="/realresults/renuvabefore.png"
+        afterImg="/realresults/renuvaafter.png"
         number="01"
         treatment="Renuva"
         reversed={false}
@@ -198,8 +187,8 @@ export default function ResultsPage({ onBook, onGallery }) {
       <div className="ba-section-divider" />
 
       <RevealSection
-        beforeImg="/coolsculptbefore.webp"
-        afterImg="/coolsculptafter.webp"
+        beforeImg="/realresults/coolsculptbefore.png"
+        afterImg="/realresults/coolsculptafter.png"
         number="02"
         treatment="CoolSculpting"
         reversed
@@ -225,8 +214,8 @@ export default function ResultsPage({ onBook, onGallery }) {
           Your consultation is always free.
         </p>
         <div className="results-cta__actions">
-          <ResultsAction onClick={onBook}>Book Consultation</ResultsAction>
-          <ResultsAction onClick={onGallery}>Full Gallery</ResultsAction>
+          <FlowerButton className="results-cta__button" onClick={onTreatments}>Treatments</FlowerButton>
+          <FlowerButton className="results-cta__button" onClick={onGallery}>Full Gallery</FlowerButton>
         </div>
       </section>
     </main>

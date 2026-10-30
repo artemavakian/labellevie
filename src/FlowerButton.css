@@ -1,0 +1,81 @@
+/* Flower buttons — the label set like the hero's top nav links, with the
+   flower mark beside it. Sizes come in as custom properties from the
+   component, which also positions the pill's see-through text with them. */
+.flower-btn {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--flower-btn-gap);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.flower-btn__label,
+.flower-btn__cutout {
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+}
+
+.flower-btn__label {
+  position: relative;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+/* Masked over a solid fill so the mark takes an exact colour. */
+.flower-btn__flower {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: var(--flower-btn-flower);
+  height: var(--flower-btn-flower);
+  flex-shrink: 0;
+  background-color: #fff;
+  -webkit-mask: url('/flowericon.webp') center / contain no-repeat;
+  mask: url('/flowericon.webp') center / contain no-repeat;
+  will-change: transform;
+}
+
+.flower-btn:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 8px;
+}
+
+/* ── White pill, label cut out of it ─────────────────────────── */
+.flower-btn--pill {
+  height: var(--flower-btn-height);
+  padding: 0 var(--flower-btn-pad);
+}
+
+.flower-btn--pill:focus-visible {
+  outline-offset: 4px;
+}
+
+.flower-btn__pill {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* The HTML label only gives the pill its width; the visible text is the
+   cutout in the SVG mask, drawn in exactly the same face and size. */
+.flower-btn--pill .flower-btn__label {
+  visibility: hidden;
+}
+
+.flower-btn--pill .flower-btn__flower {
+  background-color: #a37e57;
+}

@@ -92,7 +92,7 @@ export default function TreatmentsDirectory({ columns = [], onSelect }) {
         <header className="treatments-directory__intro">
           <p className="treatments-directory__eyebrow">La Belle Vie · Treatment Menu</p>
           <h1 className="treatments-directory__title">
-            Care, considered <em>beautifully</em>
+            Care, considered beautifully
           </h1>
           <p className="treatments-directory__lede">
             Explore personalized aesthetic, medical, and wellness treatments designed around the life you want to live.

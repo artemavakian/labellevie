@@ -401,3 +401,14 @@
     transform-origin: center;
   }
 }
+
+/* Beside the title, the blurb reaches a little further left than its
+   column, and balances its last line, so it never ends on a lone "live." */
+@media (min-width: 821px) {
+  .treatments-directory__lede {
+    width: calc(100% + 1.5em);
+    max-width: none;
+    margin-left: -1.5em;
+    text-wrap: pretty;
+  }
+}

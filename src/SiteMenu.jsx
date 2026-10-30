@@ -1,5 +1,45 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
+import gsap from 'gsap'
 import './SiteMenu.css'
+
+/* ── Menu animation settings ─────────────────────────────────────
+   The panel slides in from the right while the page is pushed left by
+   exactly the panel's width, both on one timeline and one ease. */
+const MENU_ANIMATION = {
+  openDuration: 0.9,    // Seconds to open
+  closeDuration: 0.9,   // Seconds to close
+  ease: 'power3.out',   // GSAP easing
+}
+
+// How dark the page gets beside the open panel.
+const MENU_DIM = 'rgba(10, 8, 6, 0.153)'
+const MENU_CLEAR = 'rgba(10, 8, 6, 0)'
+
+/* A transform on the page turns its fixed layers (a treatment page's
+   background, say) into ordinary absolutely-placed boxes at the top of the
+   document. Before pushing, each one is pinned where it currently sits on
+   screen, so it travels with the page instead of jumping; release() puts
+   them back once the page is home again. */
+function pinFixedLayers(page) {
+  const origin = page.getBoundingClientRect()
+  const layers = [...page.querySelectorAll('*')]
+    .filter(element => getComputedStyle(element).position === 'fixed')
+    .map(element => [element, element.getBoundingClientRect(), element.style.cssText])
+  // Measured first, then the transform and the pins go on together, so
+  // there's no frame where a layer has one without the other.
+  gsap.set(page, { x: 0 })
+  for (const [element, rect] of layers) {
+    Object.assign(element.style, {
+      top: `${rect.top - origin.top}px`,
+      left: `${rect.left - origin.left}px`,
+      right: 'auto',
+      bottom: 'auto',
+      width: `${rect.width}px`,
+      height: `${rect.height}px`,
+    })
+  }
+  return () => layers.forEach(([element, , cssText]) => { element.style.cssText = cssText })
+}
 
 const REVIEW_URL = 'https://www.google.com/search?q=labelleviemedicalcare+utah&oq=labelleviemedicalcare+utah&gs_lcrp=EgZjaHJvbWUqBggAEEUYOzIGCAAQRRg7MggIARBFGCcYOzIKCAIQABiABBiiBDIHCAMQABjvBTIHCAQQABjvBTIGCAUQRRg8MgYIBhBFGDwyBggHEEUYPNIBCDY0NzVqMGo3qAIAsAIA&sourceid=chrome&source=chrome.ob&ie=UTF-8#lrd=0x875280ca562d37eb:0x462fa6321c6febc4,1,,,,'
 
@@ -66,9 +106,72 @@ export default function SiteMenu({
   onGallery,
   onContact,
   variant,
+  pushRef,
+  onClosed,
 }) {
   const isHero = variant === 'hero'
+  const rootRef = useRef(null)
   const panelRef = useRef(null)
+  const timelineRef = useRef(null)
+  const releaseRef = useRef(null)
+  const startedRef = useRef(false)
+  const onClosedRef = useRef(onClosed)
+  onClosedRef.current = onClosed
+
+  useLayoutEffect(() => {
+    const root = rootRef.current
+    const panel = panelRef.current
+    const page = pushRef?.current
+    if (!startedRef.current) {
+      startedRef.current = true
+      gsap.set(panel, { x: 0, xPercent: 100 })
+      if (!open) return
+    }
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    timelineRef.current?.kill()
+    if (open && page && !releaseRef.current) releaseRef.current = pinFixedLayers(page)
+
+    const timeline = gsap.timeline({
+      defaults: {
+        duration: reduce ? 0 : open ? MENU_ANIMATION.openDuration : MENU_ANIMATION.closeDuration,
+        ease: MENU_ANIMATION.ease,
+      },
+      onComplete: () => {
+        if (open) return
+        // Fully home: drop the transform so the page is back to normal
+        // layout, and let the closed menu's own CSS hide it again.
+        if (page) gsap.set(page, { clearProps: 'transform' })
+        releaseRef.current?.()
+        releaseRef.current = null
+        gsap.set(root, { clearProps: 'visibility' })
+        onClosedRef.current?.()
+      },
+    })
+    // Kept on screen until the panel is all the way out.
+    if (!open) gsap.set(root, { visibility: 'visible' })
+    timeline.to(panel, { xPercent: open ? 0 : 100 }, 0)
+    timeline.to(root, { backgroundColor: open ? MENU_DIM : MENU_CLEAR }, 0)
+    if (page) timeline.to(page, { x: open ? -panel.offsetWidth : 0 }, 0)
+    timelineRef.current = timeline
+  }, [open, pushRef])
+
+  // The panel's width tracks the viewport, so an open menu keeps the page
+  // pushed by whatever that width has become.
+  useEffect(() => {
+    if (!open) return undefined
+    const sync = () => {
+      if (timelineRef.current?.isActive()) return
+      if (pushRef?.current) gsap.set(pushRef.current, { x: -panelRef.current.offsetWidth })
+    }
+    window.addEventListener('resize', sync)
+    return () => window.removeEventListener('resize', sync)
+  }, [open, pushRef])
+
+  useEffect(() => () => {
+    timelineRef.current?.kill()
+    releaseRef.current?.()
+  }, [])
 
   useEffect(() => {
     if (isHero) return undefined
@@ -107,6 +210,7 @@ export default function SiteMenu({
 
   return (
     <div
+      ref={rootRef}
       className={`site-menu${open ? ' site-menu--open' : ''}${isHero ? ' site-menu--hero' : ''}`}
       aria-hidden={isHero ? undefined : !open}
       onMouseDown={isHero ? undefined : event => {

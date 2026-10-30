@@ -1128,12 +1128,54 @@
   }
 
   /* Full Gallery (second in DOM) → first visually, above the text */
-  .results-cta__actions .results-cta__action:last-child {
+  .results-cta__actions .results-cta__button:last-child {
     order: 1;
   }
 
-  /* Book Consultation (first in DOM) → below the text */
-  .results-cta__actions .results-cta__action:first-child {
+  /* Treatments (first in DOM) → below the text */
+  .results-cta__actions .results-cta__button:first-child {
     order: 3;
   }
+}
+
+/* ── Golden ground ─────────────────────────────────────────────────
+   The chapters and the closing section sit on the warm golden ground
+   (index.css) instead of black, with all of their text in white. The
+   text column carries the light; the wrappers behind it only need the
+   base tone in case an edge ever shows. */
+.results-page,
+.ba-wrapper,
+.ba-sticky {
+  background: #a3845f;
+}
+
+.ba-text {
+  background: var(--lbv-golden-bg);
+}
+
+.ba-text--right {
+  background: var(--lbv-golden-bg-mirrored);
+}
+
+.results-cta {
+  background: var(--lbv-golden-bg);
+}
+
+.ba-chapter,
+.ba-title,
+.ba-desc,
+.ba-scroll-note,
+.results-cta__eyebrow,
+.results-cta__text {
+  color: #fff;
+}
+
+.ba-treatment-label {
+  color: #fff;
+  -webkit-text-fill-color: #fff;
+}
+
+.ba-scroll-note::before,
+.ba-scroll-note__text::after {
+  background: #fff;
 }

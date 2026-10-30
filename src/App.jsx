@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Lenis from 'lenis'
-import { ArrowUpRight } from 'lucide-react'
 import Memberships from './Memberships'
 import TreatmentPage from './TreatmentPage'
 import BookingPage from './BookingPage'
@@ -11,6 +10,7 @@ import TreatmentsDirectory from './TreatmentsDirectory'
 import SiteMenu, { SiteMenuButton } from './SiteMenu'
 import SiteIntro from './SiteIntro'
 import PageTransition, { preloadTransitionFrames } from './PageTransition'
+import FlowerButton from './FlowerButton'
 import './App.css'
 
 /* ── Treatments data ────────────────────────────────────────── */
@@ -207,6 +207,10 @@ export default function App() {
   // held in lateNavigationRef until the wipe has finished.
   const coverActionRef = useRef(null)
   const lateNavigationRef = useRef(null)
+  // Everything the menu pushes aside as it opens.
+  const shellRef = useRef(null)
+  // A navigation chosen from the open menu, held until the menu is closed.
+  const afterMenuCloseRef = useRef(null)
 
   // Frames load from the start, so they're decoded by the time the intro
   // hands over or the first link is clicked.
@@ -279,32 +283,42 @@ export default function App() {
     setHeroVideoStarted(false)
   }, [page])
 
-  // The hero doesn't scroll, so the gesture is spent on the menu instead: it
-  // brings in the same panel every other page opens, which is the only way to
-  // it here since the hero carries no menu control of its own. Closing goes
-  // through the usual Close, so the gesture only ever has to bring it in.
+  // The hero doesn't scroll, so the gesture is spent on the menu instead:
+  // scrolling on brings in the same panel every other page opens (the only
+  // way to it here, since the hero carries no menu control of its own), and
+  // scrolling back takes it away again.
   useEffect(() => {
-    if (page !== 'home' || heroPhase !== 'done' || menuOpen) return
+    if (page !== 'home' || heroPhase !== 'done') return
     let touchOrigin = null
+    // +1 = on towards the menu, -1 = back towards the hero.
+    const wanted = menuOpen ? -1 : 1
+    // A panel scrolled down its own list scrolls back up first.
+    const panelScrolled = target => (target.closest?.('.site-menu__panel')?.scrollTop ?? 0) > 0
+    const respond = (direction, target) => {
+      if (direction !== wanted || (menuOpen && panelScrolled(target))) return
+      setMenuOpen(!menuOpen)
+    }
 
     const onWheel = event => {
-      if (event.deltaY > 6) setMenuOpen(true)
+      if (Math.abs(event.deltaY) > 6) respond(Math.sign(event.deltaY), event.target)
     }
     const onTouchStart = event => {
       touchOrigin = event.touches[0]?.clientY ?? null
     }
     const onTouchMove = event => {
       if (touchOrigin === null) return
+      const travel = touchOrigin - (event.touches[0]?.clientY ?? touchOrigin)
       // Far enough that a tap or a stray finger can't trigger it.
-      if (touchOrigin - (event.touches[0]?.clientY ?? touchOrigin) > 28) {
+      if (Math.abs(travel) > 28) {
         touchOrigin = null
-        setMenuOpen(true)
+        respond(Math.sign(travel), event.target)
       }
     }
     // Keyboards get the same reach as the wheel; space is left alone so it
     // keeps activating whichever hero control has focus.
     const onKeyDown = event => {
-      if (event.key === 'ArrowDown' || event.key === 'PageDown') setMenuOpen(true)
+      if (event.key === 'ArrowDown' || event.key === 'PageDown') respond(1, event.target)
+      if (event.key === 'ArrowUp' || event.key === 'PageUp') respond(-1, event.target)
     }
 
     window.addEventListener('wheel', onWheel, { passive: true })
@@ -396,15 +410,30 @@ export default function App() {
 
   const goTo = to => {
     // One transition at a time; clicks during one are ignored.
-    if (transitionRef.current?.busy) return
-    if (to === page) {
-      applyNavigation(to)
-      return
+    if (transitionRef.current?.busy || afterMenuCloseRef.current) return
+    const go = () => {
+      if (to === page) {
+        applyNavigation(to)
+        return
+      }
+      runTransition(() => {
+        applyNavigation(to)
+        window.history.pushState({ page: to }, '', pageToPath(to))
+      })
     }
-    runTransition(() => {
-      applyNavigation(to)
-      window.history.pushState({ page: to }, '', pageToPath(to))
-    })
+    // From the menu, the panel goes back out first and the wipe follows.
+    if (menuOpen) {
+      afterMenuCloseRef.current = go
+      setMenuOpen(false)
+    } else {
+      go()
+    }
+  }
+
+  const onMenuClosed = () => {
+    const next = afterMenuCloseRef.current
+    afterMenuCloseRef.current = null
+    next?.()
   }
 
   // Keep the initial history entry tagged with its page, and restore the
@@ -438,7 +467,7 @@ export default function App() {
   const navAbout = nav('about')
   const selectTreatment = key => goTo('tx:' + key)
   const returnToHero = () => {
-    if (transitionRef.current?.busy) return
+    if (transitionRef.current?.busy || afterMenuCloseRef.current) return
     skipHeroIntroRef.current = true
     goTo('home')
   }
@@ -448,150 +477,120 @@ export default function App() {
 
   return (
     <>
-      {/* ── Hero: video + nav overlay + hero text ─────────────────
-          Kept mounted (rather than unmounted per-page) so the video
-          element never has to re-fetch/re-decode when navigating back
-          to the hero — that reload was the source of the black flash. */}
-      <section
-        className={`hero${heroActive ? '' : ' hero--inactive'}`}
-        aria-hidden={!heroActive}
-        data-menu-theme="dark"
-      >
-        {/* Plays once; the decoded video itself remains on its final frame. */}
-        <HeroVideo
-          complete={heroVideoComplete}
-          shouldPlay={heroVideoStarted}
-          isVisible={heroActive}
-          onComplete={() => setHeroVideoComplete(true)}
-        />
+      <div ref={shellRef} className="site-shell">
+        {/* ── Hero: video + nav overlay + hero text ─────────────────
+            Kept mounted (rather than unmounted per-page) so the video
+            element never has to re-fetch/re-decode when navigating back
+            to the hero — that reload was the source of the black flash. */}
+        <section
+          className={`hero${heroActive ? '' : ' hero--inactive'}`}
+          aria-hidden={!heroActive}
+          data-menu-theme="dark"
+        >
+          {/* Plays once; the decoded video itself remains on its final frame. */}
+          <HeroVideo
+            complete={heroVideoComplete}
+            shouldPlay={heroVideoStarted}
+            isVisible={heroActive}
+            onComplete={() => setHeroVideoComplete(true)}
+          />
 
-            {/* Nav overlay — center links only */}
-            <div className={`hero-nav${heroReady ? ' hero-nav--visible' : ' hero-nav--hidden'}`}>
-              <nav className="hero-nav__center">
-                <a href="#" className="header__link" draggable={false} onClick={navAbout}>ABOUT US</a>
-                <div
-                  ref={dropdownRef}
-                  className={`header__dropdown-wrap${dropdownOpen ? ' header__dropdown-wrap--open' : ''}`}
-                >
-                  <a href="#" className="header__link" draggable={false}
-                     onClick={e => { e.preventDefault(); goTo('treatments') }}>
-                    TREATMENTS
-                  </a>
-                  <div className="header__dropdown">
-                    {TREATMENT_COLS.map(col => (
-                      <div key={col.label} className="header__dropdown-col">
-                        <span className="header__dropdown-label">{col.label}</span>
-                        {col.items.map(item => (
-                          <a
-                            key={item.key}
-                            href="#"
-                            className="header__dropdown-item"
-                            onClick={e => {
-                              e.preventDefault()
-                              selectTreatment(item.key)
-                            }}
-                          >
-                            {item.name}
-                          </a>
-                        ))}
-                      </div>
-                    ))}
+              {/* Nav overlay — center links only */}
+              <div className={`hero-nav${heroReady ? ' hero-nav--visible' : ' hero-nav--hidden'}`}>
+                <nav className="hero-nav__center">
+                  <a href="#" className="header__link" draggable={false} onClick={navAbout}>ABOUT US</a>
+                  <div
+                    ref={dropdownRef}
+                    className={`header__dropdown-wrap${dropdownOpen ? ' header__dropdown-wrap--open' : ''}`}
+                  >
+                    <a href="#" className="header__link" draggable={false}
+                       onClick={e => { e.preventDefault(); goTo('treatments') }}>
+                      TREATMENTS
+                    </a>
+                    <div className="header__dropdown">
+                      {TREATMENT_COLS.map(col => (
+                        <div key={col.label} className="header__dropdown-col">
+                          <span className="header__dropdown-label">{col.label}</span>
+                          {col.items.map(item => (
+                            <a
+                              key={item.key}
+                              href="#"
+                              className="header__dropdown-item"
+                              onClick={e => {
+                                e.preventDefault()
+                                selectTreatment(item.key)
+                              }}
+                            >
+                              {item.name}
+                            </a>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-                <a href="#" className="header__link" draggable={false} onClick={nav('memberships')}>MEMBERSHIPS</a>
-              </nav>
-            </div>
-
-            {/* Hero text — vertically centered, left side */}
-            <div className={`hero-text${heroReady ? ' hero-text--visible' : ' hero-text--hidden'}`}>
-              <h1 className="hero-text__title">
-                <span>Naturally</span>
-                <RotatingHeroWord active={heroReady} />
-              </h1>
-              <div className="hero-text__sub">
-                <span>30+ Years of Experience</span>
-                <span>Thousands of Treatments Performed</span>
-                <span className="hero-text__care-location">
-                  <span>
-                    <span className="hero-text__stars" aria-label="Five stars">★★★★★</span>
-                    {' '}for Results &amp; Patient Care
-                  </span>
-                  <span className="hero-text__vertical-divider" aria-hidden="true" />
-                  <span>Draper, Utah</span>
-                </span>
+                  <a href="#" className="header__link" draggable={false} onClick={nav('memberships')}>MEMBERSHIPS</a>
+                </nav>
               </div>
-            </div>
 
-            {/* Phone-only mark in the top-left corner. */}
-            <span className={`hero-mobile-logo${heroReady ? ' hero-mobile-logo--visible' : ''}`} aria-hidden="true" />
+              {/* Hero text — vertically centered, left side */}
+              <div className={`hero-text${heroReady ? ' hero-text--visible' : ' hero-text--hidden'}`}>
+                <h1 className="hero-text__title">
+                  <span>Naturally</span>
+                  <RotatingHeroWord active={heroReady} />
+                </h1>
+                <div className="hero-text__sub">
+                  <span>30+ Years of Experience</span>
+                  <span>Thousands of Treatments Performed</span>
+                  <span className="hero-text__care-location">
+                    <span>
+                      <span className="hero-text__stars" aria-label="Five stars">★★★★★</span>
+                      {' '}for Results &amp; Patient Care
+                    </span>
+                    <span className="hero-text__vertical-divider" aria-hidden="true" />
+                    <span>Draper, Utah</span>
+                  </span>
+                </div>
+              </div>
 
-            <div className={`hero-text__actions${heroReady ? ' hero-text__actions--visible' : ' hero-text__actions--hidden'}`}>
-              <a
-                href="#"
-                className="hero-text__book"
-                aria-label="Book consultation"
-                onClick={nav('booking')}
-              >
-                <svg className="hero-text__book-fill" viewBox="0 0 220 54" aria-hidden="true">
-                  <defs>
-                    <mask id="hero-book-mask" maskUnits="userSpaceOnUse">
-                      <rect width="220" height="54" rx="27" fill="#fff" />
-                      <text x="110" y="28" textAnchor="middle" dominantBaseline="middle" fill="#000">
-                        Book Consultation
-                      </text>
-                    </mask>
-                  </defs>
-                  <rect width="220" height="54" rx="27" fill="#fff" mask="url(#hero-book-mask)" />
-                </svg>
-                <svg className="hero-text__book-outline" viewBox="0 0 220 54" aria-hidden="true">
-                  <rect x="1" y="1" width="218" height="52" rx="26" fill="none" stroke="#fff" strokeWidth="2" />
-                  <text x="110" y="28" textAnchor="middle" dominantBaseline="middle" fill="#fff">
-                    Book Consultation
-                  </text>
-                </svg>
-              </a>
-              <button
-                type="button"
-                className="hero-text__results"
-                onClick={() => goTo('results')}
-              >
-                <span className="hero-text__results-label">Real Results</span>
-                <span className="hero-text__results-icon" aria-hidden="true">
-                  <ArrowUpRight />
-                </span>
-              </button>
-            </div>
-      </section>
+              {/* Phone-only mark in the top-left corner. */}
+              <span className={`hero-mobile-logo${heroReady ? ' hero-mobile-logo--visible' : ''}`} aria-hidden="true" />
 
-      {page === 'about' && (
-        <AboutPage
-          onResults={() => goTo('results')}
-          onTreatments={() => goTo('treatments')}
-        />
-      )}
-      {page === 'results' && (
-        <ResultsPage
-          onBook={() => goTo('booking')}
-          onGallery={() => goTo('gallery')}
-        />
-      )}
-      {page === 'gallery' && (
-        <GalleryPage />
-      )}
-      {page === 'treatments' && (
-        <TreatmentsDirectory columns={TREATMENT_COLS} onSelect={selectTreatment} />
-      )}
-      {page === 'memberships' && <Memberships onScrollTo={el => lenisRef.current?.scrollTo(el)} />}
-      {page === 'booking' && <BookingPage />}
+              <div className={`hero-text__actions${heroReady ? ' hero-text__actions--visible' : ' hero-text__actions--hidden'}`}>
+                <FlowerButton variant="pill" onClick={() => goTo('booking')}>Book Consultation</FlowerButton>
+                <FlowerButton onClick={() => goTo('results')}>Real Results</FlowerButton>
+              </div>
+        </section>
 
-      {page.startsWith('tx:') && (
-        <TreatmentPage
-          key={page}
-          treatmentKey={page.slice(3)}
-          onBook={() => goTo('booking')}
-          onBrowse={() => goTo('treatments')}
-        />
-      )}
+        {page === 'about' && (
+          <AboutPage
+            onResults={() => goTo('results')}
+            onTreatments={() => goTo('treatments')}
+          />
+        )}
+        {page === 'results' && (
+          <ResultsPage
+            onTreatments={() => goTo('treatments')}
+            onGallery={() => goTo('gallery')}
+          />
+        )}
+        {page === 'gallery' && (
+          <GalleryPage />
+        )}
+        {page === 'treatments' && (
+          <TreatmentsDirectory columns={TREATMENT_COLS} onSelect={selectTreatment} />
+        )}
+        {page === 'memberships' && <Memberships onScrollTo={el => lenisRef.current?.scrollTo(el)} />}
+        {page === 'booking' && <BookingPage />}
+
+        {page.startsWith('tx:') && (
+          <TreatmentPage
+            key={page}
+            treatmentKey={page.slice(3)}
+            onBook={() => goTo('booking')}
+            onBrowse={() => goTo('treatments')}
+          />
+        )}
+      </div>
 
       {/* Hidden over the desktop hero, which carries its own nav. Phones have
           no hero nav, so the button stays; it also has to come back whenever
@@ -624,6 +623,8 @@ export default function App() {
         onResults={() => goTo('results')}
         onGallery={() => goTo('gallery')}
         onContact={() => goTo('booking')}
+        pushRef={shellRef}
+        onClosed={onMenuClosed}
       />
 
       <PageTransition ref={transitionRef} />

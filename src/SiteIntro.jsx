@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import './SiteIntro.css'
 
+// How long the script sits alone before the flower starts drawing.
+const START_MS = 1000
 // How long the finished mark holds before the page transition takes it away.
-const HOLD_MS = 600
+const HOLD_MS = 1000
 
 // Fetched and inlined (rather than shown as an image) so each showing of the
 // intro gets its own copy of the drawing that starts from the first stroke.
@@ -23,10 +25,20 @@ export default function SiteIntro({ onDone }) {
   const flowerRef = useRef(null)
   const [flower, setFlower] = useState(null)
 
+  // The flower is only put on the page once the pause is over: inserting it
+  // is what starts its strokes.
   useEffect(() => {
     let live = true
-    loadFlower().then(markup => live && setFlower(markup))
-    return () => { live = false }
+    const started = Date.now()
+    let timer
+    loadFlower().then(markup => {
+      if (!live) return
+      timer = setTimeout(() => setFlower(markup), Math.max(0, START_MS - (Date.now() - started)))
+    })
+    return () => {
+      live = false
+      clearTimeout(timer)
+    }
   }, [])
 
   useEffect(() => {

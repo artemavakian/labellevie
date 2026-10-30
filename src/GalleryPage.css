@@ -505,3 +505,11 @@
     margin-bottom: 34px;
   }
 }
+
+/* Set in the same light display face as the other page titles. */
+.gallery-title {
+  font-family: var(--lbv-display);
+  font-weight: 200;
+  line-height: 0.92;
+  letter-spacing: -0.065em;
+}
