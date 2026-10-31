@@ -1,9 +1,9 @@
 .booking-page {
   position: relative;
   display: flex;
-  min-height: 100svh;
+  min-height: calc(100 * var(--svh));
   justify-content: center;
-  padding: clamp(100px, 12vw, 180px) 0 max(24px, calc(var(--lbv-section-space) - 96px));
+  padding: clamp(100px, calc(12 * var(--vw)), 180px) 0 max(24px, calc(var(--lbv-section-space) - 96px));
   overflow: hidden;
   background:
     radial-gradient(circle at 82% 12%, rgba(200, 164, 88, 0.18), transparent 24%),
@@ -27,7 +27,7 @@
   display: flex;
   width: min(1400px, calc(100% - (var(--lbv-page-gutter) * 2)));
   flex-direction: column;
-  gap: clamp(72px, 9vw, 130px);
+  gap: clamp(72px, calc(9 * var(--vw)), 130px);
 }
 
 .booking-header { display: flex; flex-direction: column; }
@@ -36,7 +36,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: clamp(28px, 4vw, 54px);
+  margin-bottom: clamp(28px, calc(4 * var(--vw)), 54px);
   padding-bottom: 16px;
   border-bottom: 1px solid var(--lbv-line-dark);
 }
@@ -56,13 +56,13 @@
   max-width: 1100px;
   margin: 0;
   color: var(--lbv-ink);
-  font: 200 clamp(4rem, 9.5vw, 9rem) / 0.82 var(--lbv-display);
+  font: 200 clamp(4rem, calc(9.5 * var(--vw)), 9rem) / 0.82 var(--lbv-display);
   letter-spacing: -0.065em;
 }
 
 .booking-title em {
   display: block;
-  margin-left: clamp(0px, 7vw, 100px);
+  margin-left: clamp(0px, calc(7 * var(--vw)), 100px);
   color: var(--lbv-gold-deep);
   font-family: var(--lbv-script);
   font-size: 1.2em;
@@ -72,26 +72,26 @@
 
 .booking-intro {
   width: min(510px, 100%);
-  margin: clamp(34px, 4vw, 58px) 0 0 auto;
+  margin: clamp(34px, calc(4 * var(--vw)), 58px) 0 0 auto;
   color: rgba(23, 18, 13, 0.68);
-  font: 300 clamp(1rem, 1.35vw, 1.2rem) / 1.75 var(--lbv-sans);
+  font: 300 clamp(1rem, calc(1.35 * var(--vw)), 1.2rem) / 1.75 var(--lbv-sans);
 }
 
 .booking-grid {
   display: grid;
   grid-template-columns: minmax(280px, 0.78fr) minmax(500px, 1.22fr);
   align-items: start;
-  gap: clamp(54px, 9vw, 150px);
+  gap: clamp(54px, calc(9 * var(--vw)), 150px);
 }
 
 .booking-left {
   display: flex;
   flex-direction: column;
-  gap: clamp(64px, 8vw, 110px);
+  gap: clamp(64px, calc(8 * var(--vw)), 110px);
   padding-top: 20px;
 }
 
-.booking-info { display: flex; flex-direction: column; gap: clamp(32px, 4vw, 52px); }
+.booking-info { display: flex; flex-direction: column; gap: clamp(32px, calc(4 * var(--vw)), 52px); }
 .booking-detail { display: flex; flex-direction: column; gap: 9px; }
 
 .booking-detail__label {
@@ -103,7 +103,7 @@
 
 .booking-detail__value {
   color: var(--lbv-ink-soft);
-  font: 300 clamp(0.93rem, 1.2vw, 1.08rem) / 1.7 var(--lbv-sans);
+  font: 300 clamp(0.93rem, calc(1.2 * var(--vw)), 1.08rem) / 1.7 var(--lbv-sans);
   text-decoration: none;
 }@media (hover: hover) {
 a.booking-detail__value:hover { text-decoration: none; }
@@ -130,7 +130,7 @@ a.booking-detail__value:hover { text-decoration: none; }
 .booking-promo__headline {
   margin: 0;
   color: var(--lbv-gold-deep);
-  font: 400 clamp(1.62rem, 2.16vw, 2.16rem) / 1.2 var(--lbv-serif);
+  font: 400 clamp(1.62rem, calc(2.16 * var(--vw)), 2.16rem) / 1.2 var(--lbv-serif);
 }
 
 .booking-promo__body {
@@ -143,7 +143,7 @@ a.booking-detail__value:hover { text-decoration: none; }
 
 .booking-form-card {
   position: relative;
-  padding: clamp(40px, 6vw, 78px);
+  padding: clamp(40px, calc(6 * var(--vw)), 78px);
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.24), transparent 52%),
     #ead9bd;
@@ -163,7 +163,7 @@ a.booking-detail__value:hover { text-decoration: none; }
   z-index: 1;
   display: flex;
   justify-content: space-between;
-  margin-bottom: clamp(42px, 6vw, 78px);
+  margin-bottom: clamp(42px, calc(6 * var(--vw)), 78px);
   padding-bottom: 16px;
   border-bottom: 1px solid rgba(23, 18, 13, 0.22);
   color: var(--lbv-gold-deep);
@@ -250,7 +250,7 @@ a.booking-detail__value:hover { text-decoration: none; }
   align-items: center;
   justify-content: flex-end;
   gap: 28px;
-  margin-top: calc(clamp(72px, 9vw, 130px) * -0.45);
+  margin-top: calc(clamp(72px, calc(9 * var(--vw)), 130px) * -0.45);
   padding-top: 18px;
   border-top: 1px solid var(--lbv-line-dark);
   color: rgba(23, 18, 13, 0.42);
@@ -278,7 +278,7 @@ a.booking-detail__value:hover { text-decoration: none; }
   .booking-page { padding-top: 100px; }
   .booking-page::before { left: 24px; }
   .booking-inner { width: calc(100% - 48px); gap: 80px; }
-  .booking-title { font-size: clamp(3.75rem, 17vw, 7rem); }
+  .booking-title { font-size: clamp(3.75rem, calc(17 * var(--vw)), 7rem); }
   .booking-title em { margin-left: 0; }
   .booking-intro { margin-left: 0; }
   .booking-grid { grid-template-columns: 1fr; gap: 78px; }
@@ -289,7 +289,7 @@ a.booking-detail__value:hover { text-decoration: none; }
 
 @media (max-width: 560px) {
   .booking-header__edition { display: none; }
-  .booking-title { font-size: clamp(3.4rem, 18vw, 5.5rem); line-height: 0.88; }
+  .booking-title { font-size: clamp(3.4rem, calc(18 * var(--vw)), 5.5rem); line-height: 0.88; }
   .booking-left { display: flex; }
   .booking-form-card { margin: 0 -8px; padding: 48px 30px; }
   .booking-form-card::after { inset: 10px; }
@@ -330,7 +330,7 @@ a.booking-detail__value:hover { text-decoration: none; }
   }
 
   .booking-title {
-    font-size: clamp(2.6rem, 14vw, 3.8rem);
+    font-size: clamp(2.6rem, calc(14 * var(--vw)), 3.8rem);
     line-height: 0.96;
   }
 
@@ -423,7 +423,7 @@ a.booking-detail__value:hover { text-decoration: none; }
   }
 
   .booking-promo__headline {
-    font-size: clamp(1.35rem, 7vw, 1.7rem);
+    font-size: clamp(1.35rem, calc(7 * var(--vw)), 1.7rem);
   }
 
   .booking-form-card {
@@ -444,4 +444,29 @@ a.booking-detail__value:hover { text-decoration: none; }
     margin-top: 0;
     padding-top: 20px;
   }
+}
+
+/* Contact links, simplified: the text never moves, and on hover the icon
+   slides in to its right, level with where it always sat. (Phones keep
+   their own always-visible layout above, which out-ranks these.) */
+.contact-link {
+  padding-left: 0;
+}
+
+.contact-link__slot {
+  left: calc(100% + 12px);
+}
+
+.contact-link__text {
+  position: relative;
+  z-index: 1;
+  transform: none;
+  transition: none;
+}
+
+/* Out from behind the text: it starts tucked under the end of the line and
+   slides right into place as it fades in. */
+.contact-link__circle {
+  transform: translateX(-22px);
+  transition: opacity 380ms ease, transform 380ms var(--lbv-ease);
 }

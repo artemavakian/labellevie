@@ -12,52 +12,29 @@
 }
 
 .site-intro__stack {
-  --intro-logo-w: 676px; /* Change only this value to resize the opening logo */
+  --intro-logo-w: 507px; /* Change only this value to resize the opening logo */
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: min(var(--intro-logo-w), calc(100vw - 48px));
+  width: min(var(--intro-logo-w), calc(0.75 * (calc(100 * var(--vw)) - 48px)));
   user-select: none;
 }
 
-/* lbvintro.png and lbvintro.svg share one 1200×500 frame, so stacking them
-   at the same size lines the flower up with the script. The frame has more
-   empty room above and below the artwork than the old logo did; the negative
-   margins (a share of the width, as the frame scales) take that back so the
-   mark and caption keep their old spacing. */
-.site-intro__mark {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1200 / 500;
-  margin: -4.05% 0;
-}
-
 /* Masked over a solid fill rather than shown directly — that's what allows
-   the black PNG to take the logo gold. */
-.site-intro__script {
-  position: absolute;
-  inset: 0;
-  background-color: var(--lbv-gold-deep);
-  -webkit-mask: url('/lbvintro.png') center / 100% 100% no-repeat;
-  mask: url('/lbvintro.png') center / 100% 100% no-repeat;
-}
-
-/* The SVG carries its own gold and its own stroke animation. */
-.site-intro__flower {
-  position: absolute;
-  inset: 0;
-}
-
-.site-intro__flower svg {
+   it to be tinted the logo gold. */
+.site-intro__logo {
   display: block;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1024 / 340;
+  background-color: var(--lbv-gold-deep);
+  -webkit-mask: url('/lbvlogo.png') center / contain no-repeat;
+  mask: url('/lbvlogo.png') center / contain no-repeat;
 }
 
 .site-intro__caption {
-  margin-top: 12px;
+  margin-top: 9px;
   font-family: 'Montserrat', system-ui, sans-serif;
-  font-size: 26px;
+  font-size: 19.5px;
   font-weight: 300;
   letter-spacing: 0.26em;
   text-indent: 0.26em; /* keeps the tracked line optically centred */
@@ -68,12 +45,12 @@
 
 @media (max-width: 640px) {
   .site-intro__stack {
-    width: calc(100vw - 40px);
+    width: calc(0.75 * (calc(100 * var(--vw)) - 40px));
   }
 
   .site-intro__caption {
-    margin-top: 9px;
-    font-size: clamp(11px, 3.5vw, 14px);
+    margin-top: 7px;
+    font-size: clamp(8.25px, calc(2.625 * var(--vw)), 10.5px);
     letter-spacing: 0.2em;
     text-indent: 0.2em;
   }

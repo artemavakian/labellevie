@@ -1,4 +1,5 @@
 import ContactForm from './ContactForm'
+import RevealText from './RevealText'
 import './BookingPage.css'
 
 /* ── Inline SVG icons ──────────────────────────────────────────── */
@@ -51,10 +52,10 @@ export default function BookingPage() {
             <p className="booking-sub">Consultations in-person or virtual</p>
             <span className="booking-header__edition" aria-hidden="true">Draper · Utah</span>
           </div>
-          <h1 className="booking-title">
+          <RevealText as="h1" className="booking-title">
             Let&apos;s begin with<br />
             a conversation.
-          </h1>
+          </RevealText>
           <p className="booking-intro">
             Call, text, email, or message to book a free consultation or ask us anything.
           </p>
@@ -113,7 +114,7 @@ export default function BookingPage() {
             <div className="booking-form-card__heading">
               <span>CONNECT WITH US</span>
             </div>
-            <ContactForm cardMode charLimit={500} submitLabel="SEND" />
+            <ContactForm formName="Contact page" cardMode charLimit={500} submitLabel="SEND" />
           </div>
 
         </div>

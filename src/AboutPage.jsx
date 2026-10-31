@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { ArrowUpRight } from 'lucide-react'
 import rawReviews from '../reviews?raw'
 import FlowerButton from './FlowerButton'
+import GoldenBackdrop from './GoldenBackdrop'
+import RevealText from './RevealText'
 import './AboutPage.css'
 
 const GOOGLE_REVIEWS_URL =
@@ -117,7 +119,7 @@ export default function AboutPage({ onResults, onTreatments }) {
       {/* On a phone the label belongs to the statement block rather than to
           the section, which keeps the section down to a single flex child. */}
       {phone ? <p className="about-page__opening-tag">Premiere Med Spa in Utah</p> : null}
-      <h1 id="about-page-statement" className="about-page__statement">
+      <RevealText as="h1" id="about-page-statement" className="about-page__statement">
         <span className="about-page__statement-primary">
           Aesthetic medicine<br />
           delivered with<br />
@@ -125,7 +127,7 @@ export default function AboutPage({ onResults, onTreatments }) {
           <em>experience &amp;</em>
         </span>
         <em className="about-page__statement-final">warm, passionate service.</em>
-      </h1>
+      </RevealText>
     </div>
   )
 
@@ -166,9 +168,9 @@ export default function AboutPage({ onResults, onTreatments }) {
         <section className="about-page__team" aria-label="Our specialists">
           <header className="about-page__team-header">
             <p className="about-page__eyebrow">The people behind your care</p>
-            <h2 className="about-page__specialists-heading">
+            <RevealText as="h2" className="about-page__specialists-heading">
               Meet the<br />specialists
-            </h2>
+            </RevealText>
           </header>
           <div className="about-page__team-grid">
             {TEAM.map((member, index) => (
@@ -197,17 +199,18 @@ export default function AboutPage({ onResults, onTreatments }) {
       </div>
 
       {/* Closing statement slides up over the team as you scroll */}
-      <section className="about-page__footer" data-menu-theme="dark">
+      <section className="about-page__footer has-golden-backdrop" data-menu-theme="dark">
+        <GoldenBackdrop />
         <div className="about-page__footer-copy">
-          <p className="about-page__bio">
+          <RevealText className="about-page__bio">
             With over <span className="about-page__highlight">30 years of experience</span>, Kelly believes aesthetic treatments should leave you looking
             like yourself—<span className="about-page__highlight">naturally refreshed, never overdone</span>. Beyond beautiful results, we&apos;re proud
             to be known for our exceptional care, with reviews <span className="about-page__highlight">consistently praising how comfortable the experience is.</span>
-          </p>
+          </RevealText>
         </div>
         <div className="about-page__actions" aria-label="Explore La Belle Vie">
-          <FlowerButton onClick={onResults}>View Real Results</FlowerButton>
-          <FlowerButton onClick={onTreatments}>Browse Treatments</FlowerButton>
+          <FlowerButton className="about-page__button" onClick={onResults}>View Real Results</FlowerButton>
+          <FlowerButton className="about-page__button" onClick={onTreatments}>Browse Treatments</FlowerButton>
         </div>
       </section>
     </main>

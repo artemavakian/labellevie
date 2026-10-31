@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Mail, MapPin, Phone } from 'lucide-react'
 import ContactForm from './ContactForm'
+import RevealText from './RevealText'
 import './Memberships.css'
 
 const TIERS = [
@@ -136,7 +137,7 @@ export default function Memberships({ onScrollTo = () => {} }) {
                 <span className="mem-card__number">{String(index + 1).padStart(2, '0')}</span>
                 {t.featured && <span className="mem-card__badge">Most Popular</span>}
               </div>
-              <span className="mem-card__name">{t.name}</span>
+              <RevealText as="span" className="mem-card__name">{t.name}</RevealText>
               <div className="mem-card__price">
                 <span className="mem-card__amount">{t.price}</span>
                 <span className="mem-card__per">/month</span>
@@ -210,13 +211,13 @@ export default function Memberships({ onScrollTo = () => {} }) {
         <div className="mem-contact-inner">
           <div className="mem-contact-heading">
             <p className="mem-eyebrow">Your membership begins here</p>
-            <p className="mem-contact-intro">
+            <RevealText className="mem-contact-intro">
               Call, text, email, or message us to learn more or sign up for a membership.
-            </p>
+            </RevealText>
           </div>
           <div className="mem-contact-layout">
             <div className="mem-contact-form-wrap">
-              <ContactForm messagePlaceholder="Message" />
+              <ContactForm formName="Memberships page" messagePlaceholder="Message" />
             </div>
 
             <div className="mem-contact-info">

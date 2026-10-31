@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react'
 import FlowerButton from './FlowerButton'
+import GoldenBackdrop from './GoldenBackdrop'
+import RevealText from './RevealText'
 import './ResultsPage.css'
 
 function RevealSection({
@@ -10,12 +12,12 @@ function RevealSection({
   number,
   treatment,
   text,
-  consentText,
   final = false,
 }) {
   const wrapperRef = useRef(null)
   const afterImgRef = useRef(null)
   const dividerRef = useRef(null)
+  const handleRef = useRef(null)
   const scrollNoteRef = useRef(null)
 
   useEffect(() => {
@@ -30,7 +32,9 @@ function RevealSection({
 
       const rect = wrapperRef.current.getBoundingClientRect()
       const vh = window.innerHeight
-      const scrollable = wrapperRef.current.offsetHeight - vh
+      // On-screen pixels throughout, like the rect (offsetHeight isn't, in a
+      // scaled-down window).
+      const scrollable = rect.height - vh
       const progress = Math.max(0, Math.min(1, -rect.top / scrollable))
       const pct = progress * 100
 
@@ -62,28 +66,31 @@ function RevealSection({
     }
   }, [revealDir])
 
-  // Underline animation on scroll-note when user hovers the divider handle.
+  // Hovering the divider's circle pulses a band of gold through the scroll
+  // note once: it sweeps in behind the text and, the moment it reaches the
+  // end, sweeps straight back out — whether or not the pointer has left.
   // Only wired on pointer devices (matchMedia hover check).
   useEffect(() => {
-    const divider = dividerRef.current
+    const handle = handleRef.current
     const note = scrollNoteRef.current
-    if (!divider || !note) return
+    if (!handle || !note) return
     if (!window.matchMedia('(hover: hover)').matches) return
 
     const onEnter = () => {
       note.classList.remove('ba-scroll-note--erase')
       note.classList.add('ba-scroll-note--draw')
     }
-    const onLeave = () => {
+    const onDrawn = event => {
+      if (event.animationName !== 'ba-underline-draw') return
       note.classList.remove('ba-scroll-note--draw')
       note.classList.add('ba-scroll-note--erase')
     }
 
-    divider.addEventListener('mouseenter', onEnter)
-    divider.addEventListener('mouseleave', onLeave)
+    handle.addEventListener('mouseenter', onEnter)
+    note.addEventListener('animationend', onDrawn)
     return () => {
-      divider.removeEventListener('mouseenter', onEnter)
-      divider.removeEventListener('mouseleave', onLeave)
+      handle.removeEventListener('mouseenter', onEnter)
+      note.removeEventListener('animationend', onDrawn)
     }
   }, [])
 
@@ -108,13 +115,15 @@ function RevealSection({
         decoding="async"
         style={{ clipPath: initClip }}
       />
-      <div ref={dividerRef} className="ba-divider" style={{ left: initLeft }} />
-      {consentText && <p className="ba-consent-img">{consentText}</p>}
+      <div ref={dividerRef} className="ba-divider" style={{ left: initLeft }}>
+        {/* The circle's own hover target, so the thin line itself doesn't count. */}
+        <span ref={handleRef} className="ba-divider__handle" aria-hidden="true" />
+      </div>
     </div>
   )
 
   const textEl = (
-    <div className={`ba-text${reversed ? ' ba-text--right' : ''}`}>
+    <div className={`ba-text${reversed ? ' ba-text--right' : ''}`} data-menu-theme="light">
       <div className="ba-text__inner">
         <div className="ba-chapter" aria-hidden="true">
           <span>{number}</span>
@@ -137,10 +146,11 @@ function RevealSection({
   )
 }
 
-export default function ResultsPage({ onTreatments, onGallery }) {
+export default function ResultsPage({ onBook, onGallery }) {
   return (
     <main className="results-page">
-      <section className="results-intro" data-menu-theme="light">
+      <section className="results-intro has-golden-backdrop" data-menu-theme="dark">
+        <GoldenBackdrop />
         <div className="results-intro__topline" aria-label="Rejuvenate, restore, maintain">
           <span>Rejuvenate</span>
           <span className="results-intro__divider" aria-hidden="true" />
@@ -150,9 +160,9 @@ export default function ResultsPage({ onTreatments, onGallery }) {
         </div>
 
         <div className="results-intro__body">
-          <h1 className="results-intro__statement">
+          <RevealText as="h1" className="results-intro__statement">
             See what’s possible without the operating room.
-          </h1>
+          </RevealText>
           <p className="results-intro__lead">
             Results achieved with non-surgical, minimally-invasive treatments.
           </p>
@@ -165,17 +175,16 @@ export default function ResultsPage({ onTreatments, onGallery }) {
       </section>
 
       <RevealSection
-        beforeImg="/realresults/renuvabefore.png"
-        afterImg="/realresults/renuvaafter.png"
+        beforeImg="/realresults/renuvabefore.webp"
+        afterImg="/realresults/renuvaafter.webp"
         number="01"
         treatment="Renuva"
         reversed={false}
         revealDir="ltr"
-        consentText="Photos shared with patient consent."
         text={
           <>
             <span className="ba-treatment-label">Renuva®</span>
-            <h2 className="ba-title">Natural volume restoration.<br />No surgery required.</h2>
+            <RevealText as="h2" className="ba-title">Natural volume restoration.<br />No surgery required.</RevealText>
             <p className="ba-desc">
               Restore youthful volume while avoiding the risks, scars, and recovery of surgery.
               The result is a refreshed, rejuvenated look that&apos;s unmistakably you.
@@ -187,18 +196,17 @@ export default function ResultsPage({ onTreatments, onGallery }) {
       <div className="ba-section-divider" />
 
       <RevealSection
-        beforeImg="/realresults/coolsculptbefore.png"
-        afterImg="/realresults/coolsculptafter.png"
+        beforeImg="/realresults/coolsculptbefore.webp"
+        afterImg="/realresults/coolsculptafter.webp"
         number="02"
         treatment="CoolSculpting"
         reversed
         revealDir="rtl"
-        consentText="Photos shared with patient consent."
         final
         text={
           <>
             <span className="ba-treatment-label">CoolSculpting®</span>
-            <h2 className="ba-title">Non-invasive transformation.</h2>
+            <RevealText as="h2" className="ba-title">Non-invasive transformation.</RevealText>
             <p className="ba-desc">
               Target stubborn fat with no surgery, no incisions, and little to no downtime —
               revealing a naturally slimmer, more contoured appearance.
@@ -207,15 +215,16 @@ export default function ResultsPage({ onTreatments, onGallery }) {
         }
       />
 
-      <section className="results-cta" data-menu-theme="dark">
+      <section className="results-cta has-golden-backdrop" data-menu-theme="dark">
+        <GoldenBackdrop />
         <p className="results-cta__eyebrow">Begin your story</p>
-        <p className="results-cta__text">
+        <RevealText className="results-cta__text">
           Exceptional care, exceptional results.<br />
           Your consultation is always free.
-        </p>
+        </RevealText>
         <div className="results-cta__actions">
-          <FlowerButton className="results-cta__button" onClick={onTreatments}>Treatments</FlowerButton>
           <FlowerButton className="results-cta__button" onClick={onGallery}>Full Gallery</FlowerButton>
+          <FlowerButton className="results-cta__button" onClick={onBook}>Book Now</FlowerButton>
         </div>
       </section>
     </main>

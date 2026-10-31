@@ -1,0 +1,106 @@
+/* Drifting ground — soft blotches over a base, in the manner of the About
+   opening's wash but richer and in motion. Only transforms animate, so it
+   stays cheap. Each variant sets its base and the four blotch shades. */
+.golden-backdrop {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  background: var(--backdrop-base);
+  pointer-events: none;
+}
+
+/* Warm closing ground: a mesh of two deep golds, lit by brighter golds,
+   with only a touch of the palest. */
+.golden-backdrop--gold {
+  --backdrop-base:
+    radial-gradient(ellipse 60% 70% at 22% 28%, #af8454, transparent 70%),
+    radial-gradient(ellipse 55% 65% at 80% 74%, #af8454, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 78% 16%, #9e764e, transparent 70%),
+    linear-gradient(150deg, #9e764e 0%, #a77d51 50%, #9e764e 100%);
+  --blotch-ochre: 202, 151, 90;
+  --blotch-honey: 217, 165, 98;
+  --blotch-gold: 233, 180, 106;
+  --blotch-glow: 255, 213, 145;
+  --blotch-strength: 0.62;
+  --glow-strength: 0.4;
+}
+
+/* Ivory ground with pale sand and gold washes, after the About opening. */
+.golden-backdrop--light {
+  --backdrop-base: linear-gradient(145deg, #fff 0%, #faf4ea 100%);
+  --blotch-ochre: 200, 164, 88;
+  --blotch-honey: 233, 210, 173;
+  --blotch-gold: 224, 171, 103;
+  --blotch-glow: 250, 222, 170;
+  --blotch-strength: 0.4;
+  --glow-strength: 0.45;
+}
+
+.golden-backdrop__blotch {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(closest-side,
+    rgba(var(--blotch), var(--strength)),
+    rgba(var(--blotch), calc(var(--strength) * 0.38)) 55%,
+    transparent);
+  animation-name: golden-backdrop-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  will-change: transform;
+}
+
+.golden-backdrop__blotch--ochre { --blotch: var(--blotch-ochre); --strength: var(--blotch-strength); }
+.golden-backdrop__blotch--honey { --blotch: var(--blotch-honey); --strength: var(--blotch-strength); }
+.golden-backdrop__blotch--gold { --blotch: var(--blotch-gold); --strength: var(--blotch-strength); }
+.golden-backdrop__blotch--glow { --blotch: var(--blotch-glow); --strength: var(--glow-strength); }
+
+@keyframes golden-backdrop-drift {
+  from {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+
+  to {
+    transform: translate(var(--drift-x), var(--drift-y)) rotate(var(--turn)) scale(1.12);
+  }
+}
+
+/* Paused while off screen (GoldenBackdrop.jsx). */
+.golden-backdrop[data-paused] .golden-backdrop__blotch {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .golden-backdrop__blotch {
+    animation: none;
+  }
+}
+
+/* Whatever sits on the ground stays above it. White text on the gold keeps
+   a faint warm shadow so it holds up over the brightest blotches. */
+.has-golden-backdrop {
+  position: relative;
+  isolation: isolate;
+}
+
+.has-golden-backdrop:has(> .golden-backdrop--gold) {
+  text-shadow: 0 2px 22px rgba(122, 76, 28, 0.22);
+}
+
+.has-golden-backdrop > :not(.golden-backdrop) {
+  position: relative;
+  z-index: 1;
+}
+
+/* Out-ranks section rules that position all of their children. */
+.has-golden-backdrop > .golden-backdrop {
+  position: absolute;
+  z-index: 0;
+}
+
+/* Held to the screen behind a long page rather than stretched down it. */
+.golden-backdrop--fixed,
+.has-golden-backdrop > .golden-backdrop--fixed {
+  position: fixed;
+}

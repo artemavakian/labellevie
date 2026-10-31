@@ -1,8 +1,9 @@
 /* Flower buttons — the label set like the hero's top nav links, with the
-   flower mark beside it. Sizes come in as custom properties from the
-   component, which also positions the pill's see-through text with them. */
+   flower mark beside it. The flower and its gap are in ems, so setting
+   font-size on a button scales all of it; 12px matches the hero nav. */
 .flower-btn {
   position: relative;
+  font-size: 12px;
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
@@ -20,7 +21,7 @@
 .flower-btn__label,
 .flower-btn__cutout {
   font-family: 'Montserrat', system-ui, sans-serif;
-  font-size: 12px;
+  font-size: 1em;
   font-weight: 500;
   letter-spacing: 0.14em;
   white-space: nowrap;
@@ -30,6 +31,22 @@
   position: relative;
   text-transform: uppercase;
   line-height: 1.4;
+}
+
+/* The hover's sweeps, for any label (sweepTimeline in FlowerButton.jsx):
+   --hide wipes it away from the left, --show brings it back from the left,
+   each with a soft edge. */
+.sweep-label {
+  --hide: 0;
+  --show: 1;
+  --soft: 30%;
+  --sweep: linear-gradient(90deg,
+    transparent calc(var(--hide) * (100% + var(--soft)) - var(--soft)),
+    #000 calc(var(--hide) * (100% + var(--soft))),
+    #000 calc(var(--show) * (100% + var(--soft)) - var(--soft)),
+    transparent calc(var(--show) * (100% + var(--soft))));
+  -webkit-mask-image: var(--sweep);
+  mask-image: var(--sweep);
 }
 
 /* Masked over a solid fill so the mark takes an exact colour. */

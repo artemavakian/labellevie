@@ -117,6 +117,14 @@ function RotatingHeroWord({ active }) {
 function HeroVideo({ complete, shouldPlay, onComplete, isVisible }) {
   const [ready, setReady] = useState(!complete)
   const videoRef = useRef(null)
+  const wasVisibleRef = useRef(isVisible)
+
+  // Each return to the hero rewinds the film, so it plays through again.
+  useEffect(() => {
+    const video = videoRef.current
+    if (isVisible && !wasVisibleRef.current && video) video.currentTime = 0
+    wasVisibleRef.current = isVisible
+  }, [isVisible])
 
   useEffect(() => {
     const video = videoRef.current
@@ -273,6 +281,9 @@ export default function App() {
       skipHeroIntroRef.current = false
       enteringRef.current = true
       setHeroPhase('done')
+      // Coming back to the hero plays the film again from the start, just
+      // as it did when the site first opened.
+      setHeroVideoComplete(false)
       setHeroVideoStarted(true)
       return
     }
@@ -483,11 +494,11 @@ export default function App() {
             element never has to re-fetch/re-decode when navigating back
             to the hero — that reload was the source of the black flash. */}
         <section
-          className={`hero${heroActive ? '' : ' hero--inactive'}`}
+          className={`hero${heroActive ? '' : ' hero--inactive'}${menuOpen ? ' hero--menu-open' : ''}`}
           aria-hidden={!heroActive}
           data-menu-theme="dark"
         >
-          {/* Plays once; the decoded video itself remains on its final frame. */}
+          {/* Plays through each time the hero is shown, then rests on its final frame. */}
           <HeroVideo
             complete={heroVideoComplete}
             shouldPlay={heroVideoStarted}
@@ -556,7 +567,7 @@ export default function App() {
               <span className={`hero-mobile-logo${heroReady ? ' hero-mobile-logo--visible' : ''}`} aria-hidden="true" />
 
               <div className={`hero-text__actions${heroReady ? ' hero-text__actions--visible' : ' hero-text__actions--hidden'}`}>
-                <FlowerButton variant="pill" onClick={() => goTo('booking')}>Book Consultation</FlowerButton>
+                <FlowerButton variant="pill" flower={false} onClick={() => goTo('booking')}>Book Consultation</FlowerButton>
                 <FlowerButton onClick={() => goTo('results')}>Real Results</FlowerButton>
               </div>
         </section>
@@ -569,12 +580,12 @@ export default function App() {
         )}
         {page === 'results' && (
           <ResultsPage
-            onTreatments={() => goTo('treatments')}
+            onBook={() => goTo('booking')}
             onGallery={() => goTo('gallery')}
           />
         )}
         {page === 'gallery' && (
-          <GalleryPage />
+          <GalleryPage onScrollTop={() => lenisRef.current?.scrollTo(0)} />
         )}
         {page === 'treatments' && (
           <TreatmentsDirectory columns={TREATMENT_COLS} onSelect={selectTreatment} />
@@ -587,7 +598,6 @@ export default function App() {
             key={page}
             treatmentKey={page.slice(3)}
             onBook={() => goTo('booking')}
-            onBrowse={() => goTo('treatments')}
           />
         )}
       </div>

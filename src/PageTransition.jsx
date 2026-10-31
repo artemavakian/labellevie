@@ -15,6 +15,12 @@ const frameSrc = index => `/page-transition/transition-${index}.webp`
 
 let frames = null
 let framesPromise = null
+// Settles once no wipe is playing — immediately when none is.
+let idle = Promise.resolve()
+
+/* For things that should wait until the cloud has cleared, such as a page's
+   text reveal: a page mounts behind the wipe, at its cover point. */
+export const afterTransitions = () => idle
 
 /* Fetches and decodes every frame up front, so the wipe never has to wait on
    one mid-play. Safe to call repeatedly; a failed load is retried next time. */
@@ -61,7 +67,7 @@ export default function PageTransition({ ref }) {
       }
       busyRef.current = true
 
-      return new Promise(resolve => {
+      const playing = new Promise(resolve => {
         let drawn = -1
         let start = null
         let last = 0
@@ -125,6 +131,8 @@ export default function PageTransition({ ref }) {
         stopRef.current = finish
         rafId = requestAnimationFrame(tick)
       })
+      idle = playing
+      return playing
     },
   }), [])
 

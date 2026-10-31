@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { ArrowUpRight } from 'lucide-react'
+import RevealText from './RevealText'
 import './TreatmentsDirectory.css'
 
 const COL1 = ['Neurotoxins & Fillers', 'Laser & Aesthetics', 'Women\u2019s Health']
@@ -91,11 +92,15 @@ export default function TreatmentsDirectory({ columns = [], onSelect }) {
       <div className="treatments-directory__inner">
         <header className="treatments-directory__intro">
           <p className="treatments-directory__eyebrow">La Belle Vie · Treatment Menu</p>
-          <h1 className="treatments-directory__title">
-            Care, considered beautifully
-          </h1>
+          <RevealText as="h1" className="treatments-directory__title">
+            Considered<br />
+            medical care<br />
+            &amp; aesthetics
+          </RevealText>
           <p className="treatments-directory__lede">
-            Explore personalized aesthetic, medical, and wellness treatments designed around the life you want to live.
+            Explore personalized aesthetic,<br />
+            medical, and wellness treatments<br />
+            designed around the life you want to live.
           </p>
         </header>
         <div className="treatments-directory__grid">

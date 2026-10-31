@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowUpLeft, ArrowUpRight, Mail, MessageCircleCheck, Phone, Send } from 'lucide-react'
+import { useLabelSweep } from './FlowerButton'
+import GoldenBackdrop from './GoldenBackdrop'
+import { viewportScale } from './viewportScale'
+import RevealText from './RevealText'
 import './TreatmentPage.css'
 
 /* ── FAQs shared across all four neurotoxins ──────────────── */
@@ -1095,10 +1098,12 @@ const CATEGORY_OVERVIEWS = {
   'Weight Loss': ['Medical guidance.', 'Sustainable progress.'],
 }
 
-export default function TreatmentPage({ treatmentKey, onBook, onBrowse }) {
+export default function TreatmentPage({ treatmentKey, onBook }) {
   const data = TREATMENTS_DATA[treatmentKey]
   const bgImage = TREATMENT_IMAGES[treatmentKey] ?? null
   const bgRef = useRef(null)
+  const ctaLabelRef = useRef(null)
+  const sweepCta = useLabelSweep(ctaLabelRef)
 
   useEffect(() => {
     const el = bgRef.current
@@ -1108,8 +1113,11 @@ export default function TreatmentPage({ treatmentKey, onBook, onBrowse }) {
     const onScroll = () => {
       if (frame) return
       frame = window.requestAnimationFrame(() => {
-        const maxShift = Math.max(0, el.offsetHeight - window.innerHeight)
-        const shift = Math.min(window.scrollY * 0.12, maxShift)
+        // In CSS pixels, like the transform it sets; the window's height and
+        // scroll are on-screen pixels, which differ in a scaled-down window.
+        const scale = viewportScale()
+        const maxShift = Math.max(0, el.offsetHeight - window.innerHeight / scale)
+        const shift = Math.min((window.scrollY / scale) * 0.12, maxShift)
         el.style.transform = `translate3d(0, ${-shift}px, 0)`
         frame = 0
       })
@@ -1150,13 +1158,6 @@ export default function TreatmentPage({ treatmentKey, onBook, onBrowse }) {
         </>
       )}
 
-      <div className="tx-browse-row">
-        <button className="tx-hdr-btn tx-browse-btn" type="button" onClick={onBrowse}>
-          <span className="tx-hdr-btn__icon" aria-hidden="true"><ArrowUpLeft /></span>
-          <span className="tx-hdr-btn__label">Browse Treatments</span>
-        </button>
-      </div>
-
       <div className="tx-hero">
         <div className="tx-hero__copy">
           <span className="tx-hero__category">{data.category}</span>
@@ -1172,9 +1173,9 @@ export default function TreatmentPage({ treatmentKey, onBook, onBrowse }) {
         <section className="tx-overview" aria-labelledby="tx-overview-heading">
           <p className="tx-kicker">The treatment</p>
           <div>
-            <h2 className="tx-overview__heading" id="tx-overview-heading">
-              {overview[0]}<br /><em>{overview[1]}</em>
-            </h2>
+            <RevealText as="h2" className="tx-overview__heading" id="tx-overview-heading">
+              {overview[0]} <em>{overview[1]}</em>
+            </RevealText>
             <p className="tx-desc">{data.description}</p>
           </div>
         </section>
@@ -1193,26 +1194,29 @@ export default function TreatmentPage({ treatmentKey, onBook, onBrowse }) {
         )}
         {data.faqs && <FaqAccordion faqs={data.faqs} />}
         {data.timeline && <TreatmentTimeline steps={data.timeline} />}
-
-        <div className="tx-book-group" data-menu-theme="light">
-          <p className="tx-kicker">Begin your consultation</p>
-          <div className="tx-git-wrap">
-            <button className="tx-hdr-btn tx-book-btn" type="button" onClick={onBook}>
-              <span className="tx-hdr-btn__label">Get in Touch</span>
-              <span className="tx-hdr-btn__icon" aria-hidden="true"><ArrowUpRight /></span>
-            </button>
-            <div className="tx-git-icons" aria-hidden="true">
-              <Mail className="tx-git-icon tx-git-icon--1" />
-              <Phone className="tx-git-icon tx-git-icon--2" />
-              <MessageCircleCheck className="tx-git-icon tx-git-icon--3" />
-              <Send className="tx-git-icon tx-git-icon--4" />
-            </div>
-          </div>
-          <p className="tx-book-tagline">
-            Schedule your free consultation or connect with our specialists for any questions or concerns.
-          </p>
-        </div>
       </div>
+
+      {/* Closing call, full width on the golden ground like the ends of the
+          About and Real Results pages. */}
+      <section className="tx-contact has-golden-backdrop" data-menu-theme="dark" aria-label="Get in touch">
+        <GoldenBackdrop />
+        <p className="tx-contact__kicker">Let&apos;s talk you</p>
+        <button
+          className="tx-contact__cta"
+          type="button"
+          onClick={onBook}
+          onPointerEnter={event => event.pointerType === 'mouse' && sweepCta(true)}
+          onPointerLeave={event => event.pointerType === 'mouse' && sweepCta(false)}
+          onFocus={event => event.currentTarget.matches(':focus-visible') && sweepCta(true)}
+          onBlur={() => sweepCta(false)}
+        >
+          <span ref={ctaLabelRef} className="tx-contact__cta-label sweep-label">Get in Touch</span>
+          <span className="tx-contact__cta-flower" aria-hidden="true" />
+        </button>
+        <p className="tx-contact__tagline">
+          Schedule your free consultation or connect with our specialists for any questions or concerns.
+        </p>
+      </section>
 
     </main>
   )

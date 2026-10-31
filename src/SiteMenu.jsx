@@ -1,14 +1,15 @@
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
+import { viewportScale } from './viewportScale'
 import './SiteMenu.css'
 
 /* ── Menu animation settings ─────────────────────────────────────
    The panel slides in from the right while the page is pushed left by
    exactly the panel's width, both on one timeline and one ease. */
 const MENU_ANIMATION = {
-  openDuration: 0.9,    // Seconds to open
-  closeDuration: 0.9,   // Seconds to close
-  ease: 'power3.out',   // GSAP easing
+  openDuration: 1.5,    // Seconds to open
+  closeDuration: 1.5,   // Seconds to close
+  ease: 'expo.out',     // GSAP easing
 }
 
 // How dark the page gets beside the open panel.
@@ -21,21 +22,33 @@ const MENU_CLEAR = 'rgba(10, 8, 6, 0)'
    screen, so it travels with the page instead of jumping; release() puts
    them back once the page is home again. */
 function pinFixedLayers(page) {
-  const origin = page.getBoundingClientRect()
+  // The page's on-screen position, in CSS pixels like the layers' own boxes
+  // (they differ in a scaled-down window).
+  const scale = viewportScale()
+  const pageBox = page.getBoundingClientRect()
+  const origin = { top: pageBox.top / scale, left: pageBox.left / scale }
+  // Each layer's own box, before any transform of its own (a parallax
+  // shift, say) — that transform stays on it and still applies once pinned.
   const layers = [...page.querySelectorAll('*')]
-    .filter(element => getComputedStyle(element).position === 'fixed')
-    .map(element => [element, element.getBoundingClientRect(), element.style.cssText])
+    .map(element => [element, getComputedStyle(element)])
+    .filter(([, style]) => style.position === 'fixed')
+    .map(([element, style]) => [element, {
+      top: parseFloat(style.top) || 0,
+      left: parseFloat(style.left) || 0,
+      width: element.offsetWidth,
+      height: element.offsetHeight,
+    }, element.style.cssText])
   // Measured first, then the transform and the pins go on together, so
   // there's no frame where a layer has one without the other.
   gsap.set(page, { x: 0 })
-  for (const [element, rect] of layers) {
+  for (const [element, box] of layers) {
     Object.assign(element.style, {
-      top: `${rect.top - origin.top}px`,
-      left: `${rect.left - origin.left}px`,
+      top: `${box.top - origin.top}px`,
+      left: `${box.left - origin.left}px`,
       right: 'auto',
       bottom: 'auto',
-      width: `${rect.width}px`,
-      height: `${rect.height}px`,
+      width: `${box.width}px`,
+      height: `${box.height}px`,
     })
   }
   return () => layers.forEach(([element, , cssText]) => { element.style.cssText = cssText })
@@ -68,13 +81,7 @@ export function SiteMenuButton({ onClick, theme = 'light', open = false, classNa
       aria-expanded={open}
     >
       <span className="site-menu-button__text">{open ? 'Close' : 'Menu'}</span>
-      {/* Two bars make the desktop plus; the third only appears on phones,
-          where the mark is a hamburger instead. */}
-      <span className="site-menu-button__cross" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-      </span>
+      <span className="site-menu-button__flower" aria-hidden="true" />
     </button>
   )
 }
@@ -114,7 +121,8 @@ export default function SiteMenu({
   const panelRef = useRef(null)
   const timelineRef = useRef(null)
   const releaseRef = useRef(null)
-  const startedRef = useRef(false)
+  // The open state last animated to; null until the panel is first placed.
+  const shownRef = useRef(null)
   const onClosedRef = useRef(onClosed)
   onClosedRef.current = onClosed
 
@@ -122,11 +130,13 @@ export default function SiteMenu({
     const root = rootRef.current
     const panel = panelRef.current
     const page = pushRef?.current
-    if (!startedRef.current) {
-      startedRef.current = true
+    if (shownRef.current === null) {
       gsap.set(panel, { x: 0, xPercent: 100 })
-      if (!open) return
+      shownRef.current = false
     }
+    // Only a real change of state animates (effects can re-run without one).
+    if (shownRef.current === open) return
+    shownRef.current = open
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     timelineRef.current?.kill()

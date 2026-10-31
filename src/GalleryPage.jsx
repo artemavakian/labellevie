@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
-import { ArrowLeft, ArrowRight, SlidersHorizontal, X } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { ArrowLeft, ArrowRight, ArrowUp, SlidersHorizontal, X } from 'lucide-react'
+import GoldenBackdrop from './GoldenBackdrop'
 import './GalleryPage.css'
 
 const GALLERY_CATEGORY_ORDER = ['threads', 'injectables', 'coolsculpting', 'microneedling']
@@ -47,11 +48,25 @@ const FILTERS = [
   ['microneedling', 'Microneedling'],
 ]
 
-export default function GalleryPage() {
+export default function GalleryPage({ onScrollTop }) {
   const [filter, setFilter] = useState('all')
   const [selectedId, setSelectedId] = useState(null)
   const [filterOpen, setFilterOpen] = useState(false)
   const [phone, setPhone] = useState(false)
+  const [showTop, setShowTop] = useState(false)
+  const filterToggleRef = useRef(null)
+
+  // The way back up appears once the Filter control has scrolled off the
+  // top of the screen, and goes again when it's back in view.
+  useEffect(() => {
+    const toggle = filterToggleRef.current
+    if (!toggle) return undefined
+    const observer = new IntersectionObserver(([entry]) => {
+      setShowTop(!entry.isIntersecting && entry.boundingClientRect.top < 0)
+    })
+    observer.observe(toggle)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 700px)')
@@ -99,11 +114,13 @@ export default function GalleryPage() {
 
   return (
     <main className="gallery-page" data-menu-theme="light">
+      <GoldenBackdrop variant="light" fixed edgesOnly />
       <section className="gallery-content" aria-label="Before and after gallery">
         <h1 className="gallery-title">Full Gallery</h1>
 
         <div className="gallery-filter-bar">
           <button
+            ref={filterToggleRef}
             className="gallery-filter-toggle"
             type="button"
             aria-haspopup="listbox"
@@ -224,6 +241,16 @@ export default function GalleryPage() {
           </button>
         </div>
       )}
+
+      <button
+        className={`gallery-to-top${showTop ? ' gallery-to-top--visible' : ''}`}
+        type="button"
+        onClick={onScrollTop}
+        aria-label="Back to top"
+        tabIndex={showTop ? 0 : -1}
+      >
+        <ArrowUp aria-hidden="true" />
+      </button>
     </main>
   )
 }

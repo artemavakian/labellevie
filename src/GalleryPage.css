@@ -1,5 +1,5 @@
 .gallery-page {
-  min-height: 100svh;
+  min-height: calc(100 * var(--svh));
   width: 100%;
   overflow-x: clip;
   background:
@@ -11,50 +11,7 @@
 }
 
 .gallery-content {
-  padding: clamp(112px, 11vw, 160px) var(--lbv-page-gutter) clamp(72px, 9vw, 130px);
-}
-
-.gallery-filter {
-  position: relative;
-  flex: 0 0 auto;
-  border: 0;
-  padding: 0 0 7px;
-  background: transparent;
-  color: rgba(10, 8, 6, 0.48);
-  cursor: pointer;
-  font: 600 0.93rem / 1 var(--lbv-sans);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  transition: color 250ms ease;
-}
-
-.gallery-filter::after {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 1px;
-  background: var(--lbv-ink);
-  content: '';
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 420ms var(--lbv-ease);
-}.gallery-filter:not(.gallery-filter--active):focus-visible {
-  color: var(--lbv-ink);
-}
-@media (hover: hover) {
-.gallery-filter:not(.gallery-filter--active):hover {
-  color: var(--lbv-ink);
-}
-}.gallery-filter:not(.gallery-filter--active):focus-visible::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
-@media (hover: hover) {
-.gallery-filter:not(.gallery-filter--active):hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
+  padding: clamp(112px, calc(11 * var(--vw)), 160px) var(--lbv-page-gutter) clamp(72px, calc(9 * var(--vw)), 130px);
 }
 
 /* Phone-only "Filter" button + dropdown that replaces the sticky
@@ -137,7 +94,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: start;
-  gap: clamp(44px, 5vw, 72px) clamp(18px, 2.5vw, 36px);
+  gap: clamp(44px, calc(5 * var(--vw)), 72px) clamp(18px, calc(2.5 * var(--vw)), 36px);
 }
 
 .gallery-card {
@@ -166,15 +123,6 @@
 }@media (hover: hover) {
 .gallery-card__image-button:hover img {
   transform: scale(1.018);
-}
-}.gallery-card__image-button:focus-visible .gallery-card__view {
-  opacity: 1;
-  transform: translateY(0);
-}
-@media (hover: hover) {
-.gallery-card__image-button:hover .gallery-card__view {
-  opacity: 1;
-  transform: translateY(0);
 }
 }
 
@@ -205,7 +153,7 @@
 .gallery-card__treatment {
   grid-column: 1 / -1;
   color: var(--lbv-ink);
-  font: 400 clamp(0.9rem, 1.15vw, 1.08rem) / 1.4 var(--lbv-sans);
+  font: 400 clamp(0.9rem, calc(1.15 * var(--vw)), 1.08rem) / 1.4 var(--lbv-sans);
   letter-spacing: -0.01em;
 }
 
@@ -216,7 +164,7 @@
   display: grid;
   grid-template-columns: minmax(48px, 0.12fr) minmax(0, 1fr) minmax(48px, 0.12fr);
   align-items: center;
-  padding: clamp(22px, 4vw, 60px);
+  padding: clamp(22px, calc(4 * var(--vw)), 60px);
   background: rgba(5, 4, 3, 0.94);
   backdrop-filter: blur(18px);
   color: #fff;
@@ -231,7 +179,7 @@
 .gallery-lightbox__figure {
   display: flex;
   min-width: 0;
-  max-height: calc(100svh - 70px);
+  max-height: calc(calc(100 * var(--svh)) - 70px);
   margin: 0;
   flex-direction: column;
   align-items: center;
@@ -241,7 +189,7 @@
 .gallery-lightbox__figure img {
   display: block;
   max-width: 100%;
-  max-height: calc(100svh - 130px);
+  max-height: calc(calc(100 * var(--svh)) - 130px);
   object-fit: contain;
   box-shadow: 0 32px 100px rgba(0, 0, 0, 0.32);
   user-select: none;
@@ -369,7 +317,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .gallery-card__image-button img,
-  .gallery-card__view,
   .gallery-lightbox,
   .gallery-lightbox__close,
   .gallery-lightbox__nav {
@@ -380,9 +327,6 @@
 
 /* ── Phone-only "Filter" button instead of the sticky category bar ── */
 @media (max-width: 700px) {
-  .gallery-filters {
-    display: none;
-  }
 
   .gallery-filter-bar {
     position: relative;
@@ -400,9 +344,9 @@
 
 .gallery-title {
   margin: 0;
-  padding: clamp(150px, 14vw, 224px) 0 clamp(28px, 3vw, 46px);
+  padding: clamp(150px, calc(14 * var(--vw)), 224px) 0 clamp(28px, calc(3 * var(--vw)), 46px);
   color: var(--lbv-gold-deep);
-  font: 400 clamp(3.6rem, 8vw, 7.2rem) / 1 var(--lbv-script);
+  font: 400 clamp(3.6rem, calc(8 * var(--vw)), 7.2rem) / 1 var(--lbv-script);
   letter-spacing: normal;
   text-align: center;
 }
@@ -412,7 +356,7 @@
   z-index: 20;
   display: flex;
   justify-content: center;
-  margin-bottom: clamp(58px, 7vw, 108px);
+  margin-bottom: clamp(58px, calc(7 * var(--vw)), 108px);
 }
 
 .gallery-filter-panel {
@@ -470,7 +414,7 @@
   }
 
   .gallery-filter-choice:first-child {
-    padding-top: clamp(26px, 3vw, 40px);
+    padding-top: clamp(26px, calc(3 * var(--vw)), 40px);
   }
 
   .gallery-filter-choice--active {
@@ -482,7 +426,7 @@
   }
 
   .gallery-grid {
-    margin-top: clamp(58px, 7vw, 108px);
+    margin-top: clamp(58px, calc(7 * var(--vw)), 108px);
   }
 }
 
@@ -496,9 +440,9 @@
 
 @media (max-width: 700px) {
   .gallery-title {
-    padding-top: clamp(92px, 20vw, 130px);
-    padding-bottom: clamp(22px, 5vw, 34px);
-    font-size: clamp(3rem, 15vw, 4.6rem);
+    padding-top: clamp(92px, calc(20 * var(--vw)), 130px);
+    padding-bottom: clamp(22px, calc(5 * var(--vw)), 34px);
+    font-size: clamp(3rem, calc(15 * var(--vw)), 4.6rem);
   }
 
   .gallery-filter-bar {
@@ -512,4 +456,74 @@
   font-weight: 200;
   line-height: 0.92;
   letter-spacing: -0.065em;
+}
+
+/* Ground: the ivory wash of the About opening, with many more of its soft
+   blotches drifting about, held behind the page as it scrolls. */
+.gallery-page {
+  position: relative;
+  isolation: isolate;
+  background: #fff;
+}
+
+.gallery-page > .golden-backdrop {
+  z-index: -1;
+}
+
+/* Sized exactly as the Memberships title. */
+.gallery-title {
+  font-size: clamp(5.1rem, calc(12.2 * var(--vw)), 13rem);
+}
+
+@media (max-width: 580px) {
+  .gallery-title {
+    font-size: clamp(2.7rem, calc(15 * var(--vw)), 3.8rem);
+  }
+}
+
+/* Back to top: a white disc with a gold arrow, centred at the foot of the
+   screen once the Filter control has scrolled away. */
+.gallery-to-top {
+  position: fixed;
+  z-index: 950;
+  bottom: clamp(20px, calc(3 * var(--vw)), 34px);
+  left: 50%;
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(183, 138, 78, 0.28);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 14px 34px rgba(46, 29, 10, 0.16);
+  color: var(--lbv-gold-deep);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 12px);
+  transition: opacity 320ms ease, transform 420ms var(--lbv-ease);
+}
+
+.gallery-to-top--visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+.gallery-to-top svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.6;
+}
+
+.gallery-to-top:focus-visible {
+  outline: 1px solid var(--lbv-gold-deep);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-to-top {
+    transition: none;
+  }
 }

@@ -18,10 +18,10 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: min(620px, 88vw);
+  width: min(620px, calc(88 * var(--vw)));
   height: 100%;
   overflow-y: auto;
-  padding: clamp(36px, 5vh, 62px) clamp(38px, 5vw, 72px) clamp(34px, 5vh, 58px);
+  padding: clamp(36px, calc(5 * var(--vh)), 62px) clamp(38px, calc(5 * var(--vw)), 72px) clamp(34px, calc(5 * var(--vh)), 58px);
   background:
     radial-gradient(circle at 100% 0%, rgba(200, 164, 88, 0.18), transparent 30%),
     linear-gradient(145deg, #fffdf8 0%, #f5ead8 100%);
@@ -56,7 +56,7 @@
 .site-menu__logo-caption {
   display: block;
   margin-top: 9px;
-  font: 500 clamp(8px, 0.72vw, 10px) / 1.4 var(--lbv-sans);
+  font: 500 clamp(8px, calc(0.72 * var(--vw)), 10px) / 1.4 var(--lbv-sans);
   letter-spacing: 0.32em;
   text-align: center;
   text-transform: uppercase;
@@ -67,7 +67,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-top: calc(clamp(46px, 7vh, 78px) + 28px);
+  margin-top: calc(clamp(46px, calc(7 * var(--vh)), 78px) + 28px);
 }
 
 .site-menu__nav-main,
@@ -80,7 +80,9 @@
 
 .site-menu__nav-secondary {
   gap: 8px;
-  margin-top: clamp(18px, 2.5vh, 28px);
+  margin-top: clamp(18px, calc(2.5 * var(--vh)), 28px);
+  /* Set a touch in from the main links. */
+  transform: translateX(12px);
 }
 
 .site-menu__nav-link {
@@ -91,7 +93,7 @@
   background: transparent;
   color: var(--lbv-ink);
   cursor: pointer;
-  font: 200 clamp(38px, 4.6vw, 66px) / 1.1 var(--lbv-display);
+  font: 200 clamp(38px, calc(4.6 * var(--vw)), 66px) / 1.1 var(--lbv-display);
   letter-spacing: -0.045em;
   text-align: left;
 }
@@ -118,29 +120,27 @@
 }
 }
 
-/* Script at the old 11–14px would be unreadable — its x-height is only 0.36em
-   against the sans' ~0.52em — so the size is scaled up to match the previous
-   optical weight. */
+/* The same light display face as the main links, smaller and in gold. */
 .site-menu__nav-link--secondary {
   padding: 2px 0;
   color: var(--lbv-gold-deep);
-  font: 400 clamp(18px, 1.6vw, 23px) / 1.4 var(--lbv-script);
-  letter-spacing: normal;
+  font: 200 clamp(18px, calc(1.6 * var(--vw)), 23px) / 1.4 var(--lbv-display);
+  letter-spacing: -0.02em;
   text-transform: none;
 }
+
 
 .site-menu__footer {
   position: relative;
   display: grid;
   grid-template-columns: auto auto;
   justify-content: end;
-  gap: clamp(28px, 4vw, 52px);
-  margin-top: clamp(42px, 7vh, 76px);
-  padding-top: clamp(12px, 1.75vh, 19px);
+  gap: clamp(28px, calc(4 * var(--vw)), 52px);
+  margin-top: clamp(42px, calc(7 * var(--vh)), 76px);
+  padding-top: clamp(12px, calc(1.75 * var(--vh)), 19px);
   border-top: 1px solid rgba(26, 18, 8, 0.16);
 }
 
-.site-menu__contact,
 .site-menu__legal {
   display: flex;
   flex-direction: column;
@@ -276,35 +276,35 @@
     opacity 420ms ease;
 }
 
-.site-menu-button__cross {
-  position: relative;
+/* The flower mark, masked over the text colour so it always matches the
+   label beside it, whatever the button's theme. */
+.site-menu-button__flower {
+  --flower-size: 18px;
   display: block;
-  width: 22px;
-  height: 22px;
+  width: var(--flower-size);
+  height: var(--flower-size);
+  background-color: currentColor;
+  -webkit-mask: url('/flowericon.webp') center / contain no-repeat;
+  mask: url('/flowericon.webp') center / contain no-repeat;
   transition: transform 520ms var(--lbv-ease);
 }
 
-.site-menu-button__cross span {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: block;
-  width: 18px;
-  height: 1px;
-  background: currentColor;
-  transform: translate(-50%, -50%);
-}
-
-.site-menu-button__cross span:nth-child(2) {
-  transform: translate(-50%, -50%) rotate(90deg);
-}
-
-.site-menu-button__cross span:nth-child(3) {
-  display: none;
-}
-
-.site-menu-button--open .site-menu-button__cross {
+.site-menu-button--open .site-menu-button__flower {
   transform: rotate(45deg);
+}
+
+/* Where the label is dark, a solid dark flower reads heavy, so it becomes a
+   white flower outlined in ink instead. The outlined artwork carries the
+   outline outside the petals, so it's drawn 1/8 larger around the same
+   centre to keep the petals the size they were. */
+.site-menu-button--light .site-menu-button__flower,
+.site-menu-button--open .site-menu-button__flower {
+  width: calc(var(--flower-size) * 1.125);
+  height: calc(var(--flower-size) * 1.125);
+  margin: calc(var(--flower-size) * -0.0625);
+  background: url('/flowericon-outline.webp') center / contain no-repeat;
+  -webkit-mask: none;
+  mask: none;
 }
 
 .site-menu-button--dark {
@@ -323,25 +323,31 @@
   border-color: rgba(26, 18, 8, 0.18);
   background: rgba(255, 253, 248, 0.88);
   color: var(--lbv-ink);
-}.site-menu-button:not(.site-menu-button--open):focus-visible .site-menu-button__cross {
+}
+
+.site-menu-button:not(.site-menu-button--open):focus-visible .site-menu-button__flower {
   transform: rotate(90deg);
 }
+
 @media (hover: hover) {
-.site-menu-button:not(.site-menu-button--open):hover .site-menu-button__cross {
-  transform: rotate(90deg);
+  .site-menu-button:not(.site-menu-button--open):hover .site-menu-button__flower {
+    transform: rotate(90deg);
+  }
 }
-}.site-menu-button--open:focus-visible .site-menu-button__cross {
+
+.site-menu-button--open:focus-visible .site-menu-button__flower {
   transform: rotate(135deg);
 }
+
 @media (hover: hover) {
-.site-menu-button--open:hover .site-menu-button__cross {
-  transform: rotate(135deg);
-}
+  .site-menu-button--open:hover .site-menu-button__flower {
+    transform: rotate(135deg);
+  }
 }
 
 @media (max-width: 700px) {
   .site-menu__panel {
-    width: min(92vw, 520px);
+    width: min(calc(92 * var(--vw)), 520px);
     padding: 34px 26px 42px;
   }
 
@@ -354,16 +360,12 @@
   }
 
   .site-menu__nav-link {
-    font-size: clamp(34px, 10vw, 52px);
+    font-size: clamp(34px, calc(10 * var(--vw)), 52px);
   }
 
   .site-menu__footer {
     grid-template-columns: 1fr;
     gap: 22px;
-  }
-
-  .site-menu__contact {
-    grid-row: auto;
   }
 
   .site-menu-button {
@@ -389,47 +391,8 @@
     display: none;
   }
 
-  /* Phones get a hamburger that swaps straight to a cross — no rotation of
-     the mark as a whole, each bar just moves to its open position. */
-  .site-menu-button__cross,
-  .site-menu-button--open .site-menu-button__cross,
-  .site-menu-button:hover .site-menu-button__cross,
-  .site-menu-button:focus-visible .site-menu-button__cross,
-  .site-menu-button--open:hover .site-menu-button__cross,
-  .site-menu-button--open:focus-visible .site-menu-button__cross {
-    width: 22px;
-    height: 22px;
-    transform: none;
-  }
-
-  .site-menu-button__cross span {
-    width: 22px;
-    transition: none;
-  }
-
-  .site-menu-button__cross span:nth-child(1) {
-    transform: translate(-50%, calc(-50% - 6px));
-  }
-
-  .site-menu-button__cross span:nth-child(2) {
-    transform: translate(-50%, -50%);
-  }
-
-  .site-menu-button__cross span:nth-child(3) {
-    display: block;
-    transform: translate(-50%, calc(-50% + 6px));
-  }
-
-  .site-menu-button--open .site-menu-button__cross span:nth-child(1) {
-    transform: translate(-50%, -50%) rotate(45deg);
-  }
-
-  .site-menu-button--open .site-menu-button__cross span:nth-child(2) {
-    opacity: 0;
-  }
-
-  .site-menu-button--open .site-menu-button__cross span:nth-child(3) {
-    transform: translate(-50%, -50%) rotate(-45deg);
+  .site-menu-button__flower {
+    --flower-size: 22px;
   }
 
   .site-menu__panel {
@@ -438,7 +401,7 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 100dvh;
+    height: calc(100 * var(--dvh));
     display: flex;
     flex-direction: column;
     padding: 84px 24px 22px;
@@ -455,7 +418,7 @@
 
   .site-menu__logo-caption {
     margin-top: 7px;
-    font-size: clamp(7.5px, 2.4vw, 10px);
+    font-size: clamp(7.5px, calc(2.4 * var(--vw)), 10px);
     letter-spacing: 0.2em;
     white-space: nowrap; /* force one line; container is now wide enough */
   }
@@ -474,13 +437,14 @@
   }
 
   .site-menu__nav-link {
-    font-size: clamp(37.5px, 11.875vw, 50px);
+    font-size: clamp(37.5px, calc(11.875 * var(--vw)), 50px);
     text-align: center;
   }
 
   .site-menu__nav-secondary {
     gap: 6px;
     margin-top: 20px;
+    transform: none;
   }
 
   .site-menu__nav-link--secondary {
@@ -528,8 +492,8 @@
     margin-top: 50px;
   }
 
-  .site-menu__nav-link {
-    font-size: clamp(32px, 4vw, 50px);
+  .site-menu__nav-link:not(.site-menu__nav-link--secondary) {
+    font-size: clamp(32px, calc(4 * var(--vw)), 50px);
   }
 
   .site-menu__nav-secondary {
@@ -609,7 +573,7 @@
 @media (prefers-reduced-motion: reduce) {
   .site-menu,
   .site-menu__panel,
-  .site-menu-button__cross,
+  .site-menu-button__flower,
   .site-menu__nav-link::after,
   .site-menu__footer a::after {
     transition-duration: 0.01ms !important;
@@ -619,6 +583,15 @@
 /* Over the phone hero the control is a solid white disc with black bars,
    rather than the translucent dark treatment other dark sections use. */
 @media (max-width: 640px) {
+  .site-menu-button--hero .site-menu-button__flower {
+    width: calc(var(--flower-size) * 1.125);
+    height: calc(var(--flower-size) * 1.125);
+    margin: calc(var(--flower-size) * -0.0625);
+    background: url('/flowericon-outline.webp') center / contain no-repeat;
+    -webkit-mask: none;
+    mask: none;
+  }
+
   .site-menu-button--hero {
     border-color: transparent;
     background: #fff;

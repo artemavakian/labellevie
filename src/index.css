@@ -17,25 +17,24 @@
   --lbv-white: #fff;
   --lbv-line-light: rgba(255, 255, 255, 0.2);
   --lbv-line-dark: rgba(26, 18, 8, 0.16);
-  --lbv-page-gutter: clamp(24px, 5.5vw, 88px);
-  --lbv-section-space: clamp(88px, 13vw, 190px);
+  --lbv-page-gutter: clamp(24px, calc(5.5 * var(--vw)), 88px);
+  --lbv-section-space: clamp(88px, calc(13 * var(--vw)), 190px);
   --lbv-display: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --lbv-serif: 'Cormorant Garamond', Georgia, serif;
   --lbv-script: 'Snell Roundhand', 'Apple Chancery', 'Segoe Script', cursive;
   --lbv-sans: 'Montserrat', system-ui, sans-serif;
   --lbv-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --lbv-shadow: 0 28px 80px rgba(46, 29, 10, 0.14);
-  /* Warm tan ground with a soft beam of light falling from the top-left
-     corner — used wherever a section was once black. The mirrored version
-     lets the light come from the right when the section sits on that side. */
-  --lbv-golden-bg:
-    radial-gradient(ellipse 58% 46% at 4% 2%, rgba(252, 237, 196, 0.82), transparent 72%),
-    linear-gradient(206deg, transparent 22%, rgba(242, 205, 140, 0.5) 34%, rgba(226, 187, 126, 0.3) 44%, transparent 60%),
-    linear-gradient(160deg, #b08e66 0%, #a3845f 46%, #977a5a 100%);
-  --lbv-golden-bg-mirrored:
-    radial-gradient(ellipse 58% 46% at 96% 2%, rgba(252, 237, 196, 0.82), transparent 72%),
-    linear-gradient(154deg, transparent 22%, rgba(242, 205, 140, 0.5) 34%, rgba(226, 187, 126, 0.3) 44%, transparent 60%),
-    linear-gradient(200deg, #b08e66 0%, #a3845f 46%, #977a5a 100%);
+  /* Viewport units for the whole site. A scaled-down desktop window zooms
+     the page (viewportScale.js); these divide that zoom back out so a
+     "100vh" section still fills the window and vw-based sizes keep their
+     share of it. Every vw/vh in the stylesheets goes through them. */
+  --zoom: 1;
+  --vw: calc(1vw / var(--zoom));
+  --vh: calc(1vh / var(--zoom));
+  --svh: calc(1svh / var(--zoom));
+  --dvh: calc(1dvh / var(--zoom));
+  --lvh: calc(1lvh / var(--zoom));
 }
 
 html {
@@ -45,7 +44,7 @@ html {
 
 body,
 #root {
-  min-height: 100vh;
+  min-height: calc(100 * var(--vh));
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
@@ -59,8 +58,8 @@ body {
 }
 
 ::selection {
-  background: var(--lbv-gold);
-  color: var(--lbv-ink);
+  background: #e7b46e;
+  color: #fff;
 }
 
 *,

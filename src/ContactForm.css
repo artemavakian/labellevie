@@ -25,7 +25,7 @@
 .cf-success__thanks {
   margin: 0;
   color: var(--lbv-ink);
-  font: 400 clamp(2.2rem, 4vw, 3.6rem) / 1.05 var(--lbv-serif);
+  font: 400 clamp(2.2rem, calc(4 * var(--vw)), 3.6rem) / 1.05 var(--lbv-serif);
   letter-spacing: -0.035em;
 }
 
@@ -39,7 +39,7 @@
 .cf-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0 clamp(28px, 4vw, 54px);
+  gap: 0 clamp(28px, calc(4 * var(--vw)), 54px);
 }
 
 .cf-field {
@@ -154,4 +154,20 @@
   .cf-field,
   .cf-textarea,
   .cf-submit { transition: none; }
+}
+
+/* Honeypot field — out of sight and out of the tab order. */
+.cf-botcheck {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* While a submission is on its way the button can't be pressed again. */
+.cf-submit:disabled {
+  cursor: progress;
+  opacity: 0.6;
 }
